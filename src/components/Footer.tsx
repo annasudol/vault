@@ -1,7 +1,9 @@
 import Link from 'next/link';
+
 import { Logo } from '@/components/Logo';
-import { AppConfig } from '@/utils/AppConfig';
 import { Section } from '@/components/Section';
+import { AppConfig } from '@/utils/AppConfig';
+
 const Footer = () => (
   <div>
     <Section component="footer">

@@ -1,6 +1,7 @@
-import { Background } from './background/Background';
-import { Section } from '@/components/Section';
 import { Navbar } from '@/components/navigation/Navbar';
+import { Section } from '@/components/Section';
+
+import { Background } from './background/Background';
 
 const Header = () => (
   <Background color="bg-gray-400">

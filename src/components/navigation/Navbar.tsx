@@ -1,5 +1,6 @@
-import Link from 'next/link';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import Link from 'next/link';
+
 import { Logo } from '@/components/Logo';
 
 const Navbar = () => (
