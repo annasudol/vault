@@ -1,59 +1,57 @@
 import React from 'react';
 
 type LogoProps = {
-  size?: 'sm' | 'md' | 'lg';
+  size: 'sm' | 'md' | 'lg';
 };
 
-const Logo = ({ size = 'md' }: LogoProps) => {
-  const dimensions = {
-    xs: { width: 50, height: 8 }, // Extra small size dimensions
-    sm: { width: 100, height: 16 }, // Small size dimensions
-    md: { width: 199, height: 31 }, // Medium size dimensions (default)
-    lg: { width: 298, height: 47 }, // Large size dimensions
-  };
-
-  const { width, height } = dimensions[size];
+const Logo: React.FC<LogoProps> = ({ size }) => {
+  let width;
+  let height;
+  switch (size) {
+    case 'sm':
+      width = 100;
+      height = 22;
+      break;
+    case 'md':
+      width = 140;
+      height = 30;
+      break;
+    case 'lg':
+      width = 180;
+      height = 40;
+      break;
+    default:
+      width = 140;
+      height = 30;
+  }
 
   return (
     <svg
+      aria-label="Arrakis logo"
       width={width}
       height={height}
-      viewBox="0 0 199 31"
-      fill="none"
+      viewBox="0 0 200 50"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path
-        d="M26.091 2.45352L0 29.6045L0.218418 30.0445H28.7248V24.2629H15.3919L32.364 6.59056V30.0445H39.7516V7.94924C39.7516 0.802556 31.0439 -2.69852 26.0942 2.45352H26.091Z"
-        fill="#1B1919"
-      />
-      <path
-        d="M191.134 30.0375H168.473V23.5493H192.804L172.337 14.3148L172.051 14.1349C169.025 12.2527 167.503 9.6285 168.495 5.88332C169.459 2.24413 172.453 0.477539 175.944 0.477539H198.046V6.9754H175.279L194.143 15.7955C197.75 17.5525 199.677 20.4176 198.682 24.3137C197.75 27.9947 194.821 30.0279 191.15 30.0279L191.14 30.0375H191.134Z"
-        fill="#1B1919"
-      />
-      <path
-        d="M128.014 0.487305H120.607V30.0376H128.014V0.487305Z"
-        fill="#1B1919"
-      />
-      <path
-        d="M155.562 0.477539H144.94L131.672 11.2409C130.551 12.2431 129.863 13.6756 129.789 15.1852C129.716 16.7463 130.297 18.2848 131.386 19.4122L144.876 30.0503H155.678L137.967 15.4486L155.562 0.477539Z"
-        fill="#1B1919"
-      />
-      <path
-        d="M165.215 0.487305H157.809V30.0473H165.215V0.487305Z"
-        fill="#1B1919"
-      />
-      <path
-        d="M51.1217 30.0473H43.7148V11.4755C43.7148 5.40808 48.6356 0.487305 54.7031 0.487305H65.3123V6.97553H54.8637C52.7984 6.97553 51.1217 8.65219 51.1217 10.7175V30.0473Z"
-        fill="#1B1919"
-      />
-      <path
-        d="M73.7565 30.0473H66.3496V11.4755C66.3496 5.40808 71.2704 0.487305 77.3378 0.487305H87.947V6.97553H77.4984C75.4331 6.97553 73.7565 8.65219 73.7565 10.7175V30.0473Z"
-        fill="#1B1919"
-      />
-      <path
-        d="M102.839 2.45352L76.748 29.6045L76.9665 30.0445H105.473V24.2629H92.1399L109.112 6.59056V30.0445H116.5V7.94924C116.5 0.802556 107.792 -2.69852 102.842 2.45352H102.839Z"
-        fill="#1B1919"
-      />
+      <defs>
+        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style={{ stopColor: '#249361', stopOpacity: 1 }} />
+          <stop
+            offset="100%"
+            style={{ stopColor: '#3ECF8E', stopOpacity: 1 }}
+          />
+        </linearGradient>
+      </defs>
+      <text
+        x="10"
+        y="35"
+        font-family="Arial, sans-serif"
+        font-size="32"
+        fill="url(#gradient)"
+        font-weight="bold"
+      >
+        ARRAKIS
+      </text>
     </svg>
   );
 };

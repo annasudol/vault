@@ -3,3 +3,10 @@
 @tailwind components;
 
 @tailwind utilities;
+
+
+body {
+
+background: #000000;
+background: radial-gradient(circle, rgba(61,203,139,0.4906556372549019) 0%, rgba(0,0,0,1) 87%);
+}
