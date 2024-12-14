@@ -8,9 +8,6 @@ import { ETH_CHAINS } from './network';
 
 export const WALLETCONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
-if (!WALLETCONNECT_PROJECT_ID) {
-  throw new Error('Missing NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID');
-}
 
 export const WALLET_CONNECT_CONFIG = defaultWagmiConfig({
   projectId: WALLETCONNECT_PROJECT_ID as string,

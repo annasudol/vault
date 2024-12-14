@@ -56,4 +56,4 @@ const DepositForm = () => {
   );
 };
 
-export default DepositForm;
+export { DepositForm };
