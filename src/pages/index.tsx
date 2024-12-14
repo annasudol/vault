@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { DepositForm } from '@/components/deposit-form/DepositForm';
+import { CardUI } from '@/components/card/Card';
 import { UILayout } from '@/components/layout/UILayout';
 
 const Index = () => (
   <UILayout>
-    <DepositForm />
+    <CardUI />
   </UILayout>
 );
 

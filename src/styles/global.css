@@ -5,8 +5,66 @@
 @tailwind utilities;
 
 
+@layer base {
+  :root {
+    --background: #0000; /* Light greenish tint */
+    --foreground: #0000;/* Dark green text */
+    --card: 150 30% 95%;
+    --card-foreground: 150 25% 10%;
+    --popover: 150 30% 95%;
+    --popover-foreground: 150 25% 10%;
+    --primary: 150 40% 45%; /* Base green (#2FAC73) */
+    --primary-foreground: 0 0% 100%; /* White text for contrast */
+    --secondary: 150 20% 85%; /* Muted green tint */
+    --secondary-foreground: 150 25% 10%;
+    --muted: 150 20% 85%;
+    --muted-foreground: 150 15% 40%; /* Soft green-gray text */
+    --accent: 150 30% 75%; /* Slightly darker accent */
+    --accent-foreground: 150 25% 10%;
+    --destructive: 0 70% 55%; /* Red for destructive actions */
+    --destructive-foreground: 0 0% 100%;
+    --border: 150 15% 75%; /* Light green border */
+    --input: 150 15% 75%; /* Similar to border */
+    --ring: 150 40% 45%; /* Base green for focus rings */
+    --radius: 0.5rem; /* Keep radius consistent */
+    --chart-1: 150 45% 45%; /* Rich green */
+    --chart-2: 150 40% 55%; /* Slightly lighter green */
+    --chart-3: 150 35% 35%; /* Dark green for contrast */
+    --chart-4: 150 50% 70%; /* Bright green */
+    --chart-5: 150 30% 60%; /* Muted medium green */
+  }
+
+  .dark {
+    --background: 150 25% 10%; /* Dark greenish background */
+    --foreground: 150 40% 85%; /* Light green text */
+    --card: 150 25% 10%;
+    --card-foreground: 150 40% 85%;
+    --popover: 150 25% 10%;
+    --popover-foreground: 150 40% 85%;
+    --primary: 150 40% 45%; /* Base green (#2FAC73) */
+    --primary-foreground: 0 0% 100%; /* White text for contrast */
+    --secondary: 150 15% 25%; /* Deep green tint */
+    --secondary-foreground: 150 40% 85%;
+    --muted: 150 15% 25%;
+    --muted-foreground: 150 25% 60%; /* Soft green-gray text */
+    --accent: 150 20% 35%; /* Subtle green for accents */
+    --accent-foreground: 150 40% 85%;
+    --destructive: 0 60% 40%; /* Muted red for dark mode */
+    --destructive-foreground: 0 0% 100%;
+    --border: 150 15% 25%; /* Subtle green border */
+    --input: 150 15% 25%; /* Similar to border */
+    --ring: 150 40% 45%; /* Base green for focus rings */
+    --chart-1: 150 45% 45%; /* Rich green */
+    --chart-2: 150 40% 55%; /* Slightly lighter green */
+    --chart-3: 150 35% 35%; /* Dark green for contrast */
+    --chart-4: 150 50% 70%; /* Bright green */
+    --chart-5: 150 30% 60%; /* Muted medium green */
+  }
+}
+
+
 body {
 
-background: #000000;
-background: radial-gradient(circle, rgba(61,203,139,0.4906556372549019) 0%, rgba(0,0,0,1) 87%);
-}
+  background: #000000;
+  background: radial-gradient(circle, rgba(33,163,120,0.7035407913165266) 0%, rgba(0,0,0,1) 50%);
+  }
