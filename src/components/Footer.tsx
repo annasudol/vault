@@ -7,13 +7,12 @@ const Footer = () => (
     <div className="mx-auto flex-col items-center justify-center">
       <p className="py-1 ">
         Developped by{' '}
-        <Link color="success" isExternal href={AppConfig.author_git}>
+        <Link isExternal href={AppConfig.author_git}>
           {AppConfig.author}
         </Link>
         .
       </p>
       <Link
-        color="success"
         isExternal
         showAnchorIcon
         href="https://github.com/nextui-org/nextui"

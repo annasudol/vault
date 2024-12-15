@@ -61,6 +61,6 @@ module.exports = {
       'accordion-up': 'accordion-up 0.2s ease-out',
     },
   },
-  darkMode: 'class',
+  lightMode: 'class',
   plugins: [nextui()],
 };

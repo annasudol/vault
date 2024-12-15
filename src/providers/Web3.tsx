@@ -3,7 +3,7 @@
 import '@rainbow-me/rainbowkit/styles.css';
 
 import type { Theme } from '@rainbow-me/rainbowkit';
-import { darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { lightTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createWeb3Modal } from '@web3modal/wagmi/react';
 import _ from 'lodash';
@@ -17,9 +17,9 @@ interface Props extends PropsWithChildren {
   initialState?: State;
 }
 
-const myTheme = _.merge(darkTheme(), {
+const myTheme = _.merge(lightTheme(), {
   colors: {
-    accentColor: '##21a378',
+    accentColor: '##488BF2',
   },
 } as Theme);
 
