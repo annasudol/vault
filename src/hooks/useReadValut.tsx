@@ -20,12 +20,8 @@ export function useReadValut(vaultAddress: string) {
       });
     } else {
       const fetchData = async () => {
-        try {
-          const result = await readVaultData(vaultAddress as Address);
-          setResponse(result);
-        } catch {
-          setResponse({ status: ResponseStatus.Error });
-        }
+        const result = await readVaultData(vaultAddress as Address);
+        setResponse(result);
       };
 
       fetchData();

@@ -10,9 +10,9 @@ type ErrorProps = {
 const Error = ({ message, desription }: ErrorProps) => {
   const router = useRouter();
   return (
-    <div className="flex h-screen flex-col items-center justify-center">
+    <div className="flex min-h-48 flex-col items-center justify-center">
       <h1 className="py-2 text-2xl">{message}</h1>
-      {desription && <p className="py-2 text-gray-500">{desription}</p>}
+      {desription && <p className="mb-8 py-2 text-gray-500">{desription}</p>}
       <Button
         color="primary"
         className="w-full max-w-48 text-white"
