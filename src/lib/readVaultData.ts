@@ -2,10 +2,10 @@ import { readContracts } from '@wagmi/core';
 import type { Address } from 'viem';
 
 import { vaultABI } from '@/abi/valutABI';
+import { readERC20 } from '@/lib/readERC20';
+import { wagmiConfig } from '@/lib/web3';
 import type { Response, VaultData } from '@/types';
 import { ResponseStatus } from '@/types';
-
-import { wagmiConfig } from './web3';
 
 export async function readVaultData(
   vaultAddress: Address,
@@ -43,17 +43,27 @@ export async function readVaultData(
     ) {
       return { status: ResponseStatus.Error, message: 'Failed to fetch data' };
     }
+
+    const [token0, token1] = await Promise.all([
+      readERC20(reponseContract[2].result as Address),
+      readERC20(reponseContract[3].result as Address),
+    ]);
     const name = reponseContract[0].result as string;
     const totalSupply = reponseContract[1].result;
-    const token0 = reponseContract[2].result;
-    const token1 = reponseContract[3].result;
+
     return {
       status: ResponseStatus.Success,
       data: {
-        name,
+        contractName: name,
         totalSupply,
-        token0,
-        token1,
+        tokens: {
+          ...(token0.status === ResponseStatus.Success && {
+            [token0.data.symbol]: token0.data,
+          }),
+          ...(token1.status === ResponseStatus.Success && {
+            [token1.data.symbol]: token1.data,
+          }),
+        },
       },
     };
   } catch (error) {

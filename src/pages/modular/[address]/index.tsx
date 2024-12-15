@@ -3,17 +3,18 @@ import { Spinner } from '@nextui-org/react';
 import { useParams } from 'next/navigation';
 import React from 'react';
 
+// import { useAccount } from 'wagmi';
 import { Error } from '@/components/Error';
 import { StepForm } from '@/components/forms/StepForm';
 import { VaultHeader } from '@/components/header/VaultHeader';
 import { ValultLayout } from '@/components/layout/ValultLayout';
 import { useStore } from '@/store/store';
-import { TokenSymbol } from '@/types';
 
 const Index = () => {
   const params = useParams<{ address: string }>();
   const { vault, fetchVaultData, resetResponse } = useStore();
-
+  // const { address } = useAccount();
+  // console.log(vault);
   React.useEffect(() => {
     fetchVaultData(params?.address);
     return () => {
@@ -37,13 +38,10 @@ const Index = () => {
       </ValultLayout>
     );
   }
+  console.log(vault);
   return (
     <ValultLayout>
-      <VaultHeader
-        title={vault.data.name}
-        token1={TokenSymbol.WETH}
-        token2={TokenSymbol.RETH}
-      />
+      <VaultHeader title={vault.data.contractName} tokens={vault.data.tokens} />
       <StepForm />
     </ValultLayout>
   );

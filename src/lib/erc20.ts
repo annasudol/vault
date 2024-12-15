@@ -1,4 +1,4 @@
-import { readContract, readContracts } from '@wagmi/core';
+import { readContract } from '@wagmi/core';
 import type { Address } from 'viem';
 
 import { erc20Abi } from '@/abi/erc20ABI';
@@ -48,7 +48,6 @@ export async function getCurrentAllowance(
   token_address: Address,
 ): Promise<Response<BigInt>> {
   const erc20Config = { abi: erc20Abi } as const;
-  console.log('getCurrentAllowance', user, spender, token_address);
   try {
     const balance = await readContract(wagmiConfig, {
       ...erc20Config,
@@ -64,50 +63,6 @@ export async function getCurrentAllowance(
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);
-    return { status: ResponseStatus.Error };
-  }
-}
-
-export async function readTokenData(
-  tokenAddress: Address,
-): Promise<Response<any>> {
-  const erc20Config = { abi: erc20Abi } as const;
-
-  try {
-    const tokensData = await readContracts(wagmiConfig, {
-      contracts: [
-        {
-          ...erc20Config,
-          address: tokenAddress,
-          functionName: 'symbol',
-        },
-        {
-          ...erc20Config,
-          address: tokenAddress,
-          functionName: 'decimals',
-        },
-        {
-          ...erc20Config,
-          address: tokenAddress,
-          functionName: 'name',
-        },
-      ],
-    });
-
-    if (Object.values(tokensData).some((res) => res.status === 'failure')) {
-      return { status: ResponseStatus.Error };
-    }
-
-    return {
-      status: ResponseStatus.Success,
-      data: {
-        address: tokenAddress,
-        symbol: tokensData[0].result!,
-        name: tokensData[2].result!,
-        decimals: tokensData[1].result!,
-      },
-    };
-  } catch {
     return { status: ResponseStatus.Error };
   }
 }

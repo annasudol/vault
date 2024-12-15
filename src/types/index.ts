@@ -3,7 +3,7 @@ export enum ChainName {
 }
 
 export enum TokenSymbol {
-  RETH = 'RETH',
+  rETH = 'rETH',
   WETH = 'WETH',
 }
 
@@ -41,11 +41,21 @@ interface PendingResponse {
 
 export type Response<T> = SuccessResponse<T> | ErrorResponse | PendingResponse;
 
-export interface VaultData {
+export interface TokenInfo {
+  address: Address;
+  symbol: string;
   name: string;
+  decimals: number;
+}
+
+export interface TokenKeySymbol {
+  [key: string]: TokenInfo;
+}
+
+export interface VaultData {
+  contractName: string;
   totalSupply?: BigInt;
-  token0?: Address;
-  token1?: Address;
+  tokens: TokenKeySymbol;
 }
 
 export interface VaultByAddress {
@@ -53,3 +63,16 @@ export interface VaultByAddress {
 }
 
 export type Address = `0x${string}`;
+
+export interface DepositState {
+  isCompleted: boolean;
+  values: {
+    [key in TokenSymbol]: number;
+  };
+}
+
+export interface TokenBalance {
+  values: {
+    [key in TokenSymbol]: number;
+  };
+}

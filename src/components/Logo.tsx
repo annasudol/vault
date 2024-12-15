@@ -45,10 +45,10 @@ const Logo = ({ size }: LogoProps) => {
       <text
         x="10"
         y="35"
-        font-family="Arial, sans-serif"
-        font-size="32"
+        fontFamily="Arial, sans-serif"
+        fontSize="32"
         fill="url(#gradient)"
-        font-weight="bold"
+        fontWeight="bold"
       >
         ARRAKIS
       </text>

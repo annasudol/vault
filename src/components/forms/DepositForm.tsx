@@ -7,7 +7,19 @@ const DepositForm = () => {
   const [wethAmount, setWethAmount] = useState('');
   const [rethAmount, setRethAmount] = useState('');
   const [submitted, setSubmitted] = React.useState({});
+  // const { address } = useAccount();
+  // const { vault,  } = useStore();
+  // useEffect(() => {
+  //   if (vault && 'data' in vault) {
+  //     const tokens: Address[] = Object.values(
+  //       vault.data.tokens as TokenKeySymbol,
+  //     ).map((token) => (token as { address: Address }).address);
 
+  //     if (address) {
+  //       fetchTokenBalance(address, tokens);
+  //     }
+  //   }
+  // }, [vault]);
   const onSubmit = (e: {
     preventDefault: () => void;
     currentTarget: HTMLFormElement | undefined;

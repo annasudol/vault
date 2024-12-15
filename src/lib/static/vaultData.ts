@@ -7,7 +7,7 @@ export const vaultData: StaticData[] = [
   {
     vaultAddress,
     chain: ChainName.Arbitrum,
-    tokens: [TokenSymbol.WETH, TokenSymbol.RETH],
+    tokens: [TokenSymbol.WETH, TokenSymbol.rETH],
     stats: {
       TVL: {
         title: '$5.78M',

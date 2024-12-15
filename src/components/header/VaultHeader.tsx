@@ -1,17 +1,21 @@
 import { TokenIcon } from '@/components/TokenIcon';
-import type { TokenSymbol } from '@/types';
+import type { TokenKeySymbol } from '@/types';
 
 interface VaultHeaderProps {
   title: string;
-  token1: TokenSymbol;
-  token2: TokenSymbol;
+  tokens: TokenKeySymbol;
 }
-const VaultHeader = ({ title, token1, token2 }: VaultHeaderProps) => (
+const VaultHeader = ({ title, tokens }: VaultHeaderProps) => (
   <header className="mx-auto max-w-screen-lg p-4">
-    <div className="mb-12 flex max-w-screen-lg justify-between">
-      <TokenIcon token={token1} />
-      <TokenIcon token={token2} className="relative -left-5" />
-      <h1 className="text-4xl font-bold">{title}</h1>
+    <div className="mb-12 flex max-w-screen-lg justify-start">
+      <div className="flex justify-start">
+        <TokenIcon token={Object.keys(tokens)[0]} />
+        <TokenIcon
+          token={Object.keys(tokens)[1]}
+          className="relative -left-2 z-10"
+        />
+      </div>
+      <h1 className="ml-2 text-4xl font-bold">{title}</h1>
     </div>
   </header>
 );
