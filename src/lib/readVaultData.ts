@@ -63,10 +63,12 @@ export async function readVaultData(
         token1,
       },
     };
-  } catch {
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Failed to fetch data';
     return {
       status: ResponseStatus.Error,
-      message: 'Failed to get data from the contract',
+      message: errorMessage,
     };
   }
 }

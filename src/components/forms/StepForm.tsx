@@ -1,10 +1,13 @@
 import React from 'react';
 
 import Steps from '@/components/Steps';
+import { useStore } from '@/store/vaultStore';
 
 import { DepositForm } from './DepositForm';
 
 const StepForm = () => {
+  const { vault } = useStore();
+  console.log(vault);
   const [currentStep] = React.useState(0);
 
   return (

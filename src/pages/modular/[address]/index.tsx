@@ -5,15 +5,23 @@ import React from 'react';
 
 import { Error } from '@/components/Error';
 import { StepForm } from '@/components/forms/StepForm';
+import { VaultHeader } from '@/components/header/VaultHeader';
 import { ValultLayout } from '@/components/layout/ValultLayout';
-import { useReadValut } from '@/hooks/useReadValut';
+import { useStore } from '@/store/vaultStore';
+import { TokenSymbol } from '@/types';
 
 const Index = () => {
   const params = useParams<{ address: string }>();
-  const address = params?.address;
-  const response = useReadValut(address);
+  const { vault, fetchVaultData, resetResponse } = useStore();
 
-  if (response.status === 'pending') {
+  React.useEffect(() => {
+    fetchVaultData(params?.address);
+    return () => {
+      resetResponse();
+    };
+  }, [params?.address]);
+
+  if (vault.status === 'pending') {
     return (
       <ValultLayout>
         <div className="flex min-h-60 w-full flex-col items-center justify-center">
@@ -22,15 +30,20 @@ const Index = () => {
       </ValultLayout>
     );
   }
-  if (response.status === 'error') {
+  if (vault.status === 'error') {
     return (
       <ValultLayout>
-        <Error message="Error" desription={response.message} />
+        <Error message="Error" desription={vault.message} />
       </ValultLayout>
     );
   }
   return (
     <ValultLayout>
+      <VaultHeader
+        title={vault.data.name}
+        token1={TokenSymbol.WETH}
+        token2={TokenSymbol.RETH}
+      />
       <StepForm />
     </ValultLayout>
   );
