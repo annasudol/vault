@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Steps from '@/components/Steps';
-import { useStore } from '@/store/vaultStore';
+import { useStore } from '@/store/store';
 
 import { DepositForm } from './DepositForm';
 

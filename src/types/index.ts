@@ -40,3 +40,16 @@ interface PendingResponse {
 }
 
 export type Response<T> = SuccessResponse<T> | ErrorResponse | PendingResponse;
+
+export interface VaultData {
+  name: string;
+  totalSupply?: BigInt;
+  token0?: Address;
+  token1?: Address;
+}
+
+export interface VaultByAddress {
+  [key: string]: VaultData;
+}
+
+export type Address = `0x${string}`;

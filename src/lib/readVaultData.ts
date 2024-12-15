@@ -2,17 +2,10 @@ import { readContracts } from '@wagmi/core';
 import type { Address } from 'viem';
 
 import { vaultABI } from '@/abi/valutABI';
-import type { Response } from '@/types';
+import type { Response, VaultData } from '@/types';
 import { ResponseStatus } from '@/types';
 
 import { wagmiConfig } from './web3';
-
-export interface VaultData {
-  name: string;
-  totalSupply?: BigInt;
-  token0?: Address;
-  token1?: Address;
-}
 
 export async function readVaultData(
   vaultAddress: Address,
@@ -52,8 +45,8 @@ export async function readVaultData(
     }
     const name = reponseContract[0].result as string;
     const totalSupply = reponseContract[1].result;
-    const token0 = reponseContract[2].result as Address;
-    const token1 = reponseContract[3].result as Address;
+    const token0 = reponseContract[2].result;
+    const token1 = reponseContract[3].result;
     return {
       status: ResponseStatus.Success,
       data: {

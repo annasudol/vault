@@ -7,7 +7,7 @@ import { Error } from '@/components/Error';
 import { StepForm } from '@/components/forms/StepForm';
 import { VaultHeader } from '@/components/header/VaultHeader';
 import { ValultLayout } from '@/components/layout/ValultLayout';
-import { useStore } from '@/store/vaultStore';
+import { useStore } from '@/store/store';
 import { TokenSymbol } from '@/types';
 
 const Index = () => {
