@@ -7,12 +7,15 @@ import { readVaultData } from '@/lib/readVaultData';
 import type { Response } from '@/types';
 import { ResponseStatus } from '@/types';
 
-export function useReadValut(vaultAddress: string) {
+export function useReadValut(vaultAddress?: string) {
   const [response, setResponse] = useState<Response<VaultData>>({
     status: ResponseStatus.Pending,
   });
 
   useEffect(() => {
+    if (!vaultAddress) {
+      return;
+    }
     if (!isAddress(vaultAddress)) {
       setResponse({
         status: ResponseStatus.Error,

@@ -40,5 +40,3 @@ interface PendingResponse {
 }
 
 export type Response<T> = SuccessResponse<T> | ErrorResponse | PendingResponse;
-
-// & { readonly address: never };

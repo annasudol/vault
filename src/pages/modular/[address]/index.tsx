@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import React from 'react';
 
 import { Error } from '@/components/Error';
+import { StepForm } from '@/components/forms/StepForm';
 import { ValultLayout } from '@/components/layout/ValultLayout';
 import { useReadValut } from '@/hooks/useReadValut';
 
@@ -28,7 +29,11 @@ const Index = () => {
       </ValultLayout>
     );
   }
-  return <ValultLayout>success</ValultLayout>;
+  return (
+    <ValultLayout>
+      <StepForm />
+    </ValultLayout>
+  );
 };
 
 export default Index;
