@@ -1,17 +1,17 @@
-import { createConfig, http } from '@wagmi/core';
+import { getDefaultConfig } from '@rainbow-me/rainbowkit';
+import { http } from '@wagmi/core';
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config';
-import { bscTestnet, sepolia } from 'viem/chains';
+import { arbitrum } from 'viem/chains';
 import { cookieStorage, createStorage } from 'wagmi';
 
-import { AppConfig } from './AppConfig';
-import { ETH_CHAINS } from './network';
+import { AppConfig } from '../utils/AppConfig';
 
 export const WALLETCONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
 
 export const WALLET_CONNECT_CONFIG = defaultWagmiConfig({
   projectId: WALLETCONNECT_PROJECT_ID as string,
-  chains: ETH_CHAINS,
+  chains: [arbitrum],
   ssr: true,
   metadata: {
     name: AppConfig.site_name,
@@ -29,10 +29,12 @@ export const WALLET_CONNECT_CONFIG = defaultWagmiConfig({
   }),
 });
 
-export const config = createConfig({
-  chains: [bscTestnet, sepolia],
+export const wagmiConfig = getDefaultConfig({
+  appName: 'RainbowKit demo',
+  projectId: 'YOUR_PROJECT_ID',
+  chains: [arbitrum],
   transports: {
-    [sepolia.id]: http(),
-    [bscTestnet.id]: http(),
+    [arbitrum.id]: http(process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL),
   },
+  ssr: true,
 });

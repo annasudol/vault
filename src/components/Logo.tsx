@@ -4,7 +4,7 @@ type LogoProps = {
   size: 'sm' | 'md' | 'lg';
 };
 
-const Logo: React.FC<LogoProps> = ({ size }) => {
+const Logo = ({ size }: LogoProps) => {
   let width;
   let height;
   switch (size) {

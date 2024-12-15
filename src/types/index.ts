@@ -18,3 +18,27 @@ export interface StaticData {
     };
   };
 }
+
+export enum ResponseStatus {
+  Success = 'success',
+  Error = 'error',
+  Pending = 'pending',
+}
+
+interface SuccessResponse<T> {
+  status: ResponseStatus.Success;
+  data: T;
+}
+
+interface ErrorResponse {
+  status: ResponseStatus.Error;
+  message?: string;
+}
+
+interface PendingResponse {
+  status: ResponseStatus.Pending;
+}
+
+export type Response<T> = SuccessResponse<T> | ErrorResponse | PendingResponse;
+
+// & { readonly address: never };

@@ -5,20 +5,20 @@ import {
   CardHeader,
   Divider,
 } from '@nextui-org/react';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { AiFillCaretRight } from 'react-icons/ai';
 
 import { MyButton } from '@/components/button/MyButton';
 import { TokenIcon } from '@/components/TokenIcon';
 import type { StaticData } from '@/types';
 
 function TokenCard({ vaultAddress, tokens, chain, stats }: StaticData) {
-  // const router = useRouter();
+  const router = useRouter();
   return (
     <Card className="max-w-[400px]">
       <CardHeader className="flex gap-2">
         <TokenIcon token={tokens[0]} />
         <TokenIcon token={tokens[1]} className="relative -left-5" />
-
         <div className="flex flex-col">
           <p className="text-md">
             {tokens[0]} / {tokens[1]} vault
@@ -44,9 +44,14 @@ function TokenCard({ vaultAddress, tokens, chain, stats }: StaticData) {
       </CardBody>
       <Divider />
       <CardFooter>
-        <Link href={`/vault/${vaultAddress}`}>
-          <MyButton color="primary">Go to Valult</MyButton>
-        </Link>
+        <MyButton
+          color="primary"
+          className="w-full text-white"
+          onClick={() => router.push(`/modular/${vaultAddress}`)}
+        >
+          Go to Valult
+          <AiFillCaretRight />
+        </MyButton>
       </CardFooter>
     </Card>
   );

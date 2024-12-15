@@ -1,16 +1,18 @@
 import React from 'react';
 
-import { UILayout } from '@/components/layout/UILayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import { TokenCard } from '@/components/TokenCard';
-import { vaultData } from '@/lib/vaultData';
+import { vaultData } from '@/lib/static/vaultData';
 
 const Index = () => {
   return (
-    <UILayout>
-      {vaultData.map((vault) => (
-        <TokenCard key={vault.vaultAddress} {...vault} />
-      ))}
-    </UILayout>
+    <MainLayout>
+      <div className="flex justify-center p-12">
+        {vaultData.map((vault) => (
+          <TokenCard key={vault.vaultAddress} {...vault} />
+        ))}
+      </div>
+    </MainLayout>
   );
 };
 export default Index;
