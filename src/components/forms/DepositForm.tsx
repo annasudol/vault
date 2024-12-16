@@ -3,67 +3,42 @@ import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { TokenInput } from '@/components/inputs/TokenTinput';
-import { formatBigInt } from '@/lib/formatBigInt';
 import { useStore } from '@/store/store';
-import type { TokenSymbol } from '@/types';
+import type { TokenKeySymbol } from '@/types';
 
 const DepositForm = () => {
-  const [decimals, setDecimals] = useState<
-    Record<TokenSymbol, number | undefined> | undefined
-  >();
-  const [wethAmount, setWethAmount] = useState({
-    balance: '0',
-    value: '0',
-  });
-  const [rethAmount, setRethAmount] = useState({
-    balance: '0',
-    value: '0',
-  });
-  const [submitted, setSubmitted] = React.useState({});
+  const [tokensValue, setTokensValue] = useState<TokenKeySymbol>({});
+
+  const [submitted, setSubmitted] = useState({});
   const { address } = useAccount();
-  const { vault, fetchTokenBalance, tokenBalance } = useStore();
+  const { vault, fetchTokenBalance } = useStore();
 
   useEffect(() => {
-    if (vault && 'data' in vault && vault.data && address) {
-      fetchTokenBalance(address, vault.data.tokens);
+    if (!address) {
+      return;
     }
-  }, [vault]);
+    fetchTokenBalance(address);
+  }, []);
 
   useEffect(() => {
     if ('data' in vault) {
-      const decimalsObj =
-        Object.keys(vault.data.tokens).length > 0
-          ? Object.keys(vault.data.tokens).reduce(
-              (acc, token) => ({
-                ...acc,
-                [token]: vault.data.tokens[token]?.decimals,
-              }),
-              {} as Record<TokenSymbol, number>,
-            )
-          : {};
-      if (Object.values(decimalsObj).length > 0) {
-        setDecimals(decimalsObj as Record<TokenSymbol, number | undefined>);
-      }
+      const { tokens } = vault.data;
+      setTokensValue(tokens);
     }
   }, [vault]);
 
-  useEffect(() => {
-    if ('data' in tokenBalance) {
-      const wethDecimals = decimals?.WETH || 18;
-      const wethBalance = formatBigInt(
-        wethDecimals,
-        tokenBalance.data?.WETH as bigint,
-      );
-      const rethDecimals = decimals?.rETH || 18;
-      setWethAmount({ ...wethAmount, balance: wethBalance });
-      const rethBalance = formatBigInt(
-        rethDecimals,
-        tokenBalance.data?.rETH as bigint,
-      );
-
-      setRethAmount({ ...rethAmount, balance: rethBalance });
-    }
-  }, [tokenBalance]);
+  const handleUpdateTokenDepositValue = (
+    token: string,
+    value: string,
+  ): void => {
+    const updatedTokensValue = { ...tokensValue };
+    const updatedToken = { ...tokensValue[token] };
+    const newValue = {
+      ...updatedTokensValue,
+      [token]: { ...updatedToken, depositValue: value },
+    };
+    setTokensValue(newValue as unknown as TokenKeySymbol);
+  };
 
   const onSubmit = (e: {
     preventDefault: () => void;
@@ -82,22 +57,21 @@ const DepositForm = () => {
       validationBehavior="native"
       onSubmit={onSubmit}
     >
-      <TokenInput
-        name="WETH"
-        value={wethAmount.value}
-        setValue={(value) => setWethAmount({ ...wethAmount, value })}
-        max={Number(wethAmount.balance)}
-        label="WETH Amount"
-        displaySlider
-      />
-
-      <TokenInput
-        name="RETH"
-        value={rethAmount.value}
-        setValue={(value) => setRethAmount({ ...rethAmount, value })}
-        max={Number(rethAmount.balance)}
-        label="RETH Amount"
-      />
+      {Object.keys(tokensValue).map((token) => {
+        return (
+          <TokenInput
+            key={token}
+            name={token}
+            value={tokensValue[token]?.depositValue || '0'}
+            setValue={(value) =>
+              handleUpdateTokenDepositValue(token as string, value)
+            }
+            max={tokensValue[token]?.balanceInt || 0}
+            label={`${token} Amount`}
+            displaySlider
+          />
+        );
+      })}
       <Button type="submit" color="primary">
         Submit
       </Button>

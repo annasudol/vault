@@ -41,11 +41,16 @@ interface PendingResponse {
 
 export type Response<T> = SuccessResponse<T> | ErrorResponse | PendingResponse;
 
-export interface TokenInfo {
+export interface TokenBalance {
+  balanceInt?: number;
+  balanceBigInt?: BigInt;
+}
+export interface TokenInfo extends TokenBalance {
   address: Address;
   symbol: string;
   name: string;
   decimals: number;
+  depositValue?: string;
 }
 
 export interface TokenKeySymbol {
@@ -63,14 +68,3 @@ export interface VaultByAddress {
 }
 
 export type Address = `0x${string}`;
-
-// export interface DepositState {
-//   isCompleted: boolean;
-//   values: {
-//     Record<TokenSymbol, number>;
-//   };
-// }
-
-export interface TokenBalance {
-  [key: string]: BigInt | undefined;
-}
