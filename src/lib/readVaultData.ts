@@ -1,10 +1,11 @@
 import { readContracts } from '@wagmi/core';
-import type { Address } from 'viem';
 
+import { helperABI } from '@/abi/helperABI';
 import { vaultABI } from '@/abi/valutABI';
 import { readERC20 } from '@/lib/readERC20';
+import { CONTRACT } from '@/lib/static/contractAddress';
 import { wagmiConfig } from '@/lib/web3';
-import type { Response, VaultData } from '@/types';
+import type { Address, Response, VaultData } from '@/types';
 import { ResponseStatus } from '@/types';
 
 export async function readVaultData(
@@ -13,6 +14,11 @@ export async function readVaultData(
   const vaultContract = {
     abi: vaultABI,
     address: vaultAddress,
+  } as const;
+
+  const helperContract = {
+    abi: helperABI,
+    address: CONTRACT.HELPER as Address,
   } as const;
 
   try {
@@ -34,8 +40,18 @@ export async function readVaultData(
           ...vaultContract,
           functionName: 'token1',
         },
+        {
+          ...helperContract,
+          functionName: 'totalUnderlying',
+          args: [vaultAddress],
+        },
       ],
     });
+    let depositRatio;
+    const totalUnderlying = reponseContract[4].result;
+    if (totalUnderlying?.length) {
+      depositRatio = Number(totalUnderlying[1] / totalUnderlying[0]);
+    }
     if (
       Object.values(reponseContract).some(
         (response) => response.status === 'failure',
@@ -56,6 +72,7 @@ export async function readVaultData(
       data: {
         contractName: name,
         totalSupply,
+        depositRatio,
         tokens: {
           ...(token0.status === ResponseStatus.Success && {
             [token0.data.symbol]: token0.data,

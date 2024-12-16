@@ -42,7 +42,7 @@ interface PendingResponse {
 export type Response<T> = SuccessResponse<T> | ErrorResponse | PendingResponse;
 
 export interface TokenBalance {
-  balanceInt?: number;
+  balanceInt?: string;
   balanceBigInt?: BigInt;
 }
 export interface TokenInfo extends TokenBalance {
@@ -53,14 +53,15 @@ export interface TokenInfo extends TokenBalance {
   depositValue?: string;
 }
 
-export interface TokenKeySymbol {
+export interface TokenCollection {
   [key: string]: TokenInfo;
 }
 
 export interface VaultData {
   contractName: string;
+  tokens: TokenCollection;
   totalSupply?: BigInt;
-  tokens: TokenKeySymbol;
+  depositRatio?: number;
 }
 
 export interface VaultByAddress {

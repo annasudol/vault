@@ -1,9 +1,9 @@
 import { TokenIcon } from '@/components/TokenIcon';
-import type { TokenKeySymbol } from '@/types';
+import type { TokenCollection } from '@/types';
 
 interface VaultHeaderProps {
   title: string;
-  tokens: TokenKeySymbol;
+  tokens: TokenCollection;
 }
 const VaultHeader = ({ title, tokens }: VaultHeaderProps) => (
   <header className="mx-auto max-w-screen-lg p-4">

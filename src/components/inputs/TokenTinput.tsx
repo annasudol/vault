@@ -27,7 +27,6 @@ const TokenInput: React.FC<CustomInputProps> = ({
       <span className="absolute right-1 text-xs text-gray-500">
         Balance: {max} {name}
       </span>
-
       <Input
         name={name}
         value={value}
