@@ -5,14 +5,19 @@ import { useAccount } from 'wagmi';
 import { TokenInput } from '@/components/inputs/TokenTinput';
 import { formatBigInt } from '@/lib/formatBigInt';
 import { useStore } from '@/store/store';
-import { type TokenCollection, type TokenInfo, TokenSymbol } from '@/types';
+import {
+  StepType,
+  type TokenCollection,
+  type TokenInfo,
+  TokenSymbol,
+} from '@/types';
 
 const DepositForm = () => {
   const [tokensValue, setTokensValue] = useState<TokenCollection>({});
   const [tokenRatio, setTokenRatio] = useState(1);
   const [isError, setIsError] = useState(false);
   const { address } = useAccount();
-  const { vault, fetchTokenBalance } = useStore();
+  const { vault, fetchTokenBalance, setDepositValue, changeStep } = useStore();
 
   useEffect(() => {
     if (!address) {
@@ -110,11 +115,19 @@ const DepositForm = () => {
   }) => {
     e.preventDefault();
 
-    const data = Object.fromEntries(new FormData(e.currentTarget));
-    console.log(isError);
-    console.log(data);
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(
+      Array.from(formData.entries()).map(([key, value]) => [
+        key,
+        value.toString(),
+      ]),
+    );
+    if (isError) {
+      return;
+    }
+    setDepositValue(data);
+    changeStep(StepType.Allowance);
   };
-  console.log(tokensValue);
 
   return (
     <Form

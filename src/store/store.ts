@@ -3,14 +3,30 @@ import { isAddress } from 'viem';
 import { create } from 'zustand';
 
 import { fetchTokensBalances } from '@/lib/fetchTokensBalances';
+import { getAllowance } from '@/lib/getAllowance';
 import { readVaultData } from '@/lib/readVaultData';
-import type { Response, VaultData } from '@/types';
-import { ResponseStatus } from '@/types';
+import { CONTRACT } from '@/lib/static/contractAddress';
+import type {
+  AllowanceToken,
+  DepositSubmitData,
+  Response,
+  VaultData,
+} from '@/types';
+import { ResponseStatus, StepType } from '@/types';
 
 interface Store {
   vault: Response<VaultData>;
   fetchVaultData: (vaultAddress?: string) => Promise<void>;
   fetchTokenBalance: (waletAddress: Address) => Promise<void>;
+
+  step: StepType;
+  changeStep: (step: StepType) => void;
+
+  depositValue?: DepositSubmitData;
+  setDepositValue: (value: DepositSubmitData) => void;
+
+  currentAllowance: Response<AllowanceToken>;
+  setCurrentAllowance: (value: Address) => void;
 }
 
 export const useStore = create<Store>((set, get) => ({
@@ -68,5 +84,43 @@ export const useStore = create<Store>((set, get) => ({
         console.log(error);
       }
     }
+  },
+
+  step: StepType.Deposit,
+  changeStep: (step: StepType) => {
+    set({ step });
+  },
+  depositValue: undefined,
+  setDepositValue: (value: DepositSubmitData) => {
+    set({ depositValue: value });
+  },
+
+  currentAllowance: { status: ResponseStatus.Pending },
+  setCurrentAllowance: async (address: Address) => {
+    const { vault } = get();
+    if (vault.status === ResponseStatus.Success && vault.data) {
+      const allowancePromises = Object.values(vault.data.tokens).map(
+        async (token) => {
+          return getAllowance(
+            address,
+            CONTRACT.ROUTER as Address,
+            token.address,
+          );
+        },
+      );
+      const allowance = await Promise.all(allowancePromises);
+      console.log(allowance);
+
+      // set({
+      //   currentAllowance: {
+      //     status: ResponseStatus.Success,
+      //     data: {
+      //       WETH: { status: ResponseStatus.Success, data: allowance[0].data },
+      //       rETH: { status: ResponseStatus.Success, data: allowance[1].data },
+      //     },
+      //   },
+      // });
+    }
+    // set({ currentAllowance: { status: ResponseStatus.Success, data: value } });
   },
 }));

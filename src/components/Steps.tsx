@@ -6,9 +6,12 @@ import { color, domAnimation, LazyMotion, m } from 'framer-motion';
 import type { ComponentProps } from 'react';
 import React from 'react';
 
+import type { StepType } from '@/types';
+
 export type StepProps = {
   title?: React.ReactNode;
   className?: string;
+  type: StepType;
 };
 
 export interface StepsProps extends React.HTMLAttributes<HTMLButtonElement> {

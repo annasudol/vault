@@ -70,3 +70,17 @@ export interface VaultByAddress {
 }
 
 export type Address = `0x${string}`;
+
+export enum StepType {
+  Deposit = 'Deposit',
+  Allowance = 'Allowance',
+  Publish = 'Publish',
+}
+
+export interface DepositSubmitData {
+  [key: string]: string;
+}
+
+export interface AllowanceToken {
+  [key: string]: string;
+}

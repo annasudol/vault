@@ -1,33 +1,48 @@
 import React from 'react';
 
+import { AllowanceForm } from '@/components/forms/AllowanceForm';
+import { DepositForm } from '@/components/forms/DepositForm';
 import Steps from '@/components/Steps';
 import { useStore } from '@/store/store';
-
-import { DepositForm } from './DepositForm';
+import { StepType } from '@/types';
 
 const StepForm = () => {
-  const { vault } = useStore();
-  // eslint-disable-next-line no-console
-  console.log(vault);
-  const [currentStep] = React.useState(0);
+  const { step } = useStore();
+
+  const getCurrentStepNumber = (currentStep: StepType) => {
+    switch (currentStep) {
+      case StepType.Deposit:
+        return 1;
+      case StepType.Allowance:
+        return 2;
+      case StepType.Publish:
+        return 3;
+      default:
+        return 1;
+    }
+  };
 
   return (
     <div>
       <Steps
-        defaultStep={currentStep}
+        currentStep={getCurrentStepNumber(step)}
         steps={[
           {
             title: 'Deposit',
+            type: StepType.Deposit,
           },
           {
-            title: 'Set allowance',
+            title: 'Allowance',
+            type: StepType.Allowance,
           },
           {
             title: 'Publish',
+            type: StepType.Publish,
           },
         ]}
       />
-      {currentStep === 0 && <DepositForm />}
+      {step === StepType.Deposit && <DepositForm />}
+      {step === StepType.Allowance && <AllowanceForm />}
     </div>
   );
 };
