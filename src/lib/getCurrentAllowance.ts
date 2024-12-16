@@ -10,7 +10,7 @@ export async function getCurrentAllowance(
   user: Address,
   spender: Address,
   token_address: Address,
-): Promise<Response<BigInt>> {
+): Promise<Response<bigint>> {
   const erc20Config = { abi: erc20Abi } as const;
   try {
     const balance = await readContract(wagmiConfig, {

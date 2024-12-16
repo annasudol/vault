@@ -9,7 +9,7 @@ import { ResponseStatus } from '@/types';
 export async function getTokenBalance(
   walletAddress: Address,
   tokenAddress: Address,
-): Promise<Response<BigInt>> {
+): Promise<Response<bigint>> {
   const erc20Config = { abi: erc20Abi } as const;
 
   try {

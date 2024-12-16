@@ -41,7 +41,7 @@ export const fetchTokensBalances = async (
           balanceInt,
           balanceBigInt,
         }))
-        .catch((error) => ({ key, balance: BigInt(0), error })),
+        .catch((error) => ({ key, balance: 0n, error })),
     );
 
     const balances = await Promise.all(balancePromises);
