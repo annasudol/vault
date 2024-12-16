@@ -6,6 +6,7 @@ type CustomInputProps = {
   value: string;
   setValue: (value: string) => void;
   label: string;
+  balance: string;
   errorMessage?: string;
   isRequired?: boolean;
   displaySlider?: boolean;
@@ -20,12 +21,13 @@ const TokenInput: React.FC<CustomInputProps> = ({
   errorMessage = 'Please enter a number greater than 0',
   isRequired = true,
   displaySlider = false,
+  balance,
   max = 0,
 }) => {
   return (
     <div className="relative my-6 w-full">
       <span className="absolute right-1 text-xs text-gray-500">
-        Balance: {max} {name}
+        Balance: {balance} {name}
       </span>
       <Input
         name={name}
@@ -35,7 +37,7 @@ const TokenInput: React.FC<CustomInputProps> = ({
         labelPlacement="outside"
         isRequired={isRequired}
         errorMessage={
-          Number(value) > max
+          Number(value) > Number(max)
             ? 'Value cannot be higer than your balance'
             : errorMessage
         }
@@ -44,6 +46,9 @@ const TokenInput: React.FC<CustomInputProps> = ({
         min={0}
         max={max}
       />
+      <span className="text-right text-xs text-gray-500">
+        max: {max.toFixed(2)} {name}
+      </span>
       <Button
         size="sm"
         variant="bordered"

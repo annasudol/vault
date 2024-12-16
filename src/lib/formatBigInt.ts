@@ -1,5 +1,5 @@
 import { formatUnits } from 'viem';
 
-export function formatBigInt(decimals: number, value?: bigint): string {
-  return formatUnits(value || 0n, decimals);
+export function formatBigInt(value: bigint, decimals: number): string {
+  return formatUnits(value, decimals);
 }

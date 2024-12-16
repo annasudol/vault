@@ -3,7 +3,6 @@ import { Spinner } from '@nextui-org/react';
 import { useParams } from 'next/navigation';
 import React from 'react';
 
-// import { useAccount } from 'wagmi';
 import { Error } from '@/components/Error';
 import { StepForm } from '@/components/forms/StepForm';
 import { VaultHeader } from '@/components/header/VaultHeader';

@@ -47,11 +47,7 @@ export async function readVaultData(
         },
       ],
     });
-    let depositRatio;
-    const totalUnderlying = reponseContract[4].result;
-    if (totalUnderlying?.length) {
-      depositRatio = Number(totalUnderlying[1] / totalUnderlying[0]);
-    }
+
     if (
       Object.values(reponseContract).some(
         (response) => response.status === 'failure',
@@ -64,15 +60,16 @@ export async function readVaultData(
       readERC20(reponseContract[2].result as Address),
       readERC20(reponseContract[3].result as Address),
     ]);
+
     const name = reponseContract[0].result as string;
-    const totalSupply = reponseContract[1].result;
+    const totalSupply = reponseContract[1].result || 0n;
 
     return {
       status: ResponseStatus.Success,
       data: {
         contractName: name,
         totalSupply,
-        depositRatio,
+        totalUnderlying: reponseContract[4].result as [bigint, bigint],
         tokens: {
           ...(token0.status === ResponseStatus.Success && {
             [token0.data.symbol]: token0.data,

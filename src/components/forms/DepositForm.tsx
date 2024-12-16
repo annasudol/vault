@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { TokenInput } from '@/components/inputs/TokenTinput';
+import { formatBigInt } from '@/lib/formatBigInt';
 import { useStore } from '@/store/store';
-import type { TokenCollection, TokenInfo } from '@/types';
+import { type TokenCollection, type TokenInfo, TokenSymbol } from '@/types';
 
 const DepositForm = () => {
   const [tokensValue, setTokensValue] = useState<TokenCollection>({});
-
+  const [tokenRatio, setTokenRatio] = useState(1);
   const [submitted, setSubmitted] = useState({});
   const { address } = useAccount();
   const { vault, fetchTokenBalance } = useStore();
@@ -22,8 +23,39 @@ const DepositForm = () => {
 
   useEffect(() => {
     if ('data' in vault) {
-      const { tokens } = vault.data;
-      setTokensValue(tokens);
+      const { tokens, totalUnderlying } = vault.data;
+      if (totalUnderlying && tokens) {
+        const balanceToken1 = formatBigInt(
+          totalUnderlying[1],
+          tokens[1]?.decimals || 18,
+        );
+        const balanceToken0 = formatBigInt(
+          totalUnderlying[0],
+          tokens[0]?.decimals || 18,
+        );
+        const ratio = Number(balanceToken1) / Number(balanceToken0);
+        setTokenRatio(ratio);
+
+        const tokensValueupdatedWithMaxValue = Object.keys(tokens).reduce(
+          (acc, token) => {
+            const balance0Token = Number(tokens.rETH?.balanceInt || 0) / ratio;
+            return {
+              ...acc,
+              [token]: {
+                ...tokens[token],
+                depositValue: '0',
+                maxDepositValue:
+                  token === TokenSymbol.WETH
+                    ? balance0Token
+                    : Number(tokens[token]?.balanceInt),
+              },
+            };
+          },
+
+          {},
+        );
+        setTokensValue(tokensValueupdatedWithMaxValue);
+      }
     }
   }, [vault]);
 
@@ -38,13 +70,13 @@ const DepositForm = () => {
       updatedTokensValue[token] = updatedToken as TokenInfo;
 
       const valueAsNumber = parseFloat(value) || 0;
-      const depositradio = vault.data?.depositRatio || 0;
+      const depositradio = tokenRatio;
       const tokenKeys: string[] = Object.keys(updatedTokensValue);
 
       if (tokenKeys[0] === token) {
         const tokenKeyAsset1: string = tokenKeys[1] || '';
         // Update token1 based on token0
-        const updatedAsset1Value = (valueAsNumber * depositradio).toFixed();
+        const updatedAsset1Value = (valueAsNumber * depositradio).toFixed(4);
 
         const newValue = {
           ...tokensValue,
@@ -58,7 +90,7 @@ const DepositForm = () => {
         setTokensValue(newValue as unknown as TokenCollection);
       } else {
         const tokenKeyAsset0: string = tokenKeys[0] || '';
-        const updatedAsset1Value = (valueAsNumber / depositradio).toFixed();
+        const updatedAsset1Value = (valueAsNumber / depositradio).toFixed(6);
         const newValue = {
           ...tokensValue,
           [token]: { ...tokensValue[token], depositValue: value },
@@ -90,23 +122,23 @@ const DepositForm = () => {
       validationBehavior="native"
       onSubmit={onSubmit}
     >
+      {tokenRatio}
       {Object.keys(tokensValue).map((token) => {
         return (
           <TokenInput
             key={token}
             name={token}
             value={tokensValue[token]?.depositValue || '0'}
-            setValue={(value) =>
+            setValue={(value: string) =>
               handleUpdateTokenDepositValue(token as string, value)
             }
-            max={Number(tokensValue[token]?.balanceInt) || 0}
+            max={tokensValue[token]?.maxDepositValue || 0}
+            balance={tokensValue[token]?.balanceInt || '0'}
             label={`${token} Amount`}
-            displaySlider
+            displaySlider={token === TokenSymbol.rETH}
           />
         );
       })}
-      <p>{tokensValue.WETH?.depositValue}WETH</p>
-      <p>{tokensValue.rETH?.depositValue}rETH</p>
 
       <Button type="submit" color="primary">
         Submit

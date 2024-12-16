@@ -20,7 +20,7 @@ export const fetchTokenBalanceFromChain = async (
     args: [walletAddress],
   });
   const balances: TokenBalance = {
-    balanceInt: Number(formatBigInt(decimals, balance)).toFixed(2),
+    balanceInt: Number(formatBigInt(balance, decimals)).toFixed(4),
     balanceBigInt: balance,
   };
 

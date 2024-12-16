@@ -51,6 +51,7 @@ export interface TokenInfo extends TokenBalance {
   name: string;
   decimals: number;
   depositValue?: string;
+  maxDepositValue?: number;
 }
 
 export interface TokenCollection {
@@ -60,8 +61,8 @@ export interface TokenCollection {
 export interface VaultData {
   contractName: string;
   tokens: TokenCollection;
-  totalSupply?: bigint;
-  depositRatio?: number;
+  totalSupply: bigint;
+  totalUnderlying?: [bigint, bigint];
 }
 
 export interface VaultByAddress {
