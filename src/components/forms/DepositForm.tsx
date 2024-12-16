@@ -10,7 +10,7 @@ import { type TokenCollection, type TokenInfo, TokenSymbol } from '@/types';
 const DepositForm = () => {
   const [tokensValue, setTokensValue] = useState<TokenCollection>({});
   const [tokenRatio, setTokenRatio] = useState(1);
-  const [submitted, setSubmitted] = useState({});
+  const [isError, setIsError] = useState(false);
   const { address } = useAccount();
   const { vault, fetchTokenBalance } = useStore();
 
@@ -111,8 +111,8 @@ const DepositForm = () => {
     e.preventDefault();
 
     const data = Object.fromEntries(new FormData(e.currentTarget));
-
-    setSubmitted(data);
+    console.log(isError);
+    console.log(data);
   };
   console.log(tokensValue);
 
@@ -136,6 +136,7 @@ const DepositForm = () => {
             balance={tokensValue[token]?.balanceInt || '0'}
             label={`${token} Amount`}
             displaySlider={token === TokenSymbol.rETH}
+            setError={setIsError}
           />
         );
       })}
@@ -143,11 +144,6 @@ const DepositForm = () => {
       <Button type="submit" color="primary">
         Submit
       </Button>
-      {submitted && (
-        <div className="text-small text-default-500">
-          You submitted: <code>{JSON.stringify(submitted)}</code>
-        </div>
-      )}
     </Form>
   );
 };

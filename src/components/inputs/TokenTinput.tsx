@@ -1,5 +1,5 @@
 import { Button, Input, Slider } from '@nextui-org/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 type CustomInputProps = {
   name: string;
@@ -7,10 +7,10 @@ type CustomInputProps = {
   setValue: (value: string) => void;
   label: string;
   balance: string;
-  errorMessage?: string;
   isRequired?: boolean;
   displaySlider?: boolean;
   max?: number;
+  setError: (value: boolean) => void;
 };
 
 const TokenInput: React.FC<CustomInputProps> = ({
@@ -18,12 +18,30 @@ const TokenInput: React.FC<CustomInputProps> = ({
   value,
   setValue,
   label,
-  errorMessage = 'Please enter a number greater than 0',
   isRequired = true,
   displaySlider = false,
   balance,
   max = 0,
+  setError,
 }) => {
+  const [errorMessages, setErrorMessages] = React.useState<string>();
+
+  useEffect(() => {
+    let erorMessage;
+    if (Number(value) > max) {
+      erorMessage = 'Value cannot be higher than max value';
+    }
+    if (Number(value) <= 0) {
+      erorMessage = 'Value must be greater than 0';
+    }
+    const validValueRegex = /^0$|^[1-9]\d*(\.\d+)?$|^0\.\d+$/;
+    if (!validValueRegex.test(value)) {
+      erorMessage = 'Value must be avalid number';
+    }
+    setError(erorMessage !== undefined);
+
+    setErrorMessages(erorMessage);
+  }, [value]);
   return (
     <div className="relative my-6 w-full">
       <span className="absolute right-1 text-xs text-gray-500">
@@ -36,15 +54,10 @@ const TokenInput: React.FC<CustomInputProps> = ({
         label={label}
         labelPlacement="outside"
         isRequired={isRequired}
-        errorMessage={
-          Number(value) > Number(max)
-            ? 'Value cannot be higer than your balance'
-            : errorMessage
-        }
-        type="number"
+        errorMessage={errorMessages}
+        isInvalid={Number(value) > max || Number(value) <= 0 || false}
+        type="text"
         className=""
-        min={0}
-        max={max}
       />
       <span className="text-right text-xs text-gray-500">
         max: {max.toFixed(2)} {name}
