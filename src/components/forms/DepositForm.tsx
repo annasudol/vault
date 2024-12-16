@@ -58,7 +58,7 @@ const DepositForm = () => {
       setWethAmount({ ...wethAmount, balance: wethBalance });
       const rethBalance = formatBigInt(
         rethDecimals,
-        tokenBalance.data?.RETH as bigint,
+        tokenBalance.data?.rETH as bigint,
       );
 
       setRethAmount({ ...rethAmount, balance: rethBalance });
