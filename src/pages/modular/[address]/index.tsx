@@ -12,14 +12,10 @@ import { useStore } from '@/store/store';
 
 const Index = () => {
   const params = useParams<{ address: string }>();
-  const { vault, fetchVaultData, resetResponse } = useStore();
-  // const { address } = useAccount();
-  // console.log(vault);
+  const { vault, fetchVaultData } = useStore();
+
   React.useEffect(() => {
     fetchVaultData(params?.address);
-    return () => {
-      resetResponse();
-    };
   }, [params?.address]);
 
   if (vault.status === 'pending') {
@@ -38,7 +34,6 @@ const Index = () => {
       </ValultLayout>
     );
   }
-  console.log(vault);
   return (
     <ValultLayout>
       <VaultHeader title={vault.data.contractName} tokens={vault.data.tokens} />

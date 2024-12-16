@@ -7,17 +7,17 @@ import type { Response } from '@/types';
 import { ResponseStatus } from '@/types';
 
 export async function getTokenBalance(
-  wallet_address: Address,
-  token_address: Address,
+  walletAddress: Address,
+  tokenAddress: Address,
 ): Promise<Response<BigInt>> {
   const erc20Config = { abi: erc20Abi } as const;
 
   try {
     const balance = await readContract(wagmiConfig, {
       ...erc20Config,
-      address: token_address,
+      address: tokenAddress,
       functionName: 'balanceOf',
-      args: [wallet_address],
+      args: [walletAddress],
     });
 
     return {

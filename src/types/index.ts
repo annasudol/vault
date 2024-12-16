@@ -64,15 +64,13 @@ export interface VaultByAddress {
 
 export type Address = `0x${string}`;
 
-export interface DepositState {
-  isCompleted: boolean;
-  values: {
-    [key in TokenSymbol]: number;
-  };
-}
+// export interface DepositState {
+//   isCompleted: boolean;
+//   values: {
+//     Record<TokenSymbol, number>;
+//   };
+// }
 
 export interface TokenBalance {
-  values: {
-    [key in TokenSymbol]: number;
-  };
+  [key: string]: BigInt | undefined;
 }

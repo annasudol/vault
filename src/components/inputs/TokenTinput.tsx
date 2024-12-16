@@ -1,4 +1,4 @@
-import { Input, Slider } from '@nextui-org/react';
+import { Button, Input, Slider } from '@nextui-org/react';
 import React from 'react';
 
 type CustomInputProps = {
@@ -20,10 +20,14 @@ const TokenInput: React.FC<CustomInputProps> = ({
   errorMessage = 'Please enter a number greater than 0',
   isRequired = true,
   displaySlider = false,
-  max,
+  max = 0,
 }) => {
   return (
-    <div className="w-full">
+    <div className="relative my-6 w-full">
+      <span className="absolute right-1 text-xs text-gray-500">
+        Balance: {max} {name}
+      </span>
+
       <Input
         name={name}
         value={value}
@@ -31,29 +35,47 @@ const TokenInput: React.FC<CustomInputProps> = ({
         label={label}
         labelPlacement="outside"
         isRequired={isRequired}
-        errorMessage={errorMessage}
+        errorMessage={
+          Number(value) > max
+            ? 'Value cannot be higer than your balance'
+            : errorMessage
+        }
         type="number"
         className=""
         min={0}
         max={max}
       />
-      {displaySlider && (
+      <Button
+        size="sm"
+        variant="bordered"
+        color="primary"
+        className="disabled:hover:none absolute right-1 top-7 disabled:cursor-not-allowed"
+        disabled={max === 0 || value === max.toString()}
+        onClick={() => setValue(max.toString())}
+      >
+        max
+      </Button>
+
+      {displaySlider && max > 0 && (
         <Slider
-          className="max-w-md"
+          className="mt-6 max-w-md"
           color="foreground"
           defaultValue={Number(value)}
-          label="Select a value"
+          maxValue={max}
+          value={Number(value)}
+          onChange={(val) => setValue(val.toString())}
+          label={`Select a ${name} value`}
           marks={[
             {
-              value: 20,
+              value: max / 5,
               label: '20%',
             },
             {
-              value: 50,
+              value: max / 2,
               label: '50%',
             },
             {
-              value: 80,
+              value: max / 1.25,
               label: '80%',
             },
           ]}

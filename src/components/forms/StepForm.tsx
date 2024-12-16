@@ -3,6 +3,8 @@ import React from 'react';
 import Steps from '@/components/Steps';
 import { useStore } from '@/store/store';
 
+import { DepositForm } from './DepositForm';
+
 const StepForm = () => {
   const { vault } = useStore();
   // eslint-disable-next-line no-console
@@ -25,7 +27,7 @@ const StepForm = () => {
           },
         ]}
       />
-      {/* {currentStep === 0 && <DepositForm />} */}
+      {currentStep === 0 && <DepositForm />}
     </div>
   );
 };
