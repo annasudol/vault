@@ -1,14 +1,14 @@
 import { readContracts } from '@wagmi/core';
 import { erc20Abi } from 'viem';
 
-import type { Address, Response, TokenInfo } from '@/types';
+import type { Address, AsyncResponse, TokenInfo } from '@/types';
 import { ResponseStatus } from '@/types';
 
 import { wagmiConfig } from '../web3';
 
 export async function readERC20(
   tokenAddress: Address,
-): Promise<Response<TokenInfo>> {
+): Promise<AsyncResponse<TokenInfo>> {
   const erc20Config = { abi: erc20Abi } as const;
 
   try {

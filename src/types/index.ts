@@ -39,7 +39,10 @@ interface PendingResponse {
   status: ResponseStatus.Pending;
 }
 
-export type Response<T> = SuccessResponse<T> | ErrorResponse | PendingResponse;
+export type AsyncResponse<T> =
+  | SuccessResponse<T>
+  | ErrorResponse
+  | PendingResponse;
 
 export interface TokenBalance {
   balanceInt?: string;
@@ -69,7 +72,7 @@ export interface TokenAllowanceBySymbol {
 }
 
 export interface TokenAllowanceReponse {
-  [x: string]: Response<bigint>;
+  [x: string]: AsyncResponse<bigint>;
 }
 
 export interface VaultData {

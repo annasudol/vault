@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { TokenInput } from '@/components/inputs/TokenTinput';
+import { MyAlert } from '@/components/MyAlert';
 import { formatBigInt } from '@/lib/contractHelpers/formatBigInt';
 import { useStore } from '@/store/store';
 import {
@@ -18,18 +19,27 @@ const DepositForm = () => {
   const [isError, setIsError] = useState(false);
   const { address } = useAccount();
   const { vault, fetchTokenBalance, setDepositValue, changeStep } = useStore();
+  const [balanceIsNotSuficient, setBalanceIsNotSuficient] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (!address) {
       return;
     }
     fetchTokenBalance(address);
-  }, []);
+  }, [address]);
 
   useEffect(() => {
     if ('data' in vault) {
       const { tokens, totalUnderlying } = vault.data;
+      const balances = Object.values(tokens);
+      if (balances.some((balance) => !balance.balanceInt)) {
+        setBalanceIsNotSuficient(true);
+        return;
+      }
       if (totalUnderlying && tokens) {
+        setBalanceIsNotSuficient(false);
+
         const balanceToken1 = formatBigInt(
           totalUnderlying[1],
           tokens[1]?.decimals || 18,
@@ -50,7 +60,7 @@ const DepositForm = () => {
                 ...tokens[token],
                 depositValue: '0',
                 maxDepositValue:
-                  token === TokenSymbol.WETH
+                  token === 'WETH'
                     ? balance0Token
                     : Number(tokens[token]?.balanceInt),
               },
@@ -152,6 +162,12 @@ const DepositForm = () => {
           />
         );
       })}
+      {balanceIsNotSuficient && (
+        <MyAlert
+          message="Balance of some token is not suficient"
+          color="warning"
+        />
+      )}
 
       <Button type="submit" color="primary">
         Submit

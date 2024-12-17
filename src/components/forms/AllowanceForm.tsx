@@ -1,7 +1,8 @@
-import { Alert, Button } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 
+import { MyAlert } from '@/components/MyAlert';
 import { getAllAllowance } from '@/lib/contractHelpers/getAllowance';
 import { useStore } from '@/store/store';
 import type { TokenAllowanceBySymbol } from '@/types';
@@ -71,9 +72,9 @@ const AllowanceForm = () => {
               <Button color="primary">set {symbol} allowance</Button>
             ) : (
               <div key="success" className="my-3 flex w-96 items-center">
-                <Alert
+                <MyAlert
                   color="success"
-                  title={`Allowance for ${symbol} is already set`}
+                  message={`Allowance for ${symbol} is already set`}
                 />
               </div>
             )}

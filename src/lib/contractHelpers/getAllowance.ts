@@ -3,7 +3,7 @@ import { erc20Abi } from 'viem';
 
 import { CONTRACT_ADDRESS } from '@/constants/contract';
 import { formatBigInt } from '@/lib/contractHelpers/formatBigInt';
-import type { Address, Response, TokenCollection } from '@/types';
+import type { Address, AsyncResponse, TokenCollection } from '@/types';
 import { ResponseStatus } from '@/types';
 
 import { wagmiConfig } from '../web3';
@@ -11,7 +11,7 @@ import { wagmiConfig } from '../web3';
 export async function readAllowance(
   user: Address,
   token: Address,
-): Promise<Response<bigint>> {
+): Promise<AsyncResponse<bigint>> {
   const erc20Config = { abi: erc20Abi } as const;
   try {
     const balance = await readContract(wagmiConfig, {

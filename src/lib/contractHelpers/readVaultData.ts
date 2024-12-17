@@ -5,12 +5,12 @@ import { vaultABI } from '@/abi/valutABI';
 import { CONTRACT_ADDRESS } from '@/constants/contract';
 import { readERC20 } from '@/lib/contractHelpers/readERC20';
 import { wagmiConfig } from '@/lib/web3';
-import type { Address, Response, VaultData } from '@/types';
+import type { Address, AsyncResponse, VaultData } from '@/types';
 import { ResponseStatus } from '@/types';
 
 export async function readVaultData(
   vaultAddress: Address,
-): Promise<Response<VaultData>> {
+): Promise<AsyncResponse<VaultData>> {
   const vaultContract = {
     abi: vaultABI,
     address: vaultAddress,
