@@ -1,5 +1,6 @@
 import { Button } from '@nextui-org/react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useAccount } from 'wagmi';
 
 import { MyAlert } from '@/components/MyAlert';
@@ -26,6 +27,7 @@ const AllowanceForm = () => {
         allowanceResponse &&
         allowanceResponse.status === ResponseStatus.Error
       ) {
+        toast.error('Failed to fetch allowance');
         return;
       }
       if (allowanceResponse?.result) setAllowance(allowanceResponse?.result);
