@@ -131,11 +131,10 @@ const DepositForm = () => {
 
   return (
     <Form
-      className="w-full max-w-xs"
+      className="w-full max-w-sm"
       validationBehavior="native"
       onSubmit={onSubmit}
     >
-      {tokenRatio}
       {Object.keys(tokensValue).map((token) => {
         return (
           <TokenInput

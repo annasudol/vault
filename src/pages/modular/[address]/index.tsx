@@ -36,7 +36,9 @@ const Index = () => {
   return (
     <ValultLayout>
       <VaultHeader title={vault.data.contractName} tokens={vault.data.tokens} />
-      <StepForm />
+      <div className="mx-auto max-w-xl rounded-lg bg-white p-4">
+        <StepForm />
+      </div>
     </ValultLayout>
   );
 };

@@ -7,7 +7,7 @@ interface VaultHeaderProps {
 }
 const VaultHeader = ({ title, tokens }: VaultHeaderProps) => (
   <header className="mx-auto max-w-screen-lg p-4">
-    <div className="mb-12 flex max-w-screen-lg justify-start">
+    <div className="mb-12 flex max-w-screen-lg flex-col items-start justify-start sm:flex-row sm:items-center">
       <div className="flex justify-start">
         <TokenIcon token={Object.keys(tokens)[0]} />
         <TokenIcon
