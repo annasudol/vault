@@ -1,6 +1,7 @@
 import { readContract } from '@wagmi/core';
 import { erc20Abi } from 'viem';
 
+import { formatBigInt } from '@/lib/formatBigInt';
 import { CONTRACT } from '@/lib/static/contractAddress';
 import type { Address, Response, TokenCollection } from '@/types';
 import { ResponseStatus } from '@/types';
@@ -32,33 +33,44 @@ export async function readAllowance(
 export async function getAllAllowance(
   address: Address,
   tokens: TokenCollection,
-) {
+): Promise<{
+  status: ResponseStatus;
+  result:
+    | {
+        [x: string]: {
+          allowanceInt: string;
+          allowanceBigInt: bigint;
+        };
+      }
+    | undefined;
+}> {
   const allowancePromises = Object.values(tokens).map(async (token) => {
     const allowance = await readAllowance(address, token.address);
-    return {
-      [token.symbol]: allowance,
-    };
+    if (allowance.status === ResponseStatus.Success && allowance.data) {
+      return {
+        status: ResponseStatus.Success,
+        result: {
+          [token.symbol]: {
+            allowanceInt: formatBigInt(allowance.data, token.decimals),
+            allowanceBigInt: allowance.data,
+          },
+        },
+      };
+    }
+    return { status: ResponseStatus.Error, result: undefined };
   });
 
   const allowanceResponse = await Promise.all(allowancePromises);
-  const allowanceByTokenSymbol = allowanceResponse.reduce<{
-    [key: string]: bigint | ResponseStatus;
-  }>((acc, res) => {
-    const response = Object.values(res)[0];
 
-    const status = response?.status;
-    const key = Object.keys(res)[0];
-    if (status === ResponseStatus.Error) {
-      return { status: ResponseStatus.Error };
-    }
-    if (status === ResponseStatus.Success) {
-      const data = response?.data;
-      if (data) {
-        // const allowanceInt = formatBigInt(data, response?.decimals);
-        return { ...acc, [key as string]: data };
+  const aggregatedResult = allowanceResponse.reduce(
+    (acc, curr) => {
+      if (curr.status === ResponseStatus.Success && curr.result) {
+        acc.result = { ...acc.result, ...curr.result };
       }
-    }
-    return acc;
-  }, {});
-  return allowanceByTokenSymbol;
+      return acc;
+    },
+    { status: ResponseStatus.Success, result: undefined },
+  );
+
+  return aggregatedResult;
 }

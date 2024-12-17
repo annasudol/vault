@@ -45,6 +45,7 @@ export interface TokenBalance {
   balanceInt?: string;
   balanceBigInt?: bigint;
 }
+
 export interface TokenInfo extends TokenBalance {
   address: Address;
   symbol: string;
@@ -64,7 +65,7 @@ export interface TokenAllowance {
 }
 
 export interface TokenAllowanceBySymbol {
-  [x: string]: Response<TokenAllowance>;
+  [x: string]: TokenAllowance;
 }
 
 export interface TokenAllowanceReponse {
