@@ -15,7 +15,7 @@ const StepForm = () => {
         return 1;
       case StepType.Allowance:
         return 2;
-      case StepType.Publish:
+      case StepType.Liquidity:
         return 3;
       default:
         return 1;
@@ -36,8 +36,8 @@ const StepForm = () => {
             type: StepType.Allowance,
           },
           {
-            title: 'Publish',
-            type: StepType.Publish,
+            title: 'Liquidity',
+            type: StepType.Liquidity,
           },
         ]}
       />

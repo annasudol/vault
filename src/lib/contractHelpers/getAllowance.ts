@@ -2,11 +2,10 @@ import { readContract } from '@wagmi/core';
 import { erc20Abi } from 'viem';
 
 import { CONTRACT_ADDRESS } from '@/constants/contract';
-import { formatBigInt } from '@/lib/contractHelpers/formatBigInt';
+import { formatBigInt } from '@/lib/formatBigInt';
+import { WALLET_CONNECT_CONFIG } from '@/lib/web3';
 import type { Address, AsyncResponse, TokenCollection } from '@/types';
 import { ResponseStatus } from '@/types';
-
-import { wagmiConfig } from '../web3';
 
 export async function readAllowance(
   user: Address,
@@ -14,7 +13,7 @@ export async function readAllowance(
 ): Promise<AsyncResponse<bigint>> {
   const erc20Config = { abi: erc20Abi } as const;
   try {
-    const balance = await readContract(wagmiConfig, {
+    const balance = await readContract(WALLET_CONNECT_CONFIG, {
       ...erc20Config,
       address: token,
       functionName: 'allowance',

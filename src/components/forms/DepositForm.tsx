@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi';
 
 import { TokenInput } from '@/components/inputs/TokenTinput';
 import { MyAlert } from '@/components/MyAlert';
-import { formatBigInt } from '@/lib/contractHelpers/formatBigInt';
+import { formatBigInt } from '@/lib/formatBigInt';
 import { useStore } from '@/store/store';
 import {
   StepType,
@@ -30,7 +30,7 @@ const DepositForm = () => {
   }, [address]);
 
   useEffect(() => {
-    if ('data' in vault) {
+    if (vault.status === 'success' && 'data' in vault) {
       const { tokens, totalUnderlying } = vault.data;
       const balances = Object.values(tokens);
       if (balances.some((balance) => !balance.balanceInt)) {
@@ -141,7 +141,7 @@ const DepositForm = () => {
 
   return (
     <Form
-      className="w-full max-w-sm"
+      className="mb-11 min-h-96 w-full max-w-sm"
       validationBehavior="native"
       onSubmit={onSubmit}
     >

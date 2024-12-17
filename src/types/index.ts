@@ -91,7 +91,7 @@ export type Address = `0x${string}`;
 export enum StepType {
   Deposit = 'Deposit',
   Allowance = 'Allowance',
-  Publish = 'Publish',
+  Liquidity = 'Liquidity',
 }
 
 export interface DepositSubmitData {

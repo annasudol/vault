@@ -1,4 +1,3 @@
-import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { http } from '@wagmi/core';
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config';
 import { arbitrum } from 'viem/chains';
@@ -20,21 +19,13 @@ export const WALLET_CONNECT_CONFIG = defaultWagmiConfig({
     icons: [],
   },
   auth: {
-    socials: undefined,
     showWallets: true,
     walletFeatures: true,
   },
   storage: createStorage({
     storage: cookieStorage,
   }),
-});
-
-export const wagmiConfig = getDefaultConfig({
-  appName: 'RainbowKit demo',
-  projectId: 'YOUR_PROJECT_ID',
-  chains: [arbitrum],
   transports: {
     [arbitrum.id]: http(process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL),
   },
-  ssr: true,
 });

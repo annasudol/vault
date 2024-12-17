@@ -47,7 +47,7 @@ function TokenCard({ vaultAddress, tokens, chain, stats }: StaticData) {
         <Button
           color="primary"
           className="w-full text-white"
-          onClick={() => router.push(`/modular/${vaultAddress}`)}
+          onPress={() => router.push(`/modular/${vaultAddress}`)}
         >
           Go to Valult
           <AiFillCaretRight />

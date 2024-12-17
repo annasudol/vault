@@ -4,7 +4,7 @@ import { helperABI } from '@/abi/helperABI';
 import { vaultABI } from '@/abi/valutABI';
 import { CONTRACT_ADDRESS } from '@/constants/contract';
 import { readERC20 } from '@/lib/contractHelpers/readERC20';
-import { wagmiConfig } from '@/lib/web3';
+import { WALLET_CONNECT_CONFIG } from '@/lib/web3';
 import type { Address, AsyncResponse, VaultData } from '@/types';
 import { ResponseStatus } from '@/types';
 
@@ -22,7 +22,7 @@ export async function readVaultData(
   } as const;
 
   try {
-    const reponseContract = await readContracts(wagmiConfig, {
+    const reponseContract = await readContracts(WALLET_CONNECT_CONFIG, {
       contracts: [
         {
           ...vaultContract,
@@ -53,6 +53,8 @@ export async function readVaultData(
         (response) => response.status === 'failure',
       )
     ) {
+      console.log('Failed to fetch data');
+
       return { status: ResponseStatus.Error, message: 'Failed to fetch data' };
     }
 

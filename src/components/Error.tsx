@@ -16,7 +16,7 @@ const Error = ({ message, desription }: ErrorProps) => {
       <Button
         color="primary"
         className="w-full max-w-48 text-white"
-        onClick={() => router.push('/')}
+        onPress={() => router.push('/')}
       >
         <MdOutlineKeyboardBackspace />
         Go back

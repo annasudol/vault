@@ -5,6 +5,8 @@ import { useAccount } from 'wagmi';
 
 import { MyAlert } from '@/components/MyAlert';
 import { getAllAllowance } from '@/lib/contractHelpers/getAllowance';
+import { approveToken } from '@/lib/contractHelpers/increaseAllowance';
+import { parseToBigInt } from '@/lib/formatBigInt';
 import { useStore } from '@/store/store';
 import type { TokenAllowanceBySymbol } from '@/types';
 import { ResponseStatus, StepType } from '@/types';
@@ -36,6 +38,31 @@ const AllowanceForm = () => {
     fetchData();
   }, [fetchAllAllowance, address]);
 
+  const handleSetAllowance = async (symbol: string) => {
+    if (vault.status === 'success' && 'data' in vault && address) {
+      const contractAddress = vault.data.tokens[symbol]?.address;
+      const amountToAllow = vault.data.tokens[symbol]?.decimals;
+      const decimals = vault.data.tokens[symbol]?.balanceInt;
+      if (contractAddress && amountToAllow && decimals) {
+        const amountToAllowBN = parseToBigInt(
+          amountToAllow.toString(),
+          Number(decimals),
+        );
+        try {
+          if (contractAddress) {
+            await approveToken(contractAddress, amountToAllowBN);
+          } else {
+            console.error('Contract address is undefined');
+          }
+        } catch (e) {
+          console.log(e, 'errpor');
+        }
+      }
+    } else {
+      console.log('error');
+    }
+  };
+
   const buttonNext = useMemo(() => {
     if (allowance && depositValue) {
       const allowanceNeedsIncreased = Object.keys(allowance).some(
@@ -48,7 +75,7 @@ const AllowanceForm = () => {
         !allowanceNeedsIncreased && (
           <Button
             color="primary"
-            onClick={() => changeStep(StepType.Publish)}
+            onPress={() => changeStep(StepType.Liquidity)}
             className="mt-4 w-48"
           >
             Next
@@ -71,7 +98,12 @@ const AllowanceForm = () => {
             <p>Allowance: {Number(token.allowanceInt).toFixed(4)}</p>
             <p>Deposit Value: {Number(depositValue[symbol]).toFixed(4)}</p>
             {Number(token.allowanceInt) < Number(depositValue[symbol]) ? (
-              <Button color="primary">set {symbol} allowance</Button>
+              <Button
+                color="primary"
+                onPress={() => handleSetAllowance(symbol)}
+              >
+                set {symbol} allowance
+              </Button>
             ) : (
               <div key="success" className="my-3 flex w-96 items-center">
                 <MyAlert

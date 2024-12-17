@@ -22,7 +22,8 @@ const Index = () => {
       if (!isAddress(vaultAddress)) {
         setVaultAddressIsInvalid(true);
       } else {
-        fetchVaultData(vaultAddress);
+        const res = fetchVaultData(vaultAddress);
+        console.log(res);
       }
     }
   }, [params?.address]);

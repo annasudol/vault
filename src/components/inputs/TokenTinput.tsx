@@ -68,7 +68,7 @@ const TokenInput: React.FC<CustomInputProps> = ({
         color="primary"
         className="disabled:hover:none absolute right-1 top-7 disabled:cursor-not-allowed"
         disabled={max === 0 || value === max.toString()}
-        onClick={() => setValue(max.toString())}
+        onPress={() => setValue(max.toString())}
       >
         max
       </Button>
