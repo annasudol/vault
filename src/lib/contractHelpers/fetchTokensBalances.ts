@@ -1,10 +1,16 @@
 import { readContract } from '@wagmi/core';
 
 import { erc20Abi } from '@/abi/erc20ABI';
+import { formatBigInt } from '@/lib/formatBigInt';
 import { WALLET_CONNECT_CONFIG } from '@/lib/web3';
-import type { Address, TokenBalance, TokenInfo } from '@/types';
-
-import { formatBigInt } from '../formatBigInt';
+import type {
+  Address,
+  AsyncResponse,
+  TokenBalance,
+  TokenInfo,
+  TokensAllBalance,
+} from '@/types';
+import { ResponseStatus } from '@/types';
 
 const fetchTokenBalanceFromChain = async (
   tokenAddress: Address,
@@ -19,7 +25,7 @@ const fetchTokenBalanceFromChain = async (
     functionName: 'balanceOf',
     args: [walletAddress],
   });
-  const balances: TokenBalance = {
+  const balances = {
     balanceInt: Number(formatBigInt(balance, decimals)).toFixed(4),
     balanceBigInt: balance,
   };
@@ -30,39 +36,43 @@ const fetchTokenBalanceFromChain = async (
 export const fetchTokensBalances = async (
   tokens: Record<string, TokenInfo>,
   walletAddress: Address,
-) => {
+): Promise<AsyncResponse<TokensAllBalance>> => {
   const tokenEntries = Object.entries(tokens);
-
   try {
     const balancePromises = tokenEntries.map(([key, token]) =>
       fetchTokenBalanceFromChain(token.address, token.decimals, walletAddress)
         .then(({ balanceInt, balanceBigInt }) => ({
-          key,
-          balanceInt,
-          balanceBigInt,
-        }))
-        .catch((error) => ({ key, balance: 0n, error })),
-    );
-
-    const balances = await Promise.all(balancePromises);
-    const updatedTokens = { ...tokens };
-    balances.forEach((balance) => {
-      if ('error' in balance) {
-        throw new Error(`Failed to fetch balance for token ${balance.key}`);
-      } else {
-        const { key, balanceBigInt, balanceInt } = balance;
-        if (updatedTokens[key]) {
-          updatedTokens[key] = {
-            ...updatedTokens[key],
+          [key]: {
             balanceInt,
             balanceBigInt,
-          };
-        }
-      }
-    });
+          },
+        }))
+        .catch((error) => ({ error })),
+    );
 
-    return updatedTokens;
+    const balancesArray = await Promise.all(balancePromises);
+    const balances: Record<string, TokenBalance> = {};
+
+    for (const balance of balancesArray) {
+      if ('error' in balance) {
+        return {
+          status: ResponseStatus.Error,
+          message: 'Error when fetching balances',
+        };
+      }
+      Object.assign(balances, balance);
+    }
+
+    return {
+      status: ResponseStatus.Success,
+      data: balances,
+    };
   } catch (error) {
-    throw new Error('Failed to fetch token balances:');
+    const errorMessage =
+      error instanceof Error ? error.message : 'Error when fetching balances';
+    return {
+      status: ResponseStatus.Error,
+      message: errorMessage,
+    };
   }
 };

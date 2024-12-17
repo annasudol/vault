@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { Spinner } from '@nextui-org/react';
 import { useParams } from 'next/navigation';
 import React from 'react';
 import { isAddress } from 'viem';
@@ -8,6 +7,7 @@ import { Error } from '@/components/Error';
 import { StepForm } from '@/components/forms/StepForm';
 import { VaultHeader } from '@/components/header/VaultHeader';
 import { ValultLayout } from '@/components/layout/ValultLayout';
+import { Loading } from '@/components/Loading';
 import { useStore } from '@/store/store';
 
 const Index = () => {
@@ -22,8 +22,7 @@ const Index = () => {
       if (!isAddress(vaultAddress)) {
         setVaultAddressIsInvalid(true);
       } else {
-        const res = fetchVaultData(vaultAddress);
-        console.log(res);
+        fetchVaultData(vaultAddress);
       }
     }
   }, [params?.address]);
@@ -31,9 +30,7 @@ const Index = () => {
   if (vault.status === 'pending') {
     return (
       <ValultLayout>
-        <div className="flex min-h-60 w-full flex-col items-center justify-center">
-          <Spinner size="lg" />
-        </div>
+        <Loading />
       </ValultLayout>
     );
   }

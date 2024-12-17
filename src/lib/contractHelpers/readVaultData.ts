@@ -53,9 +53,10 @@ export async function readVaultData(
         (response) => response.status === 'failure',
       )
     ) {
-      console.log('Failed to fetch data');
-
-      return { status: ResponseStatus.Error, message: 'Failed to fetch data' };
+      return {
+        status: ResponseStatus.Error,
+        message: 'Failed to read contract',
+      };
     }
 
     const [token0, token1] = await Promise.all([

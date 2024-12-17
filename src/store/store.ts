@@ -3,12 +3,19 @@ import { create } from 'zustand';
 
 import { fetchTokensBalances } from '@/lib/contractHelpers/fetchTokensBalances';
 import { readVaultData } from '@/lib/contractHelpers/readVaultData';
-import type { AsyncResponse, DepositSubmitData, VaultData } from '@/types';
+import type {
+  AsyncResponse,
+  DepositSubmitData,
+  TokensAllBalance,
+  VaultData,
+} from '@/types';
 import { ResponseStatus, StepType } from '@/types';
 
 interface Store {
   vault: AsyncResponse<VaultData>;
   fetchVaultData: (vaultAddress: Address) => Promise<void>;
+
+  tokenBalance: AsyncResponse<TokensAllBalance>;
   fetchTokenBalance: (waletAddress: Address) => Promise<void>;
 
   step: StepType;
@@ -39,6 +46,8 @@ export const useStore = create<Store>((set, get) => ({
     }
   },
 
+  tokenBalance: { status: ResponseStatus.Pending },
+
   fetchTokenBalance: async (walletAddress) => {
     const { vault } = get();
     if (vault.status === ResponseStatus.Success) {
@@ -50,17 +59,19 @@ export const useStore = create<Store>((set, get) => ({
           walletAddress,
         );
         set({
-          vault: {
-            status: ResponseStatus.Success,
-            data: {
-              ...vault.data,
-              tokens: updatedValultWithBalance,
-            },
-          },
+          tokenBalance: updatedValultWithBalance,
         });
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : 'Failed to get token balance';
+        set({
+          tokenBalance: {
+            status: ResponseStatus.Error,
+            message: errorMessage,
+          },
+        });
       }
     }
   },

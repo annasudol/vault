@@ -1,121 +1,139 @@
 import { Button, Form } from '@nextui-org/react';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { TokenInput } from '@/components/inputs/TokenTinput';
+import { Loading } from '@/components/Loading';
 import { MyAlert } from '@/components/MyAlert';
 import { formatBigInt } from '@/lib/formatBigInt';
 import { useStore } from '@/store/store';
-import {
-  StepType,
-  type TokenCollection,
-  type TokenInfo,
-  TokenSymbol,
-} from '@/types';
+import type { TokensAllBalance } from '@/types';
+import { StepType, TokenSymbol } from '@/types';
+
+export interface TokenDeposit {
+  depositValue?: string;
+  maxDepositValue?: number;
+}
+
+export interface TokenDepositBySymbol {
+  [key: string]: TokenDeposit;
+}
 
 const DepositForm = () => {
-  const [tokensValue, setTokensValue] = useState<TokenCollection>({});
-  const [tokenRatio, setTokenRatio] = useState(1);
-  const [isError, setIsError] = useState(false);
+  const {
+    vault,
+    fetchTokenBalance,
+    tokenBalance,
+    setDepositValue,
+    changeStep,
+  } = useStore();
   const { address } = useAccount();
-  const { vault, fetchTokenBalance, setDepositValue, changeStep } = useStore();
+
+  const [tokenRatio, setTokenRatio] = useState<number>();
+  const [tokensAllBalance, setTokensAllBalance] = useState<TokensAllBalance>();
+  const [tokenDeposit, setTokenDeposit] = useState<TokenDepositBySymbol>();
+
+  const [isError, setIsError] = useState(false);
+
   const [balanceIsNotSuficient, setBalanceIsNotSuficient] =
     useState<boolean>(false);
 
-  useEffect(() => {
+  const handleFetchTokenBalance = useCallback(() => {
     if (!address) {
       return;
     }
     fetchTokenBalance(address);
+  }, [address, fetchTokenBalance]);
+
+  useEffect(() => {
+    handleFetchTokenBalance();
   }, [address]);
 
   useEffect(() => {
-    if (vault.status === 'success' && 'data' in vault) {
-      const { tokens, totalUnderlying } = vault.data;
-      const balances = Object.values(tokens);
+    if (
+      vault.status === 'success' &&
+      'data' in vault &&
+      tokenBalance.status === 'success' &&
+      'data' in tokenBalance
+    ) {
+      const tokenBalanceData = tokenBalance.data;
+      setTokensAllBalance(tokenBalanceData);
+
+      const balances = Object.values(tokenBalanceData);
       if (balances.some((balance) => !balance.balanceInt)) {
         setBalanceIsNotSuficient(true);
-        return;
-      }
-      if (totalUnderlying && tokens) {
+      } else {
+        const { tokens, totalUnderlying } = vault.data;
         setBalanceIsNotSuficient(false);
 
-        const balanceToken1 = formatBigInt(
-          totalUnderlying[1],
-          tokens[1]?.decimals || 18,
-        );
-        const balanceToken0 = formatBigInt(
-          totalUnderlying[0],
-          tokens[0]?.decimals || 18,
-        );
-        const ratio = Number(balanceToken1) / Number(balanceToken0);
-        setTokenRatio(ratio);
+        if (totalUnderlying) {
+          const balanceToken1 = formatBigInt(
+            totalUnderlying[1],
+            tokens[1]?.decimals || 18,
+          );
+          const balanceToken0 = formatBigInt(
+            totalUnderlying[0],
+            tokens[0]?.decimals || 18,
+          );
+          const ratio = Number(balanceToken1) / Number(balanceToken0);
+          setTokenRatio(ratio);
 
-        const tokensValueupdatedWithMaxValue = Object.keys(tokens).reduce(
-          (acc, token) => {
-            const balance0Token = Number(tokens.rETH?.balanceInt || 0) / ratio;
-            return {
-              ...acc,
-              [token]: {
-                ...tokens[token],
-                depositValue: '0',
-                maxDepositValue:
-                  token === 'WETH'
-                    ? balance0Token
-                    : Number(tokens[token]?.balanceInt),
-              },
-            };
-          },
-
-          {},
-        );
-        setTokensValue(tokensValueupdatedWithMaxValue);
+          const depositValue = Object.keys(tokenBalanceData).reduce(
+            (acc, token) => {
+              const balance0Token =
+                Number(tokenBalanceData[token]?.balanceInt || 0) / ratio;
+              return {
+                ...acc,
+                [token]: {
+                  depositValue: '0',
+                  maxDepositValue:
+                    token === TokenSymbol.WETH
+                      ? balance0Token
+                      : Number(tokenBalanceData.rETH?.balanceInt),
+                },
+              };
+            },
+            {},
+          );
+          setTokenDeposit(depositValue);
+        }
       }
     }
-  }, [vault]);
+  }, [vault, tokenBalance]);
 
-  const handleUpdateTokenDepositValue = (
-    token: string,
-    value: string,
-  ): void => {
-    if ('data' in vault) {
-      const updatedTokensValue = { ...tokensValue };
-      const updatedToken = { ...tokensValue[token] };
-      updatedToken.depositValue = value;
-      updatedTokensValue[token] = updatedToken as TokenInfo;
+  const handleUpdateTokenDepositValue = (token: string, value: string) => {
+    if (!tokenDeposit || !tokenDeposit[token] || !tokenRatio) {
+      return;
+    }
 
-      const valueAsNumber = parseFloat(value) || 0;
-      const depositradio = tokenRatio;
-      const tokenKeys: string[] = Object.keys(updatedTokensValue);
-
-      if (tokenKeys[0] === token) {
-        const tokenKeyAsset1: string = tokenKeys[1] || '';
-        // Update token1 based on token0
-        const updatedAsset1Value = (valueAsNumber * depositradio).toFixed(4);
-
-        const newValue = {
-          ...tokensValue,
-          [token]: { ...tokensValue[token], depositValue: value },
-          [tokenKeyAsset1]: {
-            ...tokensValue[tokenKeyAsset1],
-            depositValue: updatedAsset1Value,
-          },
-        };
-
-        setTokensValue(newValue as unknown as TokenCollection);
-      } else {
-        const tokenKeyAsset0: string = tokenKeys[0] || '';
-        const updatedAsset1Value = (valueAsNumber / depositradio).toFixed(6);
-        const newValue = {
-          ...tokensValue,
-          [token]: { ...tokensValue[token], depositValue: value },
-          [tokenKeyAsset0]: {
-            ...tokensValue[tokenKeyAsset0],
-            depositValue: updatedAsset1Value,
-          },
-        };
-        setTokensValue(newValue as unknown as TokenCollection);
-      }
+    if (token === TokenSymbol.WETH) {
+      const balance0 = Number(value);
+      const balance1 = balance0 * tokenRatio;
+      setTokenDeposit({
+        ...tokenDeposit,
+        [TokenSymbol.rETH]: {
+          ...tokenDeposit[TokenSymbol.rETH],
+          depositValue: balance1.toString(),
+        },
+        [token]: {
+          ...tokenDeposit[token],
+          depositValue: value,
+        },
+      });
+    } else {
+      const balance1 = Number(value);
+      const balance0 = balance1 / tokenRatio;
+      setTokenDeposit({
+        ...tokenDeposit,
+        [TokenSymbol.WETH]: {
+          ...tokenDeposit[TokenSymbol.WETH],
+          depositValue: balance0.toString(),
+        },
+        [token]: {
+          ...tokenDeposit[token],
+          depositValue: value,
+        },
+      });
     }
   };
 
@@ -139,40 +157,54 @@ const DepositForm = () => {
     changeStep(StepType.Allowance);
   };
 
-  return (
-    <Form
-      className="mb-11 min-h-96 w-full max-w-sm"
-      validationBehavior="native"
-      onSubmit={onSubmit}
-    >
-      {Object.keys(tokensValue).map((token) => {
-        return (
-          <TokenInput
-            key={token}
-            name={token}
-            value={tokensValue[token]?.depositValue || '0'}
-            setValue={(value: string) =>
-              handleUpdateTokenDepositValue(token as string, value)
-            }
-            max={tokensValue[token]?.maxDepositValue || 0}
-            balance={tokensValue[token]?.balanceInt || '0'}
-            label={`${token} Amount`}
-            displaySlider={token === TokenSymbol.rETH}
-            setError={setIsError}
+  if (vault.status === 'success' && 'data' in vault) {
+    const { tokens } = vault.data;
+    return (
+      <Form
+        className="mb-11 min-h-96 w-full max-w-sm"
+        validationBehavior="native"
+        onSubmit={onSubmit}
+      >
+        {Object.keys(tokens).map((token) => {
+          const balance = tokensAllBalance?.[token]?.balanceInt;
+          const maxValue = tokenDeposit?.[token]?.maxDepositValue || 0;
+          const value = tokenDeposit?.[token]?.depositValue || '0';
+          return (
+            <TokenInput
+              key={token}
+              name={token}
+              value={value}
+              setValue={(val: string) =>
+                handleUpdateTokenDepositValue(token, val as string)
+              }
+              balance={balance}
+              max={maxValue}
+              label={`${token} Amount`}
+              displaySlider={token === TokenSymbol.rETH}
+              setError={setIsError}
+            />
+          );
+        })}
+        {balanceIsNotSuficient && (
+          <MyAlert
+            message="Balance of some token is not suficient"
+            color="warning"
           />
-        );
-      })}
-      {balanceIsNotSuficient && (
-        <MyAlert
-          message="Balance of some token is not suficient"
-          color="warning"
-        />
-      )}
+        )}
 
-      <Button type="submit" color="primary">
-        Submit
-      </Button>
-    </Form>
+        <Button type="submit" color="primary">
+          Submit
+        </Button>
+      </Form>
+    );
+  }
+  if (vault.status === 'pending' || tokenBalance.status === 'pending') {
+    return <Loading title="loading form" />;
+  }
+  return (
+    <div className="flex h-40 items-center justify-center">
+      <MyAlert message="Failed to fetch data" color="danger" />;
+    </div>
   );
 };
 

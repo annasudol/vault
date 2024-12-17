@@ -6,7 +6,7 @@ type CustomInputProps = {
   value: string;
   setValue: (value: string) => void;
   label: string;
-  balance: string;
+  balance?: string;
   isRequired?: boolean;
   displaySlider?: boolean;
   max?: number;
@@ -42,25 +42,34 @@ const TokenInput: React.FC<CustomInputProps> = ({
 
     setErrorMessages(erorMessage);
   }, [value]);
+
+  const handleChange = (val: string) => {
+    // only allow numbers and one decimal point
+    if (!/^\d*\.?\d*$/.test(val)) {
+      return;
+    }
+    setValue(val);
+  };
   return (
     <div className="relative my-6 w-full">
-      <span className="absolute right-1 text-xs text-gray-500">
-        Balance: {balance} {name}
-      </span>
+      {balance && (
+        <span className="absolute right-1 text-xs text-gray-500">
+          Balance: {balance} {name}
+        </span>
+      )}
       <Input
         name={name}
         value={value}
-        onValueChange={(val) => setValue(val)}
+        onValueChange={(val) => handleChange(val)}
         label={label}
         labelPlacement="outside"
         isRequired={isRequired}
         errorMessage={errorMessages}
         isInvalid={Number(value) > max || Number(value) <= 0 || false}
         type="text"
-        className=""
       />
       <span className="text-right text-xs text-gray-500">
-        max: {max.toFixed(2)} {name}
+        max: {max} {name}
       </span>
       <Button
         size="sm"

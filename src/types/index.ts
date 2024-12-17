@@ -49,13 +49,15 @@ export interface TokenBalance {
   balanceBigInt?: bigint;
 }
 
-export interface TokenInfo extends TokenBalance {
+export interface TokensAllBalance {
+  [key: string]: TokenBalance;
+}
+
+export interface TokenInfo {
   address: Address;
   symbol: string;
   name: string;
   decimals: number;
-  depositValue?: string;
-  maxDepositValue?: number;
 }
 
 export interface TokenCollection {

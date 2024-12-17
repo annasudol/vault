@@ -25,7 +25,10 @@ export async function readAllowance(
       data: balance,
     };
   } catch (e) {
-    return { status: ResponseStatus.Error };
+    return {
+      status: ResponseStatus.Error,
+      message: 'Error when read allowance',
+    };
   }
 }
 

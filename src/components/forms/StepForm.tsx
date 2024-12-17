@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { AllowanceForm } from '@/components/forms/AllowanceForm';
+// import { AllowanceForm } from '@/components/forms/AllowanceForm';
 import { DepositForm } from '@/components/forms/DepositForm';
 import Steps from '@/components/Steps';
 import { useStore } from '@/store/store';
@@ -42,7 +42,7 @@ const StepForm = () => {
         ]}
       />
       {step === StepType.Deposit && <DepositForm />}
-      {step === StepType.Allowance && <AllowanceForm />}
+      {/* {step === StepType.Allowance && <AllowanceForm />} */}
     </div>
   );
 };

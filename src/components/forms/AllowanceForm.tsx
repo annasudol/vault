@@ -13,7 +13,7 @@ import { ResponseStatus, StepType } from '@/types';
 
 const AllowanceForm = () => {
   const { address } = useAccount();
-  const { vault, depositValue, changeStep } = useStore();
+  const { vault, tokenBalance, depositValue, changeStep } = useStore();
   const [allowance, setAllowance] = useState<TokenAllowanceBySymbol>();
   const fetchAllAllowance = useCallback(async () => {
     if (address && vault.status === 'success' && 'data' in vault) {
@@ -39,10 +39,17 @@ const AllowanceForm = () => {
   }, [fetchAllAllowance, address]);
 
   const handleSetAllowance = async (symbol: string) => {
-    if (vault.status === 'success' && 'data' in vault && address) {
+    if (
+      vault.status === 'success' &&
+      'data' in vault &&
+      tokenBalance &&
+      tokenBalance.status === 'success' &&
+      'data' in tokenBalance &&
+      address
+    ) {
       const contractAddress = vault.data.tokens[symbol]?.address;
-      const amountToAllow = vault.data.tokens[symbol]?.decimals;
-      const decimals = vault.data.tokens[symbol]?.balanceInt;
+      const amountToAllow = depositValue?.[symbol];
+      const decimals = vault.data.tokens[symbol]?.decimals;
       if (contractAddress && amountToAllow && decimals) {
         const amountToAllowBN = parseToBigInt(
           amountToAllow.toString(),
