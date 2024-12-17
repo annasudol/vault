@@ -4,7 +4,7 @@ import { defaultWagmiConfig } from '@web3modal/wagmi/react/config';
 import { arbitrum } from 'viem/chains';
 import { cookieStorage, createStorage } from 'wagmi';
 
-import { AppConfig } from '../utils/AppConfig';
+import { AppConfig } from '@/config/AppConfig';
 
 export const WALLETCONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;

@@ -1,6 +1,6 @@
 import { Link } from '@nextui-org/react';
 
-import { AppConfig } from '@/utils/AppConfig';
+import { AppConfig } from '@/config/AppConfig';
 
 const Footer = () => (
   <footer className="mx-auto max-w-screen-lg p-4 text-center">

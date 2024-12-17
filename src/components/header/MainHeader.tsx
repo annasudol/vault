@@ -1,4 +1,4 @@
-import { AppConfig } from '@/utils/AppConfig';
+import { AppConfig } from '@/config/AppConfig';
 
 const MainHeader = () => (
   <header className=" bg-slate-100">
