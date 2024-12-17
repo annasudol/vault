@@ -58,6 +58,19 @@ export interface TokenCollection {
   [key: string]: TokenInfo;
 }
 
+export interface TokenAllowance {
+  allowanceInt: string;
+  allowanceBigInt: bigint;
+}
+
+export interface TokenAllowanceBySymbol {
+  [x: string]: Response<TokenAllowance>;
+}
+
+export interface TokenAllowanceReponse {
+  [x: string]: Response<bigint>;
+}
+
 export interface VaultData {
   contractName: string;
   tokens: TokenCollection;
