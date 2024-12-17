@@ -1,12 +1,12 @@
 import { readContract } from '@wagmi/core';
 import { erc20Abi } from 'viem';
 
-import { formatBigInt } from '@/lib/formatBigInt';
-import { CONTRACT } from '@/lib/static/contractAddress';
+import { CONTRACT_ADDRESS } from '@/constants/contract';
+import { formatBigInt } from '@/lib/contractHelpers/formatBigInt';
 import type { Address, Response, TokenCollection } from '@/types';
 import { ResponseStatus } from '@/types';
 
-import { wagmiConfig } from './web3';
+import { wagmiConfig } from '../web3';
 
 export async function readAllowance(
   user: Address,
@@ -18,7 +18,7 @@ export async function readAllowance(
       ...erc20Config,
       address: token,
       functionName: 'allowance',
-      args: [user, CONTRACT.ROUTER as Address],
+      args: [user, CONTRACT_ADDRESS.ROUTER],
     });
 
     return {

@@ -4,7 +4,7 @@ import { erc20Abi } from 'viem';
 import type { Address, Response, TokenInfo } from '@/types';
 import { ResponseStatus } from '@/types';
 
-import { wagmiConfig } from './web3';
+import { wagmiConfig } from '../web3';
 
 export async function readERC20(
   tokenAddress: Address,

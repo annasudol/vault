@@ -12,11 +12,7 @@ const Footer = () => (
         </Link>
         .
       </p>
-      <Link
-        isExternal
-        showAnchorIcon
-        href="https://github.com/nextui-org/nextui"
-      >
+      <Link isExternal showAnchorIcon href={AppConfig.url}>
         Visit source code on GitHub.
       </Link>
     </div>

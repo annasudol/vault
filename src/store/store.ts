@@ -2,8 +2,8 @@ import type { Address } from 'viem';
 import { isAddress } from 'viem';
 import { create } from 'zustand';
 
-import { fetchTokensBalances } from '@/lib/fetchTokensBalances';
-import { readVaultData } from '@/lib/readVaultData';
+import { fetchTokensBalances } from '@/lib/contractHelpers/fetchTokensBalances';
+import { readVaultData } from '@/lib/contractHelpers/readVaultData';
 import type { DepositSubmitData, Response, VaultData } from '@/types';
 import { ResponseStatus, StepType } from '@/types';
 
@@ -96,7 +96,7 @@ export const useStore = create<Store>((set, get) => ({
   //       async (token) => {
   //         const allowance = await readAllowance(
   //           address,
-  //           CONTRACT.ROUTER as Address,
+  //           CONTRACT_ADDRESS.ROUTER as Address,
   //           token.address,
   //         );
 

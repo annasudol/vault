@@ -6,7 +6,7 @@ import type { Address, TokenBalance, TokenInfo } from '@/types';
 
 import { formatBigInt } from './formatBigInt';
 
-export const fetchTokenBalanceFromChain = async (
+const fetchTokenBalanceFromChain = async (
   tokenAddress: Address,
   decimals: number,
   walletAddress: Address,

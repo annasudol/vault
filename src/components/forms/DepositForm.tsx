@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { TokenInput } from '@/components/inputs/TokenTinput';
-import { formatBigInt } from '@/lib/formatBigInt';
+import { formatBigInt } from '@/lib/contractHelpers/formatBigInt';
 import { useStore } from '@/store/store';
 import {
   StepType,

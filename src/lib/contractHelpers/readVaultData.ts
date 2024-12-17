@@ -2,8 +2,8 @@ import { readContracts } from '@wagmi/core';
 
 import { helperABI } from '@/abi/helperABI';
 import { vaultABI } from '@/abi/valutABI';
-import { readERC20 } from '@/lib/readERC20';
-import { CONTRACT } from '@/lib/static/contractAddress';
+import { CONTRACT_ADDRESS } from '@/constants/contract';
+import { readERC20 } from '@/lib/contractHelpers/readERC20';
 import { wagmiConfig } from '@/lib/web3';
 import type { Address, Response, VaultData } from '@/types';
 import { ResponseStatus } from '@/types';
@@ -18,7 +18,7 @@ export async function readVaultData(
 
   const helperContract = {
     abi: helperABI,
-    address: CONTRACT.HELPER as Address,
+    address: CONTRACT_ADDRESS.HELPER,
   } as const;
 
   try {

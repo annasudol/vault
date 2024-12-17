@@ -2,7 +2,7 @@ import React from 'react';
 
 import { MainLayout } from '@/components/layout/MainLayout';
 import { TokenCard } from '@/components/TokenCard';
-import { vaultData } from '@/lib/static/vaultData';
+import { vaultData } from '@/constants/vaultData';
 
 const Index = () => {
   return (

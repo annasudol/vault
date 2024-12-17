@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardBody,
   CardFooter,
@@ -8,7 +9,6 @@ import {
 import { useRouter } from 'next/router';
 import { AiFillCaretRight } from 'react-icons/ai';
 
-import { MyButton } from '@/components/button/MyButton';
 import { TokenIcon } from '@/components/TokenIcon';
 import type { StaticData } from '@/types';
 
@@ -44,14 +44,14 @@ function TokenCard({ vaultAddress, tokens, chain, stats }: StaticData) {
       </CardBody>
       <Divider />
       <CardFooter>
-        <MyButton
+        <Button
           color="primary"
           className="w-full text-white"
           onClick={() => router.push(`/modular/${vaultAddress}`)}
         >
           Go to Valult
           <AiFillCaretRight />
-        </MyButton>
+        </Button>
       </CardFooter>
     </Card>
   );

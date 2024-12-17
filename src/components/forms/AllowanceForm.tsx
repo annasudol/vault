@@ -2,7 +2,7 @@ import { Alert, Button } from '@nextui-org/react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 
-import { getAllAllowance } from '@/lib/getAllowance';
+import { getAllAllowance } from '@/lib/contractHelpers/getAllowance';
 import { useStore } from '@/store/store';
 import type { TokenAllowanceBySymbol } from '@/types';
 import { ResponseStatus, StepType } from '@/types';
