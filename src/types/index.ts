@@ -80,7 +80,6 @@ export interface TokenAllowanceReponse {
 export interface VaultData {
   contractName: string;
   tokens: TokenCollection;
-  totalSupply: bigint;
   totalUnderlying?: [bigint, bigint];
 }
 

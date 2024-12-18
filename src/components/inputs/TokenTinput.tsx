@@ -1,16 +1,16 @@
 import { Button, Input, Slider } from '@nextui-org/react';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 type CustomInputProps = {
   name: string;
   value: string;
   setValue: (value: string) => void;
   label: string;
+  setError: (value: boolean) => void;
   balance?: string;
   isRequired?: boolean;
   displaySlider?: boolean;
   max?: number;
-  setError: (value: boolean) => void;
 };
 
 const TokenInput: React.FC<CustomInputProps> = ({
@@ -18,36 +18,37 @@ const TokenInput: React.FC<CustomInputProps> = ({
   value,
   setValue,
   label,
+  setError,
   isRequired = true,
   displaySlider = false,
   balance,
   max = 0,
-  setError,
 }) => {
   const [errorMessages, setErrorMessages] = React.useState<string>();
 
-  useEffect(() => {
+  const validateValue = (inputValue: string) => {
     let erorMessage;
-    if (Number(value) > max) {
+    if (Number(inputValue) > max) {
       erorMessage = 'Value cannot be higher than max value';
     }
-    if (Number(value) <= 0) {
+    if (Number(inputValue) <= 0) {
       erorMessage = 'Value must be greater than 0';
     }
     const validValueRegex = /^0$|^[1-9]\d*(\.\d+)?$|^0\.\d+$/;
-    if (!validValueRegex.test(value)) {
+    if (!validValueRegex.test(inputValue)) {
       erorMessage = 'Value must be avalid number';
     }
     setError(erorMessage !== undefined);
 
     setErrorMessages(erorMessage);
-  }, [value]);
+  };
 
   const handleChange = (val: string) => {
     // only allow numbers and one decimal point
     if (!/^\d*\.?\d*$/.test(val)) {
       return;
     }
+    validateValue(val);
     setValue(val);
   };
   return (
@@ -65,7 +66,7 @@ const TokenInput: React.FC<CustomInputProps> = ({
         labelPlacement="outside"
         isRequired={isRequired}
         errorMessage={errorMessages}
-        isInvalid={Number(value) > max || Number(value) <= 0 || false}
+        isInvalid={errorMessages !== undefined}
         type="text"
       />
       <span className="text-right text-xs text-gray-500">
@@ -76,7 +77,7 @@ const TokenInput: React.FC<CustomInputProps> = ({
         variant="bordered"
         color="primary"
         className="disabled:hover:none absolute right-1 top-7 disabled:cursor-not-allowed"
-        disabled={max === 0 || value === max.toString()}
+        disabled={max === 0 || value === max.toString(4)}
         onPress={() => setValue(max.toString())}
       >
         max

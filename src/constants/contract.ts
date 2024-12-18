@@ -15,3 +15,5 @@ export const CONTRACT_ADDRESS: ContractAddress = {
   RESOLVER: '0x535c5fdf31477f799366df6e4899a12a801cc7b8',
   VAULT: '0x4ca9fb1f302b6bd8421bad9debd22198eb6ab723',
 };
+
+export const INPUT_VALUE_PRECISION = 8;

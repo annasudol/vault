@@ -5,7 +5,10 @@ import { CONTRACT_ADDRESS } from '@/constants/contract';
 import { WALLET_CONNECT_CONFIG } from '@/lib/web3';
 import type { Address } from '@/types';
 
-export async function approveToken(contractAddress: Address, amount: bigint) {
+export async function increaseTokenAllowance(
+  contractAddress: Address,
+  amount: bigint,
+) {
   try {
     const result = await writeContract(WALLET_CONNECT_CONFIG, {
       address: contractAddress,
@@ -20,7 +23,6 @@ export async function approveToken(contractAddress: Address, amount: bigint) {
 
     return tx;
   } catch (error) {
-    console.log(error, 'error');
     return null;
   }
 }

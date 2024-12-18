@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi';
 import { TokenInput } from '@/components/inputs/TokenTinput';
 import { Loading } from '@/components/Loading';
 import { MyAlert } from '@/components/MyAlert';
-import { formatBigInt } from '@/lib/formatBigInt';
+import { INPUT_VALUE_PRECISION } from '@/constants/contract';
 import { useStore } from '@/store/store';
 import type { TokensAllBalance } from '@/types';
 import { StepType, TokenSymbol } from '@/types';
@@ -60,28 +60,22 @@ const DepositForm = () => {
       setTokensAllBalance(tokenBalanceData);
 
       const balances = Object.values(tokenBalanceData);
-      if (balances.some((balance) => !balance.balanceInt)) {
+      if (balances.some((balance) => balance.balanceInt === '0')) {
         setBalanceIsNotSuficient(true);
       } else {
-        const { tokens, totalUnderlying } = vault.data;
+        const { totalUnderlying } = vault.data;
         setBalanceIsNotSuficient(false);
 
         if (totalUnderlying) {
-          const balanceToken1 = formatBigInt(
-            totalUnderlying[1],
-            tokens[1]?.decimals || 18,
-          );
-          const balanceToken0 = formatBigInt(
-            totalUnderlying[0],
-            tokens[0]?.decimals || 18,
-          );
-          const ratio = Number(balanceToken1) / Number(balanceToken0);
+          const ratioBN = totalUnderlying[1] / totalUnderlying[0];
+          const ratio = Number(ratioBN);
           setTokenRatio(ratio);
 
           const depositValue = Object.keys(tokenBalanceData).reduce(
             (acc, token) => {
               const balance0Token =
-                Number(tokenBalanceData[token]?.balanceInt || 0) / ratio;
+                Number(tokenBalanceData[TokenSymbol.rETH]?.balanceInt || 0) /
+                ratio;
               return {
                 ...acc,
                 [token]: {
@@ -105,7 +99,7 @@ const DepositForm = () => {
     if (!tokenDeposit || !tokenDeposit[token] || !tokenRatio) {
       return;
     }
-
+    // update token0 and token1 based on token0 value
     if (token === TokenSymbol.WETH) {
       const balance0 = Number(value);
       const balance1 = balance0 * tokenRatio;
@@ -113,7 +107,7 @@ const DepositForm = () => {
         ...tokenDeposit,
         [TokenSymbol.rETH]: {
           ...tokenDeposit[TokenSymbol.rETH],
-          depositValue: balance1.toString(),
+          depositValue: balance1.toFixed(INPUT_VALUE_PRECISION),
         },
         [token]: {
           ...tokenDeposit[token],
@@ -121,13 +115,14 @@ const DepositForm = () => {
         },
       });
     } else {
+      // update token1 and token0 based on token1 value
       const balance1 = Number(value);
       const balance0 = balance1 / tokenRatio;
       setTokenDeposit({
         ...tokenDeposit,
         [TokenSymbol.WETH]: {
           ...tokenDeposit[TokenSymbol.WETH],
-          depositValue: balance0.toString(),
+          depositValue: balance0.toFixed(INPUT_VALUE_PRECISION),
         },
         [token]: {
           ...tokenDeposit[token],
@@ -135,6 +130,16 @@ const DepositForm = () => {
         },
       });
     }
+  };
+
+  const getButtonText = () => {
+    if (!address) {
+      return 'Walet is disconnected';
+    }
+    if (balanceIsNotSuficient) {
+      return 'Balance is not suficient';
+    }
+    return 'Submit';
   };
 
   const onSubmit = (e: {
@@ -159,6 +164,7 @@ const DepositForm = () => {
 
   if (vault.status === 'success' && 'data' in vault) {
     const { tokens } = vault.data;
+    const tokensSymbols = Object.keys(tokens);
     return (
       <Form
         className="mb-11 min-h-96 w-full max-w-sm"
@@ -187,13 +193,17 @@ const DepositForm = () => {
         })}
         {balanceIsNotSuficient && (
           <MyAlert
-            message="Balance of some token is not suficient"
-            color="warning"
+            message={`You dont have enoug balace of ${tokensSymbols[0]} and /or ${tokensSymbols[1]}`}
+            color="danger"
           />
         )}
-
-        <Button type="submit" color="primary">
-          Submit
+        <Button
+          type="submit"
+          color="primary"
+          className="w-full"
+          isDisabled={balanceIsNotSuficient || !address}
+        >
+          {getButtonText()}
         </Button>
       </Form>
     );
@@ -201,11 +211,15 @@ const DepositForm = () => {
   if (vault.status === 'pending' || tokenBalance.status === 'pending') {
     return <Loading title="loading form" />;
   }
-  return (
-    <div className="flex h-40 items-center justify-center">
-      <MyAlert message="Failed to fetch data" color="danger" />;
-    </div>
-  );
+  if (vault.status === 'error' || tokenBalance.status === 'error') {
+    const errorMessage = vault.message || 'Failed to fetch data';
+    return (
+      <div className="flex h-40 items-center justify-center">
+        <MyAlert message={errorMessage} color="danger" />;
+      </div>
+    );
+  }
+  return <></>;
 };
 
 export { DepositForm };

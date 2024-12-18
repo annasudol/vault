@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi';
 
 import { MyAlert } from '@/components/MyAlert';
 import { getAllAllowance } from '@/lib/contractHelpers/getAllowance';
-import { approveToken } from '@/lib/contractHelpers/increaseAllowance';
+import { increaseTokenAllowance } from '@/lib/contractHelpers/increaseAllowance';
 import { parseToBigInt } from '@/lib/formatBigInt';
 import { useStore } from '@/store/store';
 import type { TokenAllowanceBySymbol } from '@/types';
@@ -57,7 +57,7 @@ const AllowanceForm = () => {
         );
         try {
           if (contractAddress) {
-            await approveToken(contractAddress, amountToAllowBN);
+            await increaseTokenAllowance(contractAddress, amountToAllowBN);
           } else {
             console.error('Contract address is undefined');
           }

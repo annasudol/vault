@@ -30,10 +30,6 @@ export async function readVaultData(
         },
         {
           ...vaultContract,
-          functionName: 'totalSupply',
-        },
-        {
-          ...vaultContract,
           functionName: 'token0',
         },
         {
@@ -47,32 +43,32 @@ export async function readVaultData(
         },
       ],
     });
+    const errorResponse = reponseContract.filter(
+      (response) => response.status === 'failure',
+    );
 
-    if (
-      Object.values(reponseContract).some(
-        (response) => response.status === 'failure',
-      )
-    ) {
+    if (reponseContract.some((response) => response.status === 'failure')) {
+      const errorMessage = errorResponse[0]?.error
+        ? errorResponse[0].error.toString()
+        : 'Failed to read vault contract';
       return {
         status: ResponseStatus.Error,
-        message: 'Failed to read contract',
+        message: errorMessage,
       };
     }
 
     const [token0, token1] = await Promise.all([
+      readERC20(reponseContract[1].result as Address),
       readERC20(reponseContract[2].result as Address),
-      readERC20(reponseContract[3].result as Address),
     ]);
 
     const name = reponseContract[0].result as string;
-    const totalSupply = reponseContract[1].result || 0n;
 
     return {
       status: ResponseStatus.Success,
       data: {
         contractName: name,
-        totalSupply,
-        totalUnderlying: reponseContract[4].result as [bigint, bigint],
+        totalUnderlying: reponseContract[3].result as [bigint, bigint],
         tokens: {
           ...(token0.status === ResponseStatus.Success && {
             [token0.data.symbol]: token0.data,

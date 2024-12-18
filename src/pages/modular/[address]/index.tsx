@@ -51,7 +51,7 @@ const Index = () => {
           title={vault.data.contractName}
           tokens={vault.data.tokens}
         />
-        <div className="mx-auto max-w-xl rounded-lg bg-white p-4">
+        <div className="mx-auto max-w-lg rounded-lg bg-white p-4">
           <StepForm />
         </div>
       </ValultLayout>
@@ -61,7 +61,11 @@ const Index = () => {
     <ValultLayout>
       <Error
         message="Error"
-        desription="Unknown error occured while fetching vault data"
+        desription={
+          'message' in vault
+            ? vault.message
+            : 'Unknown error occured while fetching vault data'
+        }
       />
     </ValultLayout>
   );

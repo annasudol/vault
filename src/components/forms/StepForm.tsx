@@ -23,7 +23,7 @@ const StepForm = () => {
   };
 
   return (
-    <div>
+    <div className="">
       <Steps
         currentStep={getCurrentStepNumber(step)}
         steps={[
