@@ -11,7 +11,7 @@ export function MainLayout(props: PropsWithChildren) {
       <MainNavbar />
       <MainHeader />
       <main className="bg-slate-100">
-        <div className="container mx-auto max-w-5xl grow">{props.children}</div>
+        <div className="mx-auto max-w-lg grow">{props.children}</div>
       </main>
       <Footer />
     </div>

@@ -1,5 +1,5 @@
 import { Button, Input, Slider } from '@nextui-org/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 type CustomInputProps = {
   name: string;
@@ -26,31 +26,32 @@ const TokenInput: React.FC<CustomInputProps> = ({
 }) => {
   const [errorMessages, setErrorMessages] = React.useState<string>();
 
-  const validateValue = (inputValue: string) => {
+  useEffect(() => {
     let erorMessage;
-    if (Number(inputValue) > max) {
+    if (Number(value) > max) {
       erorMessage = 'Value cannot be higher than max value';
     }
-    if (Number(inputValue) <= 0) {
+    if (Number(value) <= 0) {
       erorMessage = 'Value must be greater than 0';
     }
     const validValueRegex = /^0$|^[1-9]\d*(\.\d+)?$|^0\.\d+$/;
-    if (!validValueRegex.test(inputValue)) {
+    if (!validValueRegex.test(value)) {
       erorMessage = 'Value must be avalid number';
     }
     setError(erorMessage !== undefined);
 
     setErrorMessages(erorMessage);
-  };
+  }, [value, max]);
 
   const handleChange = (val: string) => {
     // only allow numbers and one decimal point
     if (!/^\d*\.?\d*$/.test(val)) {
       return;
     }
-    validateValue(val);
+
     setValue(val);
   };
+
   return (
     <div className="relative my-6 w-full">
       {balance && (
@@ -78,7 +79,7 @@ const TokenInput: React.FC<CustomInputProps> = ({
         color="primary"
         className="disabled:hover:none absolute right-1 top-7 disabled:cursor-not-allowed"
         disabled={max === 0 || value === max.toString(4)}
-        onPress={() => setValue(max.toString())}
+        onPress={() => handleChange(max.toString())}
       >
         max
       </Button>
@@ -90,7 +91,7 @@ const TokenInput: React.FC<CustomInputProps> = ({
           defaultValue={Number(value)}
           maxValue={max}
           value={Number(value)}
-          onChange={(val) => setValue(val.toString())}
+          onChange={(val) => handleChange(val.toString())}
           label={`Select a ${name} value`}
           marks={[
             {

@@ -8,18 +8,20 @@ import { WALLET_CONNECT_CONFIG } from '@/lib/web3';
 import type { Address, AsyncResponse, VaultData } from '@/types';
 import { ResponseStatus } from '@/types';
 
+import { truncateString } from '../truncateString';
+
 export async function readVaultData(
   vaultAddress: Address,
 ): Promise<AsyncResponse<VaultData>> {
   const vaultContract = {
     abi: vaultABI,
     address: vaultAddress,
-  } as const;
+  };
 
   const helperContract = {
     abi: helperABI,
     address: CONTRACT_ADDRESS.HELPER,
-  } as const;
+  };
 
   try {
     const reponseContract = await readContracts(WALLET_CONNECT_CONFIG, {
@@ -49,7 +51,7 @@ export async function readVaultData(
 
     if (reponseContract.some((response) => response.status === 'failure')) {
       const errorMessage = errorResponse[0]?.error
-        ? errorResponse[0].error.toString()
+        ? truncateString(errorResponse[0].error.toString())
         : 'Failed to read vault contract';
       return {
         status: ResponseStatus.Error,
@@ -62,6 +64,18 @@ export async function readVaultData(
       readERC20(reponseContract[2].result as Address),
     ]);
 
+    if (token0.status === ResponseStatus.Error) {
+      return {
+        status: ResponseStatus.Error,
+        message: token0.message,
+      };
+    }
+    if (token1.status === ResponseStatus.Error) {
+      return {
+        status: ResponseStatus.Error,
+        message: token1.message,
+      };
+    }
     const name = reponseContract[0].result as string;
 
     return {

@@ -5,26 +5,26 @@ import { WALLET_CONNECT_CONFIG } from '@/lib/web3';
 import type { Address, AsyncResponse, TokenInfo } from '@/types';
 import { ResponseStatus } from '@/types';
 
+import { truncateString } from '../truncateString';
+
 export async function readERC20(
   tokenAddress: Address,
 ): Promise<AsyncResponse<TokenInfo>> {
-  const erc20Config = { abi: erc20Abi } as const;
-
   try {
     const tokensData = await readContracts(WALLET_CONNECT_CONFIG, {
       contracts: [
         {
-          ...erc20Config,
+          abi: erc20Abi,
           address: tokenAddress,
           functionName: 'symbol',
         },
         {
-          ...erc20Config,
+          abi: erc20Abi,
           address: tokenAddress,
           functionName: 'decimals',
         },
         {
-          ...erc20Config,
+          abi: erc20Abi,
           address: tokenAddress,
           functionName: 'name',
         },
@@ -32,7 +32,14 @@ export async function readERC20(
     });
 
     if (Object.values(tokensData).some((res) => res.status === 'failure')) {
-      return { status: ResponseStatus.Error };
+      const errorMessage = Object.values(tokensData)
+        .filter((err) => err.status === 'failure')[0]
+        ?.error.toString();
+      return {
+        status: ResponseStatus.Error,
+        message:
+          truncateString(errorMessage) || 'Failed to read token contract',
+      };
     }
 
     return {
@@ -44,7 +51,12 @@ export async function readERC20(
         decimals: tokensData[1].result!,
       },
     };
-  } catch {
-    return { status: ResponseStatus.Error };
+  } catch (error: Error | unknown) {
+    const message =
+      error instanceof Error ? error.message : 'Failed to read token contract';
+    return {
+      status: ResponseStatus.Error,
+      message,
+    };
   }
 }

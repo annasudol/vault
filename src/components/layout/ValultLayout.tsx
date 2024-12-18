@@ -8,10 +8,8 @@ export function ValultLayout(props: PropsWithChildren) {
   return (
     <div className="flex min-h-screen flex-col">
       <MainNavbar />
-      <main className="min-h-96 bg-slate-100">
-        <div className="container mx-auto max-w-screen-lg grow p-4">
-          {props.children}
-        </div>
+      <main className="min-h-[80vh] bg-slate-100">
+        <div className="mx-auto max-w-screen-lg px-4">{props.children}</div>
       </main>
       <Footer />
     </div>

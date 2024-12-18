@@ -1,13 +1,14 @@
 import { Button, Form } from '@nextui-org/react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { TokenInput } from '@/components/inputs/TokenTinput';
 import { Loading } from '@/components/Loading';
 import { MyAlert } from '@/components/MyAlert';
 import { INPUT_VALUE_PRECISION } from '@/constants/contract';
+import { useTokenRatio } from '@/hooks/useTokenRatio';
+import { truncateString } from '@/lib/truncateString';
 import { useStore } from '@/store/store';
-import type { TokensAllBalance } from '@/types';
 import { StepType, TokenSymbol } from '@/types';
 
 export interface TokenDeposit {
@@ -20,80 +21,16 @@ export interface TokenDepositBySymbol {
 }
 
 const DepositForm = () => {
-  const {
-    vault,
-    fetchTokenBalance,
-    tokenBalance,
-    setDepositValue,
-    changeStep,
-  } = useStore();
+  const { vault, tokenBalance, setDepositValue, changeStep } = useStore();
   const { address } = useAccount();
-
-  const [tokenRatio, setTokenRatio] = useState<number>();
-  const [tokensAllBalance, setTokensAllBalance] = useState<TokensAllBalance>();
-  const [tokenDeposit, setTokenDeposit] = useState<TokenDepositBySymbol>();
-
   const [isError, setIsError] = useState(false);
-
-  const [balanceIsNotSuficient, setBalanceIsNotSuficient] =
-    useState<boolean>(false);
-
-  const handleFetchTokenBalance = useCallback(() => {
-    if (!address) {
-      return;
-    }
-    fetchTokenBalance(address);
-  }, [address, fetchTokenBalance]);
-
-  useEffect(() => {
-    handleFetchTokenBalance();
-  }, [address]);
-
-  useEffect(() => {
-    if (
-      vault.status === 'success' &&
-      'data' in vault &&
-      tokenBalance.status === 'success' &&
-      'data' in tokenBalance
-    ) {
-      const tokenBalanceData = tokenBalance.data;
-      setTokensAllBalance(tokenBalanceData);
-
-      const balances = Object.values(tokenBalanceData);
-      if (balances.some((balance) => balance.balanceInt === '0')) {
-        setBalanceIsNotSuficient(true);
-      } else {
-        const { totalUnderlying } = vault.data;
-        setBalanceIsNotSuficient(false);
-
-        if (totalUnderlying) {
-          const ratioBN = totalUnderlying[1] / totalUnderlying[0];
-          const ratio = Number(ratioBN);
-          setTokenRatio(ratio);
-
-          const depositValue = Object.keys(tokenBalanceData).reduce(
-            (acc, token) => {
-              const balance0Token =
-                Number(tokenBalanceData[TokenSymbol.rETH]?.balanceInt || 0) /
-                ratio;
-              return {
-                ...acc,
-                [token]: {
-                  depositValue: '0',
-                  maxDepositValue:
-                    token === TokenSymbol.WETH
-                      ? balance0Token
-                      : Number(tokenBalanceData.rETH?.balanceInt),
-                },
-              };
-            },
-            {},
-          );
-          setTokenDeposit(depositValue);
-        }
-      }
-    }
-  }, [vault, tokenBalance]);
+  const {
+    tokenRatio,
+    tokensAllBalance,
+    tokenDeposit,
+    setTokenDeposit,
+    balanceIsNotSufficient,
+  } = useTokenRatio(address);
 
   const handleUpdateTokenDepositValue = (token: string, value: string) => {
     if (!tokenDeposit || !tokenDeposit[token] || !tokenRatio) {
@@ -136,7 +73,7 @@ const DepositForm = () => {
     if (!address) {
       return 'Walet is disconnected';
     }
-    if (balanceIsNotSuficient) {
+    if (balanceIsNotSufficient) {
       return 'Balance is not suficient';
     }
     return 'Submit';
@@ -158,6 +95,7 @@ const DepositForm = () => {
     if (isError) {
       return;
     }
+
     setDepositValue(data);
     changeStep(StepType.Allowance);
   };
@@ -191,17 +129,26 @@ const DepositForm = () => {
             />
           );
         })}
-        {balanceIsNotSuficient && (
+        {balanceIsNotSufficient && (
           <MyAlert
             message={`You dont have enoug balace of ${tokensSymbols[0]} and /or ${tokensSymbols[1]}`}
             color="danger"
           />
         )}
+        {tokenBalance.status === 'error' && (
+          <div className="flex h-40 items-center justify-center">
+            <MyAlert
+              message={truncateString(tokenBalance.message, 100) || 'Error'}
+              color="danger"
+            />
+            ;
+          </div>
+        )}
         <Button
           type="submit"
           color="primary"
           className="w-full"
-          isDisabled={balanceIsNotSuficient || !address}
+          isDisabled={balanceIsNotSufficient || !address}
         >
           {getButtonText()}
         </Button>
