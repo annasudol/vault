@@ -1,5 +1,5 @@
 import { Button } from '@nextui-org/react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { Loading } from '@/components/Loading';
@@ -7,12 +7,17 @@ import { MyAlert } from '@/components/MyAlert';
 import { getAllAllowance } from '@/lib/contractHelpers/getAllowance';
 import { increaseTokenAllowance } from '@/lib/contractHelpers/increaseAllowance';
 import { parseToBigInt } from '@/lib/formatBigInt';
+import { truncateString } from '@/lib/truncateString';
 import { useStore } from '@/store/store';
-import type { AsyncResponse, TokenAllowanceBySymbol } from '@/types';
+import {
+  type AsyncResponse,
+  StepType,
+  type TokenAllowanceBySymbol,
+} from '@/types';
 
 const AllowanceForm = () => {
   const { address } = useAccount();
-  const { vault, tokenBalance, depositValue } = useStore();
+  const { vault, tokenBalance, depositValue, changeStep } = useStore();
   const [allowance, setAllowance] =
     useState<AsyncResponse<TokenAllowanceBySymbol>>();
   const fetchAllAllowance = useCallback(async () => {
@@ -59,38 +64,53 @@ const AllowanceForm = () => {
       console.log('error');
     }
   };
-  console.log(allowance, 'allowance');
 
-  // const buttonNext = useMemo(() => {
-  //   if (allowance && depositValue) {
-  //     const allowanceNeedsIncreased = Object.keys(allowance).some(
-  //       (token) =>
-  //         allowance[token] &&
-  //         depositValue[token] &&
-  //         allowance[token].allowanceInt < depositValue[token],
-  //     );
-  //     return (
-  //       !allowanceNeedsIncreased && (
-  //         <Button
-  //           color="primary"
-  //           onPress={() => changeStep(StepType.Liquidity)}
-  //           className="mt-4 w-48"
-  //         >
-  //           Next
-  //         </Button>
-  //       )
-  //     );
-  //   }
-  //   return <></>;
-  // }, [allowance, depositValue]);
+  const buttonNext = useMemo(() => {
+    if (allowance?.status === 'success' && depositValue) {
+      const depositIsHighrtThanAllowance = Object.keys(allowance.data).some(
+        (t) => {
+          const allowanceInt = allowance.data?.[t]?.allowanceInt;
+          const depoit = depositValue[t];
+          if (!allowanceInt || !depoit) {
+            return true;
+          }
+          return allowanceInt < depoit;
+        },
+      );
+
+      return (
+        depositIsHighrtThanAllowance && (
+          <Button
+            color="primary"
+            onPress={() => changeStep(StepType.Liquidity)}
+            className="mt-12 w-48"
+          >
+            Next
+          </Button>
+        )
+      );
+    }
+    return <></>;
+  }, [allowance, depositValue]);
 
   if (allowance?.status === 'pending') {
     return <Loading />;
   }
-  if (allowance?.status === 'success' && depositValue) {
+  if (allowance?.status === 'error') {
+    return (
+      <div className="flex h-40 items-center justify-center">
+        <MyAlert
+          message={truncateString(allowance.message, 100) || 'Error'}
+          color="danger"
+        />
+        ;
+      </div>
+    );
+  }
+  if (allowance?.status === 'success' && 'data' in allowance && depositValue) {
     return (
       <div className="px-6 py-4">
-        {Object.entries(allowance || {}).map(([symbol, token]) => (
+        {Object.entries(allowance.data || {}).map(([symbol, token]) => (
           <div key={symbol}>
             <h2 className="text-lg font-medium">{symbol}</h2>
             <p>Allowance: {Number(token.allowanceInt).toFixed(4)}</p>
@@ -112,7 +132,7 @@ const AllowanceForm = () => {
             )}
           </div>
         ))}
-        {/* {buttonNext} */}
+        {buttonNext}
       </div>
     );
   }
