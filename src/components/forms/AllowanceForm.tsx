@@ -9,17 +9,14 @@ import { increaseTokenAllowance } from '@/lib/contractHelpers/increaseAllowance'
 import { parseToBigInt } from '@/lib/formatBigInt';
 import { truncateString } from '@/lib/truncateString';
 import { useStore } from '@/store/store';
-import {
-  type AsyncResponse,
-  StepType,
-  type TokenAllowanceBySymbol,
-} from '@/types';
+import type { AsyncResponse, TokenAllowance, TokensCollection } from '@/types';
+import { StepType } from '@/types';
 
 const AllowanceForm = () => {
   const { address } = useAccount();
   const { vault, tokenBalance, depositValue, changeStep } = useStore();
   const [allowance, setAllowance] =
-    useState<AsyncResponse<TokenAllowanceBySymbol>>();
+    useState<AsyncResponse<TokensCollection<TokenAllowance>>>();
   const fetchAllAllowance = useCallback(async () => {
     if (address && vault.status === 'success' && 'data' in vault) {
       const result = await getAllAllowance(address, vault.data.tokens);

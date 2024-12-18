@@ -8,7 +8,7 @@ import type {
   AsyncResponse,
   TokenBalance,
   TokenInfo,
-  TokensAllBalance,
+  TokensCollection,
 } from '@/types';
 import { ResponseStatus } from '@/types';
 
@@ -36,7 +36,7 @@ const fetchTokenBalanceFromChain = async (
 export const fetchTokensBalances = async (
   tokens: Record<string, TokenInfo>,
   walletAddress: Address,
-): Promise<AsyncResponse<TokensAllBalance>> => {
+): Promise<AsyncResponse<TokensCollection<TokenBalance>>> => {
   const tokenEntries = Object.entries(tokens);
   try {
     const balancePromises = tokenEntries.map(([key, token]) =>

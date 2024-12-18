@@ -7,8 +7,9 @@ import { WALLET_CONNECT_CONFIG } from '@/lib/web3';
 import type {
   Address,
   AsyncResponse,
-  TokenAllowanceBySymbol,
-  TokenCollection,
+  TokenAllowance,
+  TokenInfo,
+  TokensCollection,
 } from '@/types';
 import { ResponseStatus } from '@/types';
 
@@ -38,8 +39,8 @@ export async function readAllowance(
 
 export async function getAllAllowance(
   address: Address,
-  tokens: TokenCollection,
-): Promise<AsyncResponse<TokenAllowanceBySymbol>> {
+  tokens: TokensCollection<TokenInfo>,
+): Promise<AsyncResponse<TokensCollection<TokenAllowance>>> {
   const allowancePromises = Object.values(tokens).map(async (token) => {
     const allowance = await readAllowance(address, token.address);
     if (allowance.status === ResponseStatus.Success && allowance.data) {
@@ -66,7 +67,7 @@ export async function getAllAllowance(
       return { ...acc, ...curr.result };
     }
     return acc;
-  }, {} as TokenAllowanceBySymbol);
+  }, {} as TokensCollection<TokenAllowance>);
 
   return {
     status: ResponseStatus.Success,

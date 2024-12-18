@@ -49,10 +49,6 @@ export interface TokenBalance {
   balanceBigInt?: bigint;
 }
 
-export interface TokensAllBalance {
-  [key: string]: TokenBalance;
-}
-
 export interface TokenInfo {
   address: Address;
   symbol: string;
@@ -60,31 +56,19 @@ export interface TokenInfo {
   decimals: number;
 }
 
-export interface TokenCollection {
-  [key: string]: TokenInfo;
-}
-
 export interface TokenAllowance {
   allowanceInt: string;
   allowanceBigInt: bigint;
 }
 
-export interface TokenAllowanceBySymbol {
-  [x: string]: TokenAllowance;
-}
-
-export interface TokenAllowanceReponse {
-  [x: string]: AsyncResponse<bigint>;
-}
-
 export interface VaultData {
   contractName: string;
-  tokens: TokenCollection;
+  tokens: TokensCollection<TokenInfo>;
   totalUnderlying?: [bigint, bigint];
 }
 
-export interface VaultByAddress {
-  [key: string]: VaultData;
+export interface TokensCollection<T> {
+  [key: string]: T;
 }
 
 export type Address = `0x${string}`;
@@ -93,12 +77,4 @@ export enum StepType {
   Deposit = 'Deposit',
   Allowance = 'Allowance',
   Liquidity = 'Liquidity',
-}
-
-export interface DepositSubmitData {
-  [key: string]: string;
-}
-
-export interface AllowanceToken {
-  [key: string]: string;
 }

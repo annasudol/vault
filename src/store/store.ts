@@ -5,8 +5,8 @@ import { fetchTokensBalances } from '@/lib/contractHelpers/fetchTokensBalances';
 import { readVaultData } from '@/lib/contractHelpers/readVaultData';
 import type {
   AsyncResponse,
-  DepositSubmitData,
-  TokensAllBalance,
+  TokenBalance,
+  TokensCollection,
   VaultData,
 } from '@/types';
 import { ResponseStatus, StepType } from '@/types';
@@ -15,14 +15,14 @@ interface Store {
   vault: AsyncResponse<VaultData>;
   fetchVaultData: (vaultAddress: Address) => Promise<void>;
 
-  tokenBalance: AsyncResponse<TokensAllBalance>;
+  tokenBalance: AsyncResponse<TokensCollection<TokenBalance>>;
   fetchTokenBalance: (waletAddress: Address) => Promise<void>;
 
   step: StepType;
   changeStep: (step: StepType) => void;
 
-  depositValue?: DepositSubmitData;
-  setDepositValue: (value: DepositSubmitData) => void;
+  depositValue?: TokensCollection<string>;
+  setDepositValue: (value: TokensCollection<string>) => void;
 }
 
 export const useStore = create<Store>((set, get) => ({
@@ -81,7 +81,7 @@ export const useStore = create<Store>((set, get) => ({
     set({ step });
   },
   depositValue: undefined,
-  setDepositValue: (value: DepositSubmitData) => {
+  setDepositValue: (value: TokensCollection<string>) => {
     set({ depositValue: value });
   },
 }));
