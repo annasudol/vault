@@ -1,6 +1,5 @@
 import React from 'react';
 
-// import { AllowanceForm } from '@/components/forms/AllowanceForm';
 import { DepositForm } from '@/components/forms/DepositForm';
 import Steps from '@/components/Steps';
 import { useStore } from '@/store/store';
