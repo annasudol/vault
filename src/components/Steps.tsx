@@ -64,9 +64,6 @@ const Steps = React.forwardRef<HTMLButtonElement, StepsProps>(
     },
     ref,
   ) => {
-    // TODO: Fix this
-    //    const [currentStep, _setCurrentStep] = useControlledState(
-
     const [currentStep] = useControlledState(
       currentStepProp,
       defaultStep,
