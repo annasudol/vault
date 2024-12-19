@@ -1,9 +1,9 @@
 import { readContract } from '@wagmi/core';
 import { erc20Abi } from 'viem';
 
+import { WALLET_CONNECT_CONFIG } from '@/config/web3';
 import { CONTRACT_ADDRESS } from '@/constants/contract';
 import { formatBigInt } from '@/lib/formatBigInt';
-import { WALLET_CONNECT_CONFIG } from '@/lib/web3';
 import type {
   Address,
   AsyncResponse,

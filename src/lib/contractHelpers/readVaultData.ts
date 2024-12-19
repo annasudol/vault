@@ -2,13 +2,12 @@ import { readContracts } from '@wagmi/core';
 
 import { helperABI } from '@/abi/helperABI';
 import { vaultABI } from '@/abi/valutABI';
+import { WALLET_CONNECT_CONFIG } from '@/config/web3';
 import { CONTRACT_ADDRESS } from '@/constants/contract';
 import { readERC20 } from '@/lib/contractHelpers/readERC20';
-import { WALLET_CONNECT_CONFIG } from '@/lib/web3';
+import { truncateString } from '@/lib/truncateString';
 import type { Address, AsyncResponse, VaultData } from '@/types';
 import { ResponseStatus } from '@/types';
-
-import { truncateString } from '../truncateString';
 
 export async function readVaultData(
   vaultAddress: Address,

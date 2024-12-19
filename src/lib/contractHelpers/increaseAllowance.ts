@@ -1,8 +1,8 @@
 import { waitForTransactionReceipt, writeContract } from '@wagmi/core';
 
 import { erc20Abi } from '@/abi/erc20ABI';
+import { WALLET_CONNECT_CONFIG } from '@/config/web3';
 import { CONTRACT_ADDRESS } from '@/constants/contract';
-import { WALLET_CONNECT_CONFIG } from '@/lib/web3';
 import type { Address } from '@/types';
 
 export async function increaseTokenAllowance(

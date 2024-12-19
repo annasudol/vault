@@ -9,7 +9,7 @@ import type { PropsWithChildren } from 'react';
 import type { State } from 'wagmi';
 import { WagmiProvider } from 'wagmi';
 
-import { WALLET_CONNECT_CONFIG, WALLETCONNECT_PROJECT_ID } from '@/lib/web3';
+import { WALLET_CONNECT_CONFIG, WALLETCONNECT_PROJECT_ID } from '@/config/web3';
 
 interface Props extends PropsWithChildren {
   initialState?: State;
