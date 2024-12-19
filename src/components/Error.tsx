@@ -1,6 +1,6 @@
-import { Button } from '@nextui-org/button';
 import { useRouter } from 'next/router';
-import { MdOutlineKeyboardBackspace } from 'react-icons/md';
+
+import { ButtonIcon, MyButton } from './MyButton';
 
 type ErrorProps = {
   message: string;
@@ -15,14 +15,13 @@ const Error = ({ message, desription }: ErrorProps) => {
       {desription && (
         <p className="mb-8 break-all px-4 py-2 text-gray-500">{desription}</p>
       )}
-      <Button
-        color="primary"
+      <MyButton
         className="w-full max-w-48 text-white"
         onPress={() => router.push('/')}
+        icon={ButtonIcon.ArrowLeft}
       >
-        <MdOutlineKeyboardBackspace />
         Go back
-      </Button>
+      </MyButton>
     </div>
   );
 };

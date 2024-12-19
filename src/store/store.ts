@@ -5,6 +5,7 @@ import { fetchTokensBalances } from '@/lib/contractHelpers/fetchTokensBalances';
 import { readVaultData } from '@/lib/contractHelpers/readVaultData';
 import type {
   AsyncResponse,
+  DepositTokens,
   TokenBalance,
   TokensCollection,
   VaultData,
@@ -21,8 +22,8 @@ interface Store {
   step: StepType;
   changeStep: (step: StepType) => void;
 
-  depositValue?: TokensCollection<string>;
-  setDepositValue: (value: TokensCollection<string>) => void;
+  depositValue?: DepositTokens;
+  setDepositValue: (value: DepositTokens) => void;
 }
 
 export const useStore = create<Store>((set, get) => ({
@@ -81,7 +82,7 @@ export const useStore = create<Store>((set, get) => ({
     set({ step });
   },
   depositValue: undefined,
-  setDepositValue: (value: TokensCollection<string>) => {
+  setDepositValue: (value: DepositTokens) => {
     set({ depositValue: value });
   },
 }));

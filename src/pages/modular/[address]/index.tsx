@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useParams } from 'next/navigation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { isAddress } from 'viem';
 
 import { Error } from '@/components/Error';
@@ -13,10 +13,9 @@ import { useStore } from '@/store/store';
 const Index = () => {
   const params = useParams<{ address: string }>();
   const { vault, fetchVaultData } = useStore();
-  const [vaultAddressIsInvalid, setVaultAddressIsInvalid] =
-    React.useState(false);
+  const [vaultAddressIsInvalid, setVaultAddressIsInvalid] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const vaultAddress = params?.address;
     if (vaultAddress) {
       if (!isAddress(vaultAddress)) {

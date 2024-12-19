@@ -71,6 +71,8 @@ export interface TokensCollection<T> {
   [key: string]: T;
 }
 
+export interface DepositTokens extends TokensCollection<string> {}
+
 export type Address = `0x${string}`;
 
 export enum StepType {

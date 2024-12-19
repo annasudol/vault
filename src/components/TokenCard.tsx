@@ -1,5 +1,4 @@
 import {
-  Button,
   Card,
   CardBody,
   CardFooter,
@@ -7,10 +6,11 @@ import {
   Divider,
 } from '@nextui-org/react';
 import { useRouter } from 'next/router';
-import { AiFillCaretRight } from 'react-icons/ai';
 
 import { TokenIcon } from '@/components/TokenIcon';
 import type { StaticData } from '@/types';
+
+import { ButtonIcon, MyButton } from './MyButton';
 
 function TokenCard({ vaultAddress, tokens, chain, stats }: StaticData) {
   const router = useRouter();
@@ -44,14 +44,13 @@ function TokenCard({ vaultAddress, tokens, chain, stats }: StaticData) {
       </CardBody>
       <Divider />
       <CardFooter>
-        <Button
-          color="primary"
+        <MyButton
+          icon={ButtonIcon.ArrowRight}
           className="w-full text-white"
           onPress={() => router.push(`/modular/${vaultAddress}`)}
         >
           Go to Valult
-          <AiFillCaretRight />
-        </Button>
+        </MyButton>
       </CardFooter>
     </Card>
   );

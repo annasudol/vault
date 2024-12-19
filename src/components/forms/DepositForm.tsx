@@ -1,4 +1,4 @@
-import { Button, Form } from '@nextui-org/react';
+import { Form } from '@nextui-org/react';
 import React, { useState } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -10,6 +10,8 @@ import { useTokenRatio } from '@/hooks/useTokenRatio';
 import { truncateString } from '@/lib/truncateString';
 import { useStore } from '@/store/store';
 import { StepType, TokenSymbol } from '@/types';
+
+import { MyButton } from '../MyButton';
 
 export interface TokenDeposit {
   depositValue?: string;
@@ -144,14 +146,13 @@ const DepositForm = () => {
             ;
           </div>
         )}
-        <Button
+        <MyButton
           type="submit"
-          color="primary"
           className="w-full"
           isDisabled={balanceIsNotSufficient || !address}
         >
           {getButtonText()}
-        </Button>
+        </MyButton>
       </Form>
     );
   }
