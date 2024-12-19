@@ -38,7 +38,8 @@ const MyButton = ({
       isLoading={isLoading}
       {...props}
     >
-      {icon === ButtonIcon.ArrowLeft && buttonIcon} {children} {buttonIcon}
+      {icon === ButtonIcon.ArrowLeft && buttonIcon} {children}{' '}
+      {icon !== ButtonIcon.ArrowLeft && buttonIcon}
     </Button>
   );
 };

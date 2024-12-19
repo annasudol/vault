@@ -1,7 +1,7 @@
 import { readContracts } from '@wagmi/core';
 import { erc20Abi } from 'viem';
 
-import { WALLET_CONNECT_CONFIG } from '@/config/web3';
+import { wagmiConfig } from '@/config/web3';
 import type { Address, AsyncResponse, TokenInfo } from '@/types';
 import { ResponseStatus } from '@/types';
 
@@ -11,7 +11,7 @@ export async function readERC20(
   tokenAddress: Address,
 ): Promise<AsyncResponse<TokenInfo>> {
   try {
-    const tokensData = await readContracts(WALLET_CONNECT_CONFIG, {
+    const tokensData = await readContracts(wagmiConfig, {
       contracts: [
         {
           abi: erc20Abi,

@@ -1,7 +1,7 @@
 import { readContract } from '@wagmi/core';
 
 import { erc20Abi } from '@/abi/erc20ABI';
-import { WALLET_CONNECT_CONFIG } from '@/config/web3';
+import { wagmiConfig } from '@/config/web3';
 import { formatBigInt } from '@/lib/formatBigInt';
 import type {
   Address,
@@ -19,7 +19,7 @@ const fetchTokenBalanceFromChain = async (
 ) => {
   const erc20Config = { abi: erc20Abi } as const;
 
-  const balance = await readContract(WALLET_CONNECT_CONFIG, {
+  const balance = await readContract(wagmiConfig, {
     ...erc20Config,
     address: tokenAddress,
     functionName: 'balanceOf',

@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Allowance } from '@/components/forms/Allowance';
 import { DepositForm } from '@/components/forms/DepositForm';
+import { LiquidityForm } from '@/components/forms/LiquidityForm';
 import Steps from '@/components/Steps';
 import { useStore } from '@/store/store';
 import { StepType } from '@/types';
@@ -43,6 +44,7 @@ const StepForm = () => {
       />
       {step === StepType.Deposit && <DepositForm />}
       {step === StepType.Allowance && <Allowance />}
+      {step === StepType.Liquidity && <LiquidityForm />}
     </div>
   );
 };

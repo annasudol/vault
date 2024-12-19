@@ -9,7 +9,7 @@ import type { PropsWithChildren } from 'react';
 import type { State } from 'wagmi';
 import { WagmiProvider } from 'wagmi';
 
-import { WALLET_CONNECT_CONFIG, WALLETCONNECT_PROJECT_ID } from '@/config/web3';
+import { wagmiConfig, WALLETCONNECT_PROJECT_ID } from '@/config/web3';
 
 interface Props extends PropsWithChildren {
   initialState?: State;
@@ -18,7 +18,7 @@ interface Props extends PropsWithChildren {
 const queryClient = new QueryClient();
 
 createWeb3Modal({
-  wagmiConfig: WALLET_CONNECT_CONFIG,
+  wagmiConfig,
   projectId: WALLETCONNECT_PROJECT_ID as string,
   enableAnalytics: false, // Optional - defaults to your Cloud configuration
   enableOnramp: true,
@@ -27,10 +27,7 @@ createWeb3Modal({
 export function Web3Provider(props: Props) {
   return (
     <>
-      <WagmiProvider
-        config={WALLET_CONNECT_CONFIG}
-        initialState={props.initialState}
-      >
+      <WagmiProvider config={wagmiConfig} initialState={props.initialState}>
         <QueryClientProvider client={queryClient}>
           <RainbowKitProvider>{props.children}</RainbowKitProvider>
         </QueryClientProvider>

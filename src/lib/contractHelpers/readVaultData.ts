@@ -2,7 +2,7 @@ import { readContracts } from '@wagmi/core';
 
 import { helperABI } from '@/abi/helperABI';
 import { vaultABI } from '@/abi/valutABI';
-import { WALLET_CONNECT_CONFIG } from '@/config/web3';
+import { wagmiConfig } from '@/config/web3';
 import { CONTRACT_ADDRESS } from '@/constants/contract';
 import { readERC20 } from '@/lib/contractHelpers/readERC20';
 import { truncateString } from '@/lib/truncateString';
@@ -23,7 +23,7 @@ export async function readVaultData(
   };
 
   try {
-    const reponseContract = await readContracts(WALLET_CONNECT_CONFIG, {
+    const reponseContract = await readContracts(wagmiConfig, {
       contracts: [
         {
           ...vaultContract,

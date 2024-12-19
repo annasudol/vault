@@ -1,24 +1,20 @@
 import { readContract } from '@wagmi/core';
 import { erc20Abi } from 'viem';
 
-import { WALLET_CONNECT_CONFIG } from '@/config/web3';
+import { wagmiConfig } from '@/config/web3';
 import { CONTRACT_ADDRESS } from '@/constants/contract';
-import { formatBigInt } from '@/lib/formatBigInt';
-import type {
-  Address,
-  AsyncResponse,
-  TokenAllowance,
-  TokenInfo,
-  TokensCollection,
-} from '@/types';
+import type { Address, AsyncResponse } from '@/types';
 import { ResponseStatus } from '@/types';
+
+import { formatBigInt } from '../formatBigInt';
 
 export async function readAllowance(
   user: Address,
   token: Address,
-): Promise<AsyncResponse<bigint>> {
+  decimals: number,
+): Promise<AsyncResponse<string>> {
   try {
-    const balance = await readContract(WALLET_CONNECT_CONFIG, {
+    const balance = await readContract(wagmiConfig, {
       abi: erc20Abi,
       address: token,
       functionName: 'allowance',
@@ -27,7 +23,7 @@ export async function readAllowance(
 
     return {
       status: ResponseStatus.Success,
-      data: balance,
+      data: formatBigInt(balance, decimals),
     };
   } catch (e) {
     return {
@@ -37,40 +33,50 @@ export async function readAllowance(
   }
 }
 
-export async function getAllAllowance(
-  address: Address,
-  tokens: TokensCollection<TokenInfo>,
-): Promise<AsyncResponse<TokensCollection<TokenAllowance>>> {
-  const allowancePromises = Object.values(tokens).map(async (token) => {
-    const allowance = await readAllowance(address, token.address);
-    if (allowance.status === ResponseStatus.Success && allowance.data) {
-      return {
-        status: ResponseStatus.Success,
-        result: {
-          [token.symbol]: {
-            allowanceInt: formatBigInt(allowance.data, token.decimals),
-            allowanceBigInt: allowance.data,
-          },
-        },
-      };
-    }
-    return {
-      status: ResponseStatus.Error,
-      message: 'Error when read allowance',
-    };
-  });
+// export async function getAllTokensAllowance(
+//   address: Address,
+//   tokens: TokensCollection<TokenInfo>,
+// ): Promise<TokensCollection<AsyncResponse<string>>> {
+//   const allowancePromises = Object.values(tokens).map(async (token) => {
+//     const allowance = await readAllowance(
+//       address,
+//       token.address,
+//       token.decimals,
+//     );
+//     return {
+//       [token.symbol]: {
+//         ...allowance,
+//       },
+//     };
+//   });
 
-  const allowanceResponse = await Promise.all(allowancePromises);
+//   const allowanceResponseArray = await Promise.all(allowancePromises);
+//   return allowanceResponseArray.reduce(
+//     (acc, curr) => ({ ...acc, ...curr }),
+//     {},
+//   );
+// }
+// export async function getTokensAllowance(
+//   address: Address,
+//   tokens: TokensCollection<TokenInfo>,
+// ) {
+//   const [wethAddress, sethAddress] = Object.values(tokens).map(
+//     (token) => token.address,
+//   );
+//   if (!wethAddress || !sethAddress) {
+//     return {
+//       status: ResponseStatus.Error,
+//       message: 'Error when read allowance',
+//     };
+//   }
+//   const res = await Promise.all([
+//     readAllowance(address, wethAddress),
+//     readAllowance(address, sethAddress),
+//   ]);
+//   console.log(res, 'tokens');
 
-  const aggregatedResult = allowanceResponse.reduce((acc, curr) => {
-    if (curr.status === ResponseStatus.Success && curr.result) {
-      return { ...acc, ...curr.result };
-    }
-    return acc;
-  }, {} as TokensCollection<TokenAllowance>);
-
-  return {
-    status: ResponseStatus.Success,
-    data: aggregatedResult,
-  };
-}
+//   return {
+//     status: ResponseStatus.Error,
+//     message: 'Error when read allowance',
+//   };
+// }

@@ -2,7 +2,7 @@ import { readContract } from '@wagmi/core';
 import type { Address } from 'viem';
 
 import { erc20Abi } from '@/abi/erc20ABI';
-import { WALLET_CONNECT_CONFIG } from '@/config/web3';
+import { wagmiConfig } from '@/config/web3';
 import type { AsyncResponse } from '@/types';
 import { ResponseStatus } from '@/types';
 
@@ -11,7 +11,7 @@ export async function getTokenBalance(
   tokenAddress: Address,
 ): Promise<AsyncResponse<bigint>> {
   try {
-    const balance = await readContract(WALLET_CONNECT_CONFIG, {
+    const balance = await readContract(wagmiConfig, {
       abi: erc20Abi,
       address: tokenAddress,
       functionName: 'balanceOf',

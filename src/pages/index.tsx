@@ -4,7 +4,7 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { TokenCard } from '@/components/TokenCard';
 import { vaultData } from '@/constants/vaultData';
 
-const Index = () => {
+const HomePage = () => {
   return (
     <MainLayout>
       <div className="flex justify-center p-12">
@@ -15,4 +15,4 @@ const Index = () => {
     </MainLayout>
   );
 };
-export default Index;
+export default HomePage;

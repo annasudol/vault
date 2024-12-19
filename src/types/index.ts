@@ -56,11 +56,6 @@ export interface TokenInfo {
   decimals: number;
 }
 
-export interface TokenAllowance {
-  allowanceInt: string;
-  allowanceBigInt: bigint;
-}
-
 export interface VaultData {
   contractName: string;
   tokens: TokensCollection<TokenInfo>;
@@ -72,6 +67,8 @@ export interface TokensCollection<T> {
 }
 
 export interface DepositTokens extends TokensCollection<string> {}
+
+export type TokenAllowanceResponse = AsyncResponse<string>;
 
 export type Address = `0x${string}`;
 
