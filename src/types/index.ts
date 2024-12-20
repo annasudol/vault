@@ -68,6 +68,11 @@ export interface TokensCollection<T> {
 
 export interface DepositTokens extends TokensCollection<string> {}
 
+export interface TokenDeposit {
+  depositValue: string;
+  maxDepositValue?: number;
+}
+
 export type TokenAllowanceResponse = AsyncResponse<string>;
 
 export type Address = `0x${string}`;

@@ -1,4 +1,3 @@
-import { Link } from '@nextui-org/react';
 import React from 'react';
 import { toast } from 'react-toastify';
 
@@ -9,6 +8,7 @@ import type { TokenAllowanceResponse, TokenSymbol, VaultData } from '@/types';
 import { Loading } from '../Loading';
 import { MyAlert } from '../MyAlert';
 import { MyButton } from '../MyButton';
+import { TxLink } from '../TxLink';
 
 interface AllowanceProps {
   allowance: TokenAllowanceResponse;
@@ -45,12 +45,7 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
             toast.success(
               <div>
                 <strong>Transaction is succesfull</strong>
-                <Link
-                  isExternal
-                  href={`https://arbiscan.io/tx/${tx.transactionHash}`}
-                >
-                  Transaction dedails
-                </Link>
+                <TxLink txHash={tx.transactionHash} />
               </div>,
             );
             handleUpdateAllowance();

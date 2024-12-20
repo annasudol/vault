@@ -13,15 +13,6 @@ import { StepType, TokenSymbol } from '@/types';
 
 import { MyButton } from '../MyButton';
 
-export interface TokenDeposit {
-  depositValue?: string;
-  maxDepositValue?: number;
-}
-
-export interface TokenDepositBySymbol {
-  [key: string]: TokenDeposit;
-}
-
 const DepositForm = () => {
   const { vault, tokenBalance, setDepositValue, changeStep } = useStore();
   const { address } = useAccount();

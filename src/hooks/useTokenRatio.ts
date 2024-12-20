@@ -1,15 +1,22 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { useStore } from '@/store/store';
-import type { Address } from '@/types';
+import type {
+  Address,
+  TokenBalance,
+  TokenDeposit,
+  TokensCollection,
+} from '@/types';
 import { TokenSymbol } from '@/types';
 
 export const useTokenRatio = (address: string | undefined) => {
   const { vault, fetchTokenBalance, tokenBalance } = useStore();
   const [tokenRatio, setTokenRatio] = useState<number>();
   const [tokensAllBalance, setTokensAllBalance] =
-    useState<Record<string, any>>();
-  const [tokenDeposit, setTokenDeposit] = useState<Record<string, any>>();
+    useState<TokensCollection<TokenBalance>>();
+
+  const [tokenDeposit, setTokenDeposit] =
+    useState<TokensCollection<TokenDeposit>>();
   const [balanceIsNotSufficient, setBalanceIsNotSufficient] = useState(false);
   const handleFetchTokenBalance = useCallback(() => {
     if (!address) {
