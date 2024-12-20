@@ -43,23 +43,21 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
             contractAddress,
             amountToAllowBN,
           );
-          if (tx && tx.status === 'success') {
+          if (tx) {
             toast.success(
               <div>
                 <strong>Transaction is succesfull</strong>
-                <TxLink txHash={tx.data} />
+                <TxLink txHash={tx} />
               </div>,
             );
             handleUpdateAllowance();
-          }
-          if (tx && tx.status === 'error') {
-            toast.success(
+          } else {
+            toast.error(
               <div>
                 <strong>Error</strong>
-                <p>{tx.message}</p>
+                <p>Error while processing transaction</p>
               </div>,
             );
-            handleUpdateAllowance();
           }
         } else {
           toast.error(
