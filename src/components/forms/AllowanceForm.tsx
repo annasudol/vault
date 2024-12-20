@@ -27,6 +27,7 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
   allowanceNeedsIncrease,
   handleUpdateAllowance,
 }) => {
+  const [isLoading, setIsLoading] = React.useState(false);
   const handleSetAllowance = async () => {
     const contractAddress = vault.tokens[token]?.address;
     const decimals = vault.tokens[token]?.decimals;
@@ -37,6 +38,7 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
       );
       try {
         if (contractAddress) {
+          setIsLoading(true);
           const tx = await increaseTokenAllowance(
             contractAddress,
             amountToAllowBN,
@@ -45,7 +47,16 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
             toast.success(
               <div>
                 <strong>Transaction is succesfull</strong>
-                <TxLink txHash={tx.transactionHash} />
+                <TxLink txHash={tx.data} />
+              </div>,
+            );
+            handleUpdateAllowance();
+          }
+          if (tx && tx.status === 'error') {
+            toast.success(
+              <div>
+                <strong>Error</strong>
+                <p>{tx.message}</p>
               </div>,
             );
             handleUpdateAllowance();
@@ -57,6 +68,8 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
         }
       } catch {
         toast.error('Error while processing the transaction');
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -77,7 +90,11 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
       <p>Allowance: {allowance.data}</p>
       <p>Deposit Value: {depositValue}</p>
       {allowanceNeedsIncrease === true && (
-        <MyButton onPress={() => handleSetAllowance()} className="my-4">
+        <MyButton
+          onPress={() => handleSetAllowance()}
+          className="my-4"
+          isLoading={isLoading}
+        >
           Set {token} Allowance
         </MyButton>
       )}

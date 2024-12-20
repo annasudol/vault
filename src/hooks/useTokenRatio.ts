@@ -14,9 +14,9 @@ export const useTokenRatio = (address: string | undefined) => {
   const [tokenRatio, setTokenRatio] = useState<number>();
   const [tokensAllBalance, setTokensAllBalance] =
     useState<TokensCollection<TokenBalance>>();
-
   const [tokenDeposit, setTokenDeposit] =
     useState<TokensCollection<TokenDeposit>>();
+
   const [balanceIsNotSufficient, setBalanceIsNotSufficient] = useState(false);
   const handleFetchTokenBalance = useCallback(() => {
     if (!address) {
@@ -51,6 +51,7 @@ export const useTokenRatio = (address: string | undefined) => {
           const ratio = Number(ratioBN);
           setTokenRatio(ratio);
 
+          // Update maxDepositValue for tokens based on the ratio and balance of other token
           const depositValue = Object.keys(tokenBalanceData).reduce(
             (acc, token) => {
               const balance0Token =
