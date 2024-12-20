@@ -6,7 +6,7 @@ import { Logo } from '@/components/Logo';
 
 const MainNavbar = () => (
   <Navbar className="w-full" shouldHideOnScroll>
-    <div className="h-22 mx-auto flex w-full max-w-screen-lg flex-wrap items-center justify-between px-4">
+    <div className="mx-auto flex w-full flex-wrap items-center justify-between">
       <nav className="py-6">
         <Link href="/">
           <Logo size="md" />

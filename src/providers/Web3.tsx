@@ -20,7 +20,7 @@ const queryClient = new QueryClient();
 createWeb3Modal({
   wagmiConfig,
   projectId: WALLETCONNECT_PROJECT_ID as string,
-  enableAnalytics: false, // Optional - defaults to your Cloud configuration
+  enableAnalytics: false,
   enableOnramp: true,
 });
 
