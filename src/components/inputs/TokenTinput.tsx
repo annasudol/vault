@@ -64,21 +64,25 @@ const TokenInput: React.FC<CustomInputProps> = ({
         isRequired={isRequired}
         errorMessage={errorMessages}
         isInvalid={Boolean(errorMessages)}
-        type="number"
+        disabled={max === 0}
+        type="text"
       />
-      <span className="text-right text-xs text-gray-500">
-        max: {max.toFixed(2)} {name}
-      </span>
-      <Button
-        size="sm"
-        variant="bordered"
-        color="primary"
-        className="disabled:hover:none absolute right-1 top-7 disabled:cursor-not-allowed"
-        disabled={max === 0 || value === max.toString()}
-        onPress={() => handleChange(max.toString())}
-      >
-        max
-      </Button>
+      {max > 0 && (
+        <>
+          <span className="text-right text-xs text-gray-500">
+            max: {max.toFixed(2)} {name}
+          </span>
+          <Button
+            size="sm"
+            variant="bordered"
+            color="primary"
+            className="absolute right-1 top-7 disabled:cursor-not-allowed"
+            onPress={() => handleChange(max.toString())}
+          >
+            max
+          </Button>
+        </>
+      )}
 
       {displaySlider && max > 0 && (
         <Slider

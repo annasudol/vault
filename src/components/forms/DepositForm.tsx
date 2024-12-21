@@ -64,7 +64,7 @@ const DepositForm = () => {
 
   const getButtonText = () => {
     if (!address) {
-      return 'WalLet is disconnected';
+      return 'Wallet is disconnected';
     }
     if (balanceIsNotSufficient) {
       return 'Balance is not suficient';
@@ -124,7 +124,7 @@ const DepositForm = () => {
         })}
         {balanceIsNotSufficient && (
           <MyAlert
-            message={`You dont have enoug balace of ${tokensSymbols[0]} and /or ${tokensSymbols[1]}`}
+            message={`You dont have enough balace of ${tokensSymbols[0]} and /or ${tokensSymbols[1]}`}
             color="danger"
           />
         )}
