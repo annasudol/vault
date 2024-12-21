@@ -5,18 +5,18 @@ import { useAccount } from 'wagmi';
 import { TokenInput } from '@/components/inputs/TokenTinput';
 import { Loading } from '@/components/Loading';
 import { MyAlert } from '@/components/MyAlert';
+import { MyButton } from '@/components/MyButton';
 import { INPUT_VALUE_PRECISION } from '@/constants/contract';
 import { useTokenRatio } from '@/hooks/useTokenRatio';
 import { truncateString } from '@/lib/truncateString';
 import { useStore } from '@/store/store';
 import { StepType, TokenSymbol } from '@/types';
 
-import { MyButton } from '../MyButton';
-
 const DepositForm = () => {
   const { vault, tokenBalance, setDepositValue, changeStep } = useStore();
   const { address } = useAccount();
   const [isError, setIsError] = useState(false);
+
   const {
     tokenRatio,
     tokensAllBalance,
