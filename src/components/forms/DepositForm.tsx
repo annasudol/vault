@@ -83,6 +83,13 @@ const DepositForm = () => {
       return;
     }
     const formData = new FormData(e.currentTarget);
+    if (
+      formData.get(TokenSymbol.WETH) === '0' &&
+      formData.get(TokenSymbol.rETH) === '0'
+    ) {
+      setIsError(true);
+      return;
+    }
     if ('data' in vault) {
       const datas: DepositTokens = {
         [TokenSymbol.WETH]: {
@@ -131,6 +138,7 @@ const DepositForm = () => {
               label={`${token} Amount`}
               displaySlider={token === TokenSymbol.rETH}
               setError={setIsError}
+              isError={isError}
             />
           );
         })}

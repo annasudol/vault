@@ -8,6 +8,7 @@ type CustomInputProps = {
   setValue: (value: string) => void;
   label: string;
   setError: (value: boolean) => void;
+  isError: boolean;
   balance?: string;
   isRequired?: boolean;
   displaySlider?: boolean;
@@ -20,6 +21,7 @@ const TokenInput: React.FC<CustomInputProps> = ({
   setValue,
   label,
   setError,
+  isError,
   isRequired = true,
   displaySlider = false,
   balance,
@@ -63,7 +65,7 @@ const TokenInput: React.FC<CustomInputProps> = ({
         labelPlacement="outside"
         isRequired={isRequired}
         errorMessage={errorMessages}
-        isInvalid={Boolean(errorMessages)}
+        isInvalid={Boolean(errorMessages) || isError}
         disabled={max === 0}
         type="text"
       />
