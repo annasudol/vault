@@ -64,7 +64,7 @@ const DepositForm = () => {
 
   const getButtonText = () => {
     if (!address) {
-      return 'Walet is disconnected';
+      return 'WalLet is disconnected';
     }
     if (balanceIsNotSufficient) {
       return 'Balance is not suficient';
