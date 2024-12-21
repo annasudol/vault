@@ -1,5 +1,6 @@
 import { Button, Input, Slider } from '@nextui-org/react';
-import React, { useEffect } from 'react';
+import React from 'react';
+import { z } from 'zod';
 
 type CustomInputProps = {
   name: string;
@@ -25,34 +26,26 @@ const TokenInput: React.FC<CustomInputProps> = ({
   max = 0,
 }) => {
   const [errorMessages, setErrorMessages] = React.useState<string>();
-  const [inputValidate, setInputValidate] = React.useState<boolean>(false);
 
-  useEffect(() => {
-    let erorMessage;
-    if (inputValidate) {
-      if (Number(value) > max) {
-        erorMessage = 'Value cannot be higher than max value';
-      }
-      if (Number(value) <= 0) {
-        erorMessage = 'Value must be greater than 0';
-      }
-      const validValueRegex = /^0$|^[1-9]\d*(\.\d+)?$|^0\.\d+$/;
-      if (!validValueRegex.test(value)) {
-        erorMessage = 'Value must be avalid number';
-      }
-      setError(erorMessage !== undefined);
-
-      setErrorMessages(erorMessage);
-    }
-  }, [value, max, inputValidate]);
+  const inputSchema = z
+    .number({ invalid_type_error: 'Value must be a valid number' })
+    .positive('Value must be greater than 0')
+    .max(max, `Value cannot exceed the maximum of ${max.toFixed(2)}`);
 
   const handleChange = (val: string) => {
-    // only allow numbers and one decimal point
-    if (!/^\d*\.?\d*$/.test(val)) {
-      return;
+    try {
+      const parsedValue = inputSchema.parse(Number(val));
+      setValue(parsedValue.toString());
+      setError(false); // Clear any existing errors
+      setErrorMessages(undefined); // Clear error messages
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        if (error.errors[0] && error.errors[0].message) {
+          setErrorMessages(error.errors[0].message);
+        }
+        setError(true);
+      }
     }
-
-    setValue(val);
   };
 
   return (
@@ -65,24 +58,23 @@ const TokenInput: React.FC<CustomInputProps> = ({
       <Input
         name={name}
         value={value}
-        onValueChange={(val) => handleChange(val)}
+        onChange={(e) => handleChange(e.target.value)}
         label={label}
         labelPlacement="outside"
         isRequired={isRequired}
         errorMessage={errorMessages}
-        isInvalid={errorMessages !== undefined}
-        onMouseLeave={() => setInputValidate(true)}
-        type="text"
+        isInvalid={Boolean(errorMessages)}
+        type="number"
       />
       <span className="text-right text-xs text-gray-500">
-        max: {max} {name}
+        max: {max.toFixed(2)} {name}
       </span>
       <Button
         size="sm"
         variant="bordered"
         color="primary"
         className="disabled:hover:none absolute right-1 top-7 disabled:cursor-not-allowed"
-        disabled={max === 0 || value === max.toString(4)}
+        disabled={max === 0 || value === max.toString()}
         onPress={() => handleChange(max.toString())}
       >
         max
@@ -98,21 +90,12 @@ const TokenInput: React.FC<CustomInputProps> = ({
           onChange={(val) => handleChange(val.toString())}
           label={`Select a ${name} value`}
           marks={[
-            {
-              value: max / 5,
-              label: '20%',
-            },
-            {
-              value: max / 2,
-              label: '50%',
-            },
-            {
-              value: max / 1.25,
-              label: '80%',
-            },
+            { value: max / 5, label: '20%' },
+            { value: max / 2, label: '50%' },
+            { value: max / 1.25, label: '80%' },
           ]}
           size="sm"
-          step={10}
+          step={1}
         />
       )}
     </div>
