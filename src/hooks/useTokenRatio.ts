@@ -11,7 +11,9 @@ import { TokenSymbol } from '@/types';
 
 export const useTokenRatio = (address: string | undefined) => {
   const { vault, fetchTokenBalance, tokenBalance } = useStore();
+
   const [tokenRatio, setTokenRatio] = useState<number>();
+
   const [tokensAllBalance, setTokensAllBalance] =
     useState<TokensCollection<TokenBalance>>();
   const [tokenDeposit, setTokenDeposit] =

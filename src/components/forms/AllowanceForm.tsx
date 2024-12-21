@@ -28,6 +28,7 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
   handleUpdateAllowance,
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
+
   const handleSetAllowance = async () => {
     const contractAddress = vault.tokens[token]?.address;
     const decimals = vault.tokens[token]?.decimals;

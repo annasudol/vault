@@ -1,7 +1,7 @@
 import { readContract } from '@wagmi/core';
 import type { Address } from 'viem';
+import { erc20Abi } from 'viem';
 
-import { erc20Abi } from '@/abi/erc20ABI';
 import { wagmiConfig } from '@/config/web3';
 import type { AsyncResponse } from '@/types';
 import { ResponseStatus } from '@/types';

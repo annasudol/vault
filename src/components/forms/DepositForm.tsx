@@ -8,8 +8,10 @@ import { MyAlert } from '@/components/MyAlert';
 import { MyButton } from '@/components/MyButton';
 import { INPUT_VALUE_PRECISION } from '@/constants/contract';
 import { useTokenRatio } from '@/hooks/useTokenRatio';
+import { parseToBigInt } from '@/lib/formatBigInt';
 import { truncateString } from '@/lib/truncateString';
 import { useStore } from '@/store/store';
+import type { DepositTokens } from '@/types';
 import { StepType, TokenSymbol } from '@/types';
 
 const DepositForm = () => {
@@ -77,20 +79,30 @@ const DepositForm = () => {
     currentTarget: HTMLFormElement | undefined;
   }) => {
     e.preventDefault();
-
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(
-      Array.from(formData.entries()).map(([key, value]) => [
-        key,
-        value.toString(),
-      ]),
-    );
     if (isError) {
       return;
     }
-
-    setDepositValue(data);
-    changeStep(StepType.Allowance);
+    const formData = new FormData(e.currentTarget);
+    if ('data' in vault) {
+      const datas: DepositTokens = {
+        [TokenSymbol.WETH]: {
+          int: formData.get(TokenSymbol.WETH) as string,
+          bigInt: parseToBigInt(
+            formData.get(TokenSymbol.WETH) as string,
+            vault.data.tokens[TokenSymbol.WETH]?.decimals || 18,
+          ),
+        },
+        [TokenSymbol.rETH]: {
+          int: formData.get(TokenSymbol.rETH) as string,
+          bigInt: parseToBigInt(
+            formData.get(TokenSymbol.rETH) as string,
+            vault.data.tokens[TokenSymbol.rETH]?.decimals || 18,
+          ),
+        },
+      };
+      setDepositValue(datas);
+      changeStep(StepType.Allowance);
+    }
   };
 
   if (vault.status === 'success' && 'data' in vault) {
@@ -124,7 +136,8 @@ const DepositForm = () => {
         })}
         {balanceIsNotSufficient && (
           <MyAlert
-            message={`You dont have enough balace of ${tokensSymbols[0]} and /or ${tokensSymbols[1]}`}
+            message={`You dont have enough balace of ${tokensSymbols[0]} 
+            and /or ${tokensSymbols[1]}`}
             color="danger"
           />
         )}

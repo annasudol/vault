@@ -100,7 +100,7 @@ const Allowance = () => {
       {tokenWETHAllowance && (
         <AllowanceForm
           vault={vault.data}
-          depositValue={depositValue?.WETH}
+          depositValue={depositValue?.WETH?.int}
           allowance={tokenWETHAllowance}
           token={TokenSymbol.WETH}
           allowanceNeedsIncrease={allowanceNeedsIncrease.WETH}
@@ -110,7 +110,7 @@ const Allowance = () => {
       {tokenrETHAllowance && (
         <AllowanceForm
           vault={vault.data}
-          depositValue={depositValue?.rETH}
+          depositValue={depositValue?.rETH?.int}
           allowance={tokenrETHAllowance}
           token={TokenSymbol.rETH}
           allowanceNeedsIncrease={allowanceNeedsIncrease.rETH}

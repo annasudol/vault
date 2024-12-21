@@ -66,7 +66,12 @@ export interface TokensCollection<T> {
   [key: string]: T;
 }
 
-export interface DepositTokens extends TokensCollection<string> {}
+export interface TokenValue {
+  int?: string;
+  bigInt?: bigint;
+}
+
+export interface DepositTokens extends TokensCollection<TokenValue> {}
 
 export interface TokenDeposit {
   depositValue: string;
@@ -76,6 +81,8 @@ export interface TokenDeposit {
 export type TokenAllowanceResponse = AsyncResponse<string>;
 
 export type Address = `0x${string}`;
+
+export type TxHash = `0x${string}`;
 
 export enum StepType {
   Deposit = 'Deposit',
