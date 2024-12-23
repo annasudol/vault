@@ -5,7 +5,6 @@ import { useAccount } from 'wagmi';
 import { TokenInput } from '@/components/inputs/TokenTinput';
 import { Loading } from '@/components/Loading';
 import { MyAlert } from '@/components/MyAlert';
-import { MyButton } from '@/components/MyButton';
 import { INPUT_VALUE_PRECISION } from '@/constants/contract';
 import { useTokenRatio } from '@/hooks/useTokenRatio';
 import { parseToBigInt } from '@/lib/formatBigInt';
@@ -13,6 +12,8 @@ import { truncateString } from '@/lib/truncateString';
 import { useStore } from '@/store/store';
 import type { DepositTokens } from '@/types';
 import { StepType, TokenSymbol } from '@/types';
+
+import { SubmitButton } from '../button/SubmitButton';
 
 const DepositForm = () => {
   const { vault, tokenBalance, setDepositValue, changeStep } = useStore();
@@ -117,7 +118,7 @@ const DepositForm = () => {
     const tokensSymbols = Object.keys(tokens);
     return (
       <Form
-        className="mb-11 min-h-96 w-full max-w-sm"
+        className="mx-auto mb-11 min-h-96 w-full p-4"
         validationBehavior="native"
         onSubmit={onSubmit}
       >
@@ -158,13 +159,9 @@ const DepositForm = () => {
             ;
           </div>
         )}
-        <MyButton
-          type="submit"
-          className="w-full"
-          isDisabled={balanceIsNotSufficient || !address}
-        >
+        <SubmitButton isDisabled={balanceIsNotSufficient || !address}>
           {getButtonText()}
-        </MyButton>
+        </SubmitButton>
       </Form>
     );
   }

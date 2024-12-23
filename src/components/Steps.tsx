@@ -95,12 +95,12 @@ const Steps = React.forwardRef<HTMLButtonElement, StepsProps>(
     }, [color, className]);
 
     return (
-      <nav
+      <div
         aria-label="Progress"
         className="-my-4 max-w-fit overflow-x-auto py-4"
       >
         <ol
-          className={cn('flex flex-row flex-nowrap gap-x-3', colors, className)}
+          className={cn('flex flex-row flex-nowrap gap-x-2', colors, className)}
         >
           {steps?.map((step, stepIdx) => {
             let status;
@@ -122,7 +122,7 @@ const Steps = React.forwardRef<HTMLButtonElement, StepsProps>(
                   ref={ref}
                   aria-current={status === 'active' ? 'step' : undefined}
                   className={cn(
-                    'group flex w-full cursor-pointer flex-row items-center justify-center gap-x-3 rounded-large py-2.5',
+                    'group flex w-full cursor-pointer flex-row items-center justify-center gap-x-1 rounded-large py-2.5',
                     stepClassName,
                   )}
                   {...props}
@@ -205,7 +205,7 @@ const Steps = React.forwardRef<HTMLButtonElement, StepsProps>(
             );
           })}
         </ol>
-      </nav>
+      </div>
     );
   },
 );

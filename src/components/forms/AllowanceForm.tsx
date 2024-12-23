@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
+import { SubmitButton } from '@/components/button/SubmitButton';
+import { MyAlert } from '@/components/MyAlert';
+import { TxLink } from '@/components/TxLink';
 import { useIncreaseAllowance } from '@/hooks/useIncreaseAllowance';
 import type { TokenSymbol, VaultData } from '@/types';
-
-import { MyAlert } from '../MyAlert';
-import { MyButton } from '../MyButton';
-import { TxLink } from '../TxLink';
 
 interface AllowanceProps {
   vault: VaultData;
@@ -21,10 +20,16 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
   token,
   updateAllowance,
 }) => {
-  const { tx, handleIncreaseAllowance, allowance, statusRead, statusWrite } =
-    useIncreaseAllowance({
-      token: vault.tokens[token],
-    });
+  const {
+    tx,
+    handleIncreaseAllowance,
+    allowance,
+    statusRead,
+    statusWrite,
+    argsError,
+  } = useIncreaseAllowance({
+    token: vault.tokens[token],
+  });
 
   const [allowanceNeedsIncrease, setAllowanceNeedsIncrease] =
     useState<boolean>();
@@ -64,18 +69,18 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
       <p>Allowance: {statusRead.isLoading ? '...loading' : allowance}</p>
       <p>Deposit Value: {depositValue}</p>
       {allowanceNeedsIncrease && (
-        <MyButton
+        <SubmitButton
           onPress={() =>
             depositValue &&
             handleIncreaseAllowance({
               amount: depositValue,
             })
           }
-          className="my-4"
           isLoading={statusWrite.isLoading}
+          disabled={!depositValue}
         >
           Set {token} Allowance
-        </MyButton>
+        </SubmitButton>
       )}
       {allowanceNeedsIncrease === false && (
         <MyAlert
@@ -83,11 +88,18 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
           message={`Allowance for ${token} is already set`}
         />
       )}
-      {statusRead.isError && (
+      {argsError ? (
         <MyAlert
           color="danger"
-          message={`Error while reading ${token} allowance'`}
+          message={`Wallet is not connected  or token is not recognized to get ${token} allowance`}
         />
+      ) : (
+        statusRead.isError && (
+          <MyAlert
+            color="danger"
+            message={`Error while reading ${token} allowance`}
+          />
+        )
       )}
     </div>
   );

@@ -19,7 +19,7 @@ const Allowance = () => {
 
   return (
     <div>
-      <h2 className="mb-2 text-xl">Allowance</h2>
+      <h2 className="my-8 text-xl">Allowance</h2>
       {'data' in vault && (
         <>
           <AllowanceForm

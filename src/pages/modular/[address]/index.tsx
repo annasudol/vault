@@ -50,7 +50,7 @@ const Index = () => {
           title={vault.data.contractName}
           tokens={vault.data.tokens}
         />
-        <div className="mx-auto rounded-lg bg-white p-4 sm:max-w-xl">
+        <div className="mx-auto rounded-lg bg-white p-4 sm:max-w-lg">
           <StepForm />
         </div>
       </ValultLayout>

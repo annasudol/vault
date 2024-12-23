@@ -7,7 +7,7 @@ interface MyAlertProps {
 
 export function MyAlert({ message, color }: MyAlertProps) {
   return (
-    <div className="my-3 flex w-full items-center break-all">
+    <div className="my-3 flex w-full items-center">
       <Alert color={color} title={message} />
     </div>
   );

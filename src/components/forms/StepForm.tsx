@@ -24,7 +24,7 @@ const StepForm = () => {
   };
 
   return (
-    <div className="">
+    <div className="flex flex-col items-center justify-center">
       <Steps
         currentStep={getCurrentStepNumber(step)}
         steps={[
