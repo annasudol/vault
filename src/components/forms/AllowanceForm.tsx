@@ -1,98 +1,78 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { increaseTokenAllowance } from '@/lib/contractHelpers/increaseAllowance';
-import { parseToBigInt } from '@/lib/formatBigInt';
-import type { TokenAllowanceResponse, TokenSymbol, VaultData } from '@/types';
+import { useIncreaseAllowance } from '@/hooks/useIncreaseAllowance';
+import type { TokenSymbol, VaultData } from '@/types';
 
-import { Loading } from '../Loading';
 import { MyAlert } from '../MyAlert';
 import { MyButton } from '../MyButton';
 import { TxLink } from '../TxLink';
 
 interface AllowanceProps {
-  allowance: TokenAllowanceResponse;
   vault: VaultData;
   token: TokenSymbol;
-  handleUpdateAllowance: () => void;
   depositValue?: string;
-  allowanceNeedsIncrease: boolean | null | undefined;
+  updateAllowance: (value: boolean) => void;
 }
 
 const AllowanceForm: React.FC<AllowanceProps> = ({
-  allowance,
   depositValue,
   vault,
   token,
-  allowanceNeedsIncrease,
-  handleUpdateAllowance,
+  updateAllowance,
 }) => {
-  const [isLoading, setIsLoading] = React.useState(false);
+  const { tx, handleIncreaseAllowance, allowance, statusRead, statusWrite } =
+    useIncreaseAllowance({
+      token: vault.tokens[token],
+    });
 
-  const handleSetAllowance = async () => {
-    const contractAddress = vault.tokens[token]?.address;
-    const decimals = vault.tokens[token]?.decimals;
-    if (contractAddress && decimals && depositValue) {
-      const amountToAllowBN = parseToBigInt(
-        depositValue.toString(),
-        Number(decimals),
-      );
-      try {
-        if (contractAddress) {
-          setIsLoading(true);
-          const tx = await increaseTokenAllowance(
-            contractAddress,
-            amountToAllowBN,
-          );
-          if (tx) {
-            toast.success(
-              <div>
-                <strong>Transaction is succesfull</strong>
-                <TxLink txHash={tx} />
-              </div>,
-            );
-            handleUpdateAllowance();
-          } else {
-            toast.error(
-              <div>
-                <strong>Error</strong>
-                <p>Error while processing transaction</p>
-              </div>,
-            );
-          }
-        } else {
-          toast.error(
-            'Error while processing the transaction. Contract Address of a token is not found',
-          );
-        }
-      } catch {
-        toast.error('Error while processing the transaction');
-      } finally {
-        setIsLoading(false);
-      }
+  const [allowanceNeedsIncrease, setAllowanceNeedsIncrease] =
+    useState<boolean>();
+
+  useEffect(() => {
+    const status = Number(allowance) < Number(depositValue);
+    setAllowanceNeedsIncrease(status);
+    updateAllowance(status);
+  }, [allowance, vault]);
+
+  const [displayedToasts, setDisplayedToasts] = useState<Set<string>>(
+    new Set(),
+  );
+  useEffect(() => {
+    const toastIdError = `${token}-error`;
+    const toastIdSuccess = `${token}-success`;
+
+    if (statusWrite.isError && !displayedToasts.has(toastIdError)) {
+      toast.error(`Error while increasing ${token} allowance`);
+      setDisplayedToasts((prev) => new Set(prev).add(toastIdError));
     }
-  };
-  if (allowance.status === 'pending') {
-    return <Loading title={`Reading ${token} allowance`} />;
-  }
-  if (allowance.status === 'error') {
-    return (
-      <div className="flex h-40 items-center justify-center">
-        <MyAlert message={`Error reading ${token} allowance`} color="danger" />;
-      </div>
-    );
-  }
+
+    if (statusWrite.isSuccess && tx && !displayedToasts.has(toastIdSuccess)) {
+      toast.success(
+        <div>
+          <p>{`Increased ${token} allowance successfully`}</p>
+          <TxLink txHash={tx} />
+        </div>,
+      );
+      setDisplayedToasts((prev) => new Set(prev).add(toastIdSuccess));
+    }
+  }, [statusWrite, tx, token, displayedToasts]);
 
   return (
     <div className="my-4">
       <h3 className="text-lg font-medium">{token}</h3>
-      <p>Allowance: {allowance.data}</p>
+      <p>Allowance: {statusRead.isLoading ? '...loading' : allowance}</p>
       <p>Deposit Value: {depositValue}</p>
-      {allowanceNeedsIncrease === true && (
+      {allowanceNeedsIncrease && (
         <MyButton
-          onPress={() => handleSetAllowance()}
+          onPress={() =>
+            depositValue &&
+            handleIncreaseAllowance({
+              amount: depositValue,
+            })
+          }
           className="my-4"
-          isLoading={isLoading}
+          isLoading={statusWrite.isLoading}
         >
           Set {token} Allowance
         </MyButton>
@@ -101,6 +81,12 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
         <MyAlert
           color="success"
           message={`Allowance for ${token} is already set`}
+        />
+      )}
+      {statusRead.isError && (
+        <MyAlert
+          color="danger"
+          message={`Error while reading ${token} allowance'`}
         />
       )}
     </div>

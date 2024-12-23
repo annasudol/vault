@@ -89,3 +89,9 @@ export enum StepType {
   Allowance = 'Allowance',
   Liquidity = 'Liquidity',
 }
+
+export interface CallContractStatus {
+  isLoading: boolean;
+  isError: boolean;
+  isSuccess?: boolean;
+}
