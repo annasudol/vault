@@ -1,10 +1,11 @@
-import { Image } from '@nextui-org/react';
+import { cn, Image } from '@nextui-org/react';
 
 import { ChainName, TokenSymbol } from '@/types';
 
 const tokenIcons: Record<TokenSymbol | ChainName, string> = {
-  [TokenSymbol.WETH]: '/assets/wETH.png',
+  [TokenSymbol.WETH]: '/assets/ETH.png',
   [TokenSymbol.rETH]: '/assets/rETH.svg',
+  [TokenSymbol.wstETH]: '/assets/wstETH.png',
   [ChainName.Arbitrum]: '/assets/arbitrum.png',
 };
 
@@ -40,7 +41,7 @@ export function TokenIcon({ token, className, size = 50 }: TokenIconProps) {
       src={tokenIcons[token as TokenSymbol | ChainName]}
       width={size}
       height={size}
-      className={className}
+      className={cn(className, 'rounded-full')}
     />
   );
 }

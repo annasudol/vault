@@ -5,6 +5,7 @@ export enum ChainName {
 export enum TokenSymbol {
   rETH = 'rETH',
   WETH = 'WETH',
+  wstETH = 'wstETH',
 }
 
 export interface StaticData {

@@ -19,7 +19,7 @@ export function MainLayout(props: PropsWithChildren) {
         <MainNavbar />
         <MainHeader />
         <main className="bg-slate-100">
-          <div className="mx-auto max-w-lg grow">{props.children}</div>
+          <div className="mx-auto max-w-2xl grow">{props.children}</div>
         </main>
         <Footer />
       </div>

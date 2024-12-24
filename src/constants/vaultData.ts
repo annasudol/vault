@@ -22,4 +22,23 @@ export const vaultData: StaticData[] = [
       },
     },
   },
+  {
+    vaultAddress: '0xf06fda2664d1f88d19919e37034b92bf26896c61',
+    chain: ChainName.Arbitrum,
+    tokens: [TokenSymbol.wstETH, TokenSymbol.WETH],
+    stats: {
+      TVL: {
+        title: '$5.78M',
+      },
+      APY: {
+        title: '0.12%',
+      },
+      volume30d: {
+        title: '$45.71M',
+      },
+      volueme1d: {
+        title: '0.28',
+      },
+    },
+  },
 ];
