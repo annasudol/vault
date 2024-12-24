@@ -18,7 +18,7 @@ export function MainLayout(props: PropsWithChildren) {
       <div className="flex min-h-screen flex-col">
         <MainNavbar />
         <MainHeader />
-        <main className="bg-slate-100">
+        <main className="bg-slate-200">
           <div className="mx-auto max-w-2xl grow">{props.children}</div>
         </main>
         <Footer />

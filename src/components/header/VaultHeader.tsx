@@ -9,10 +9,13 @@ const VaultHeader = ({ title, tokens }: VaultHeaderProps) => (
   <header className="mx-auto max-w-screen-lg p-4">
     <div className="mb-12 flex flex-col items-start justify-start sm:flex-row sm:items-center sm:justify-center">
       <div className="flex justify-start">
-        <TokenIcon token={Object.keys(tokens)[0]} />
+        <TokenIcon
+          token={Object.keys(tokens)[0]}
+          className="border-2 border-white"
+        />
         <TokenIcon
           token={Object.keys(tokens)[1]}
-          className="relative -left-2 z-10"
+          className="relative -left-2 z-10 border-2 border-white"
         />
       </div>
       <h1 className="ml-2 text-4xl font-bold">{title}</h1>

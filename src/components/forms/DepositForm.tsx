@@ -84,32 +84,36 @@ const DepositForm = () => {
       return;
     }
     const formData = new FormData(e.currentTarget);
-    if (
-      formData.get(TokenSymbol.WETH) === '0' &&
-      formData.get(TokenSymbol.rETH) === '0'
-    ) {
-      setIsError(true);
-      return;
-    }
+
     if ('data' in vault) {
-      const datas: DepositTokens = {
-        [TokenSymbol.WETH]: {
-          int: formData.get(TokenSymbol.WETH) as string,
-          bigInt: parseToBigInt(
-            formData.get(TokenSymbol.WETH) as string,
-            vault.data.tokens[TokenSymbol.WETH]?.decimals || 18,
-          ),
-        },
-        [TokenSymbol.rETH]: {
-          int: formData.get(TokenSymbol.rETH) as string,
-          bigInt: parseToBigInt(
-            formData.get(TokenSymbol.rETH) as string,
-            vault.data.tokens[TokenSymbol.rETH]?.decimals || 18,
-          ),
-        },
-      };
-      setDepositValue(datas);
-      changeStep(StepType.Allowance);
+      const { tokens } = vault.data;
+      const token0 = Object.keys(tokens)[0];
+      const token1 = Object.keys(tokens)[1];
+
+      if (token0 && token1) {
+        if (formData.get(token0) === '0' && formData.get(token1) === '0') {
+          setIsError(true);
+          return;
+        }
+        const datas: DepositTokens = {
+          [token0]: {
+            int: formData.get(token0) as string,
+            bigInt: parseToBigInt(
+              formData.get(token0) as string,
+              vault.data.tokens[token0]?.decimals || 18,
+            ),
+          },
+          [token1]: {
+            int: formData.get(token1) as string,
+            bigInt: parseToBigInt(
+              formData.get(token1) as string,
+              vault.data.tokens[token1]?.decimals || 18,
+            ),
+          },
+        };
+        setDepositValue(datas);
+        changeStep(StepType.Allowance);
+      }
     }
   };
 

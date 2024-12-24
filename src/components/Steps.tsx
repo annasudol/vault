@@ -51,19 +51,15 @@ function CheckIcon(props: ComponentProps<'svg'>) {
 }
 
 const Steps = React.forwardRef<HTMLButtonElement, StepsProps>(
-  (
-    {
-      steps = [],
-      defaultStep = 0,
-      onStepChange,
-      currentStep: currentStepProp,
-      hideProgressBars = false,
-      stepClassName,
-      className,
-      ...props
-    },
-    ref,
-  ) => {
+  ({
+    steps = [],
+    defaultStep = 0,
+    onStepChange,
+    currentStep: currentStepProp,
+    hideProgressBars = false,
+    stepClassName,
+    className,
+  }) => {
     const [currentStep] = useControlledState(
       currentStepProp,
       defaultStep,
@@ -104,9 +100,9 @@ const Steps = React.forwardRef<HTMLButtonElement, StepsProps>(
         >
           {steps?.map((step, stepIdx) => {
             let status;
-            if (currentStep === stepIdx) {
+            if (currentStep === stepIdx + 1) {
               status = 'active';
-            } else if (currentStep < stepIdx) {
+            } else if (currentStep < stepIdx + 1) {
               status = 'inactive';
             } else {
               status = 'complete';
@@ -117,15 +113,13 @@ const Steps = React.forwardRef<HTMLButtonElement, StepsProps>(
                 key={stepIdx}
                 className="relative flex w-full items-center pr-12"
               >
-                <button
+                <div
                   key={stepIdx}
-                  ref={ref}
                   aria-current={status === 'active' ? 'step' : undefined}
                   className={cn(
-                    'group flex w-full cursor-pointer flex-row items-center justify-center gap-x-1 rounded-large py-2.5',
+                    'group flex w-full flex-row items-center justify-center gap-x-1 rounded-large py-2.5',
                     stepClassName,
                   )}
-                  {...props}
                 >
                   <div className="h-ful relative flex items-center whitespace-nowrap">
                     <LazyMotion features={domAnimation}>
@@ -200,7 +194,7 @@ const Steps = React.forwardRef<HTMLButtonElement, StepsProps>(
                       />
                     </div>
                   )}
-                </button>
+                </div>
               </li>
             );
           })}

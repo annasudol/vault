@@ -29,7 +29,7 @@ export function TokenIcon({ token, className, size = 50 }: TokenIconProps) {
           width: size,
           height: size,
         }}
-        className={`flex items-center justify-center rounded-full border-2 border-gray-700 bg-gray-200 ${className}`}
+        className={`flex items-center justify-center rounded-full border-2 border-gray-700 bg-gray-100 ${className}`}
       >
         <span style={{ fontSize: size / 3 }}>?</span>
       </div>
@@ -41,7 +41,7 @@ export function TokenIcon({ token, className, size = 50 }: TokenIconProps) {
       src={tokenIcons[token as TokenSymbol | ChainName]}
       width={size}
       height={size}
-      className={cn(className, 'rounded-full')}
+      className={cn(className, 'rounded-full bg-white')}
     />
   );
 }
