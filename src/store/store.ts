@@ -1,23 +1,25 @@
 import type { Address } from 'viem';
 import { create } from 'zustand';
 
-import { fetchTokensBalances } from '@/lib/contractHelpers/fetchTokensBalances';
-import { readVaultData } from '@/lib/contractHelpers/readVaultData';
 import type {
   AsyncResponse,
   DepositTokens,
   TokenBalance,
   TokensCollection,
+  VaultCollection,
   VaultData,
 } from '@/types';
 import { ResponseStatus, StepType } from '@/types';
 
 interface Store {
-  vault: AsyncResponse<VaultData>;
-  fetchVaultData: (vaultAddress: Address) => Promise<void>;
-
-  tokenBalance: AsyncResponse<TokensCollection<TokenBalance>>;
-  fetchTokenBalance: (waletAddress: Address) => Promise<void>;
+  vaults: VaultCollection<VaultData>;
+  saveVaultData: (vaultAddress: Address, vault: VaultData) => void;
+  tokenBalance: VaultCollection<TokensCollection<TokenBalance>>;
+  
+  saveTokenBalance: (
+    vaultAddress: Address,
+    balance: TokensCollection<TokenBalance>,
+  ) => void;
 
   step: StepType;
   changeStep: (step: StepType) => void;
@@ -26,61 +28,32 @@ interface Store {
   setDepositValue: (value: DepositTokens) => void;
 }
 
-export const useStore = create<Store>((set, get) => ({
-  vault: { status: ResponseStatus.Pending },
-
-  fetchVaultData: async (vaultAddress) => {
-    try {
-      const result = await readVaultData(vaultAddress);
-      set({
-        vault: result,
-      });
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Failed to fetch data.';
-      set({
-        vault: {
-          status: ResponseStatus.Error,
-          message: errorMessage,
-        },
-      });
-    }
+export const useStore = create<Store>((set) => ({
+  vaults: {},
+  saveVaultData: (vaultAddress, vault) => {
+    set((state) => ({
+      vaults: {
+        ...state.vaults,
+        [vaultAddress]: vault,
+      },
+    }));
   },
 
-  tokenBalance: { status: ResponseStatus.Pending },
-
-  fetchTokenBalance: async (walletAddress) => {
-    const { vault } = get();
-    if (vault.status === ResponseStatus.Success) {
-      const tokens = vault.data?.tokens;
-
-      try {
-        const updatedValultWithBalance = await fetchTokensBalances(
-          tokens,
-          walletAddress,
-        );
-        set({
-          tokenBalance: updatedValultWithBalance,
-        });
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error
-            ? error.message
-            : 'Failed to get token balance';
-        set({
-          tokenBalance: {
-            status: ResponseStatus.Error,
-            message: errorMessage,
-          },
-        });
-      }
-    }
+  tokenBalance: {},
+  saveTokenBalance: (vaultAddress, balance) => {
+    set((state) => ({
+      tokenBalance: {
+        ...state.tokenBalance,
+        [vaultAddress]: balance, 
+      },
+    }));
   },
 
   step: StepType.Deposit,
   changeStep: (step: StepType) => {
     set({ step });
   },
+
   depositValue: undefined,
   setDepositValue: (value: DepositTokens) => {
     set({ depositValue: value });

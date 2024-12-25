@@ -7,7 +7,7 @@ type ErrorProps = {
   desription?: string;
 };
 
-const Error = ({ message, desription }: ErrorProps) => {
+const ErrorInfo = ({ message, desription }: ErrorProps) => {
   const router = useRouter();
   return (
     <div className="mx-4 flex min-h-[80vh] max-w-screen-lg flex-col items-center justify-center">
@@ -26,4 +26,4 @@ const Error = ({ message, desription }: ErrorProps) => {
   );
 };
 
-export { Error };
+export { ErrorInfo };

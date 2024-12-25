@@ -27,7 +27,7 @@ const useLiquidity = ({
   argsError: boolean;
 } => {
   const { address } = useAccount();
-  const { depositValue, vault } = useStore();
+  const { depositValue, vaults } = useStore();
   const decimalsETH =
     'data' in vault && vault.data.tokens.WETH
       ? vault.data.tokens.WETH.decimals

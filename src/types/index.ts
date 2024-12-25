@@ -51,16 +51,19 @@ export interface TokenBalance {
 }
 
 export interface TokenInfo {
-  address: Address;
-  symbol: string;
-  name: string;
-  decimals: number;
+  address?: Address;
+  symbol?: string;
+  decimals?: number;
 }
 
 export interface VaultData {
   contractName: string;
   tokens: TokensCollection<TokenInfo>;
-  totalUnderlying?: [bigint, bigint];
+  totalUnderlying: [bigint, bigint];
+}
+
+export interface VaultCollection<T> {
+  [key: Address]: T;
 }
 
 export interface TokensCollection<T> {
