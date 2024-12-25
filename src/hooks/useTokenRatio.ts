@@ -13,8 +13,7 @@ export const useTokenRatio = (
   vaultAddress: Address,
   tokenBalance?: TokensCollection<TokenBalance>,
 ) => {
-  const { vaults } = useStore();
-
+  const { vaults } = useStore(); 
   const [tokenRatio, setTokenRatio] = useState<number>();
   const [vault] = useState(vaults[vaultAddress]);
 
@@ -27,8 +26,6 @@ export const useTokenRatio = (
 
   useEffect(() => {
     if (tokenBalance && tokenBalance) {
-        console.log(tokenBalance, 'balance');
-
 
       const balances = Object.values(tokenBalance);
       if (balances.some((balance) => balance.balanceInt === '0')) {

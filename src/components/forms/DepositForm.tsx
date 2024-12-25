@@ -17,6 +17,7 @@ import { SubmitButton } from '../button/SubmitButton';
 import { TokenInput } from '../inputs/TokenTinput';
 import { Loading } from '../Loading';
 import { MyAlert } from '../MyAlert';
+import { INPUT_VALUE_PRECISION } from '@/constants/contract';
 
 const DepositForm = () => {
   // const { tokenBalance, setDepositValue, changeStep } = useStore();
@@ -25,65 +26,60 @@ const DepositForm = () => {
   const { balance, vaultAddressIsInvalid } = useGetTokenBalance(
     vaultAddress as string,
   );
-    const saveTokenBalance = useStore((state) => state.saveTokenBalance);
+    // const saveTokenBalance = useStore((state) => state.saveTokenBalance);
   
-  // const { vaults, saveTokenBalance } = useStore();
+  const { vaults } = useStore();
+  const tokens = vaults[vaultAddress as keyof typeof vaults]?.tokens;
   const [isError, setIsError] = useState(false);
-    // useEffect(() => {
-    //   if (!vaultAddressIsInvalid && balance) {
-    //     saveTokenBalance(vaultAddress as Address, balance);
-    //   }
-    // }, [balance, vaultAddressIsInvalid, vaultAddress, saveTokenBalance]);
 
-    const {balanceIsNotSufficient} = useTokenRatio(params.address as Address, balance);
-    console.log(balanceIsNotSufficient);
-    // const vault = vaults[vaultAddress as keyof typeof vaults];
 
-  // const {
-  //   tokenRatio,
-  //   tokensAllBalance,
-  //   tokenDeposit,
-  //   setTokenDeposit,
-  //   balanceIsNotSufficient,
-  // } = useTokenRatio(address as Address, params.address as Address);
+    const {tokenRatio,
+      tokenDeposit,
+      setTokenDeposit,
+      balanceIsNotSufficient} = useTokenRatio(params.address as Address, balance);
+
 
   const handleUpdateTokenDepositValue = (token: string, value: string) => {
-  }
-  //   if (!tokenDeposit || !tokenDeposit[token] || !tokenRatio) {
-  //     return;
-  //   }
-  //   // update token0 and token1 based on token0 value
-  //   if (token === TokenSymbol.WETH) {
-  //     const balance0 = Number(value);
-  //     const balance1 = balance0 * tokenRatio;
-  //     setTokenDeposit({
-  //       ...tokenDeposit,
-  //       [TokenSymbol.rETH]: {
-  //         ...tokenDeposit[TokenSymbol.rETH],
-  //         depositValue: balance1.toFixed(INPUT_VALUE_PRECISION),
-  //       },
-  //       [token]: {
-  //         ...tokenDeposit[token],
-  //         depositValue: value,
-  //       },
-  //     });
-  //   } else {
-  //     // update token1 and token0 based on token1 value
-  //     const balance1 = Number(value);
-  //     const balance0 = balance1 / tokenRatio;
-  //     setTokenDeposit({
-  //       ...tokenDeposit,
-  //       [TokenSymbol.WETH]: {
-  //         ...tokenDeposit[TokenSymbol.WETH],
-  //         depositValue: balance0.toFixed(INPUT_VALUE_PRECISION),
-  //       },
-  //       [token]: {
-  //         ...tokenDeposit[token],
-  //         depositValue: value,
-  //       },
-  //     });
-  //   }
-  // };
+
+
+    if (!tokenDeposit || !tokenDeposit[token] || !tokenRatio || !tokens) {
+      return;
+    }
+    const tokenKey0 = Object.keys(tokens)[0] as TokenSymbol;
+    const tokenKey1 = Object.keys(tokens)[1] as TokenSymbol;
+
+    // update token0 and token1 based on token0 value
+    if (token === tokenKey0) {
+      const balance0 = Number(value);
+      const balance1 = balance0 * tokenRatio;
+      setTokenDeposit({
+        ...tokenDeposit,
+        [tokenKey1]: {
+          ...tokenDeposit[tokenKey1],
+          depositValue: balance1.toFixed(INPUT_VALUE_PRECISION),
+        },
+        [token]: {
+          ...tokenDeposit[token],
+          depositValue: value,
+        },
+      });
+    } else {
+      // update token1 and token0 based on token1 value
+      const balance1 = Number(value);
+      const balance0 = balance1 / tokenRatio;
+      setTokenDeposit({
+        ...tokenDeposit,
+        [tokenKey0]: {
+          ...tokenDeposit[tokenKey0],
+          depositValue: balance0.toFixed(INPUT_VALUE_PRECISION),
+        },
+        [token]: {
+          ...tokenDeposit[token],
+          depositValue: value,
+        },
+      });
+    }
+  };
 
   // const getButtonText = () => {
   //   if (!address) {
@@ -137,59 +133,59 @@ const DepositForm = () => {
     // }
   };
 
-  // if (vaults && vault && balance) {
+  if (vaults && tokens && balance && tokenDeposit) {
 
-  //   return (
-  //     <Form
-  //       className="mx-auto mb-11 min-h-96 w-full p-4"
-  //       validationBehavior="native"
-  //       onSubmit={onSubmit}
-  //     >
+    return (
+      <Form
+        className="mx-auto mb-11 min-h-96 w-full p-4"
+        validationBehavior="native"
+        onSubmit={onSubmit}
+      >
         
-  //        {Object.entries(vault.tokens).map(([token]) => {
-  //         const tokenBalance= balance[token]?.balanceInt;
-  //         const maxValue =  0;
-  //         const value = '0'
-  //         return (
-  //           <TokenInput
-  //             key={token}
-  //             name={token}
-  //             value={value}
-  //             setValue={(val: string) =>
-  //               handleUpdateTokenDepositValue(token, val as string)
-  //             }
-  //             balance={tokenBalance}
-  //             max={maxValue}
-  //             label={`${token} Amount`}
-  //             displaySlider={token === TokenSymbol.rETH}
-  //             setError={setIsError}
-  //             isError={isError}
-  //           />
-  //         );
+         {Object.entries(tokens).map(([token]) => {
+          const tokenBalance= balance[token]?.balanceInt;
+          const maxValue =  tokenDeposit[token]?.maxDepositValue;
+          const value = tokenDeposit[token]?.depositValue || '0';
+          return (
+            <TokenInput
+              key={token}
+              name={token}
+              value={value}
+              setValue={(val: string) =>
+                handleUpdateTokenDepositValue(token, val as string)
+              }
+              balance={tokenBalance}
+              max={maxValue}
+              label={`${token} Amount`}
+              displaySlider={token === TokenSymbol.rETH}
+              setError={setIsError}
+              isError={isError}
+            />
+          );
 
-  //       })}
-  //       {/* {balanceIsNotSufficient && (
-  //         <MyAlert
-  //           message={`You dont have enough balace of ${tokensSymbols[0]}
-  //           and /or ${tokensSymbols[1]}`}
-  //           color="danger"
-  //         />
-  //       )}
-  //       {tokenBalance.status === 'error' && (
-  //         <div className="flex h-40 items-center justify-center">
-  //           <MyAlert
-  //             message={truncateString(tokenBalance.message, 100) || 'Error'}
-  //             color="danger"
-  //           />
-  //           ;
-  //         </div>
-  //       )} */}
-  //       {/* <SubmitButton isDisabled={balanceIsNotSufficient || !address}>
-  //         {getButtonText()}
-  //       </SubmitButton> */}
-  //     </Form>
-  //   );
-  // }
+        })}
+        {/* {balanceIsNotSufficient && (
+          <MyAlert
+            message={`You dont have enough balace of ${tokensSymbols[0]}
+            and /or ${tokensSymbols[1]}`}
+            color="danger"
+          />
+        )}
+        {tokenBalance.status === 'error' && (
+          <div className="flex h-40 items-center justify-center">
+            <MyAlert
+              message={truncateString(tokenBalance.message, 100) || 'Error'}
+              color="danger"
+            />
+            ;
+          </div>
+        )} */}
+        {/* <SubmitButton isDisabled={balanceIsNotSufficient || !address}>
+          {getButtonText()}
+        </SubmitButton> */}
+      </Form>
+    );
+  }
   // if (vault.status === 'pending' || tokenBalance.status === 'pending') {
   //   return <Loading title="loading form" />;
   // }
