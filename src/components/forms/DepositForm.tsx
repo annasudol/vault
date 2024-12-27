@@ -1,5 +1,6 @@
 import { Form } from '@nextui-org/react';
 import React, { useContext, useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance';
 import { parseToBigInt } from '@/lib/formatBigInt';
@@ -17,6 +18,7 @@ import { TokenInput } from '../inputs/TokenTinput';
 import { MyAlert } from '../MyAlert';
 
 const DepositForm = () => {
+  const { address } = useAccount();
   const { tokens, vaultData, setStep, setDeposit } =
     useContext(VaultContext) ?? {};
   const [isError, setIsError] = useState(false);
@@ -154,14 +156,14 @@ const DepositForm = () => {
           />
         );
       })}
-      {balanceIsNotSufficient && (
+      {balanceIsNotSufficient && address && (
         <MyAlert
           message={`You dont have enough balace of ${Object.keys(tokens || {})[0]}
-            and /or ${Object.keys(tokens || {})[1]}`}
+            and / or ${Object.keys(tokens || {})[1]}`}
           color="danger"
         />
       )}
-      {balanceCallStatus.isError && !balanceIsNotSufficient && (
+      {balanceCallStatus.isError && address && (
         <div className="flex h-40 items-center justify-center">
           <MyAlert
             message="Error while reading tokens balance"
