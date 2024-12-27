@@ -70,6 +70,7 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
       <p>Deposit Value: {depositValue}</p>
       {allowanceNeedsIncrease && (
         <SubmitButton
+          type="button"
           onPress={() =>
             depositValue &&
             handleIncreaseAllowance({

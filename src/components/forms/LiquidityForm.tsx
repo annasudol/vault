@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import type { Address } from 'viem';
 
-import { MyButton } from '@/components/MyButton';
 import { useLiquidity } from '@/hooks/useLiquidity';
 
+import { SubmitButton } from '../button/SubmitButton';
 import { MyAlert } from '../MyAlert';
 import { TxLink } from '../TxLink';
 
@@ -51,9 +51,13 @@ const LiquidityForm = () => {
           message="Liquidity has been added successfully"
         />
       ) : (
-        <MyButton onPress={handleAddLiquidity} isLoading={statusRead.isLoading}>
+        <SubmitButton
+          onPress={handleAddLiquidity}
+          isLoading={statusRead.isLoading}
+          type="button"
+        >
           Submit
-        </MyButton>
+        </SubmitButton>
       )}
     </div>
   );

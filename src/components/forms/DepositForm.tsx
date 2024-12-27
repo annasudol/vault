@@ -175,7 +175,7 @@ const DepositForm = () => {
           <Loading title="Reading tokens data" />
         </div>
       )}
-      <SubmitButton isDisabled={balanceIsNotSufficient}>
+      <SubmitButton isDisabled={balanceIsNotSufficient} type="submit">
         {balanceIsNotSufficient ? 'Balance is not suficient' : 'Submit'}
       </SubmitButton>
     </Form>
