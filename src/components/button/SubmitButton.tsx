@@ -18,8 +18,8 @@ const SubmitButton = ({ children, ...props }: SubmitButtonProps) => {
     <div className="flex w-full flex-col text-center">
       <MyButton
         type="submit"
-        className=" min-w-56"
-        isDisabled={!address || props.isDisabled}
+        className=" min-w-56 disabled:opacity-50 disabled:hover:opacity-50"
+        disabled={!address || props.isDisabled}
         {...props}
       >
         {!address ? 'Wallet is not connected' : children}

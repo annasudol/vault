@@ -19,13 +19,13 @@ interface GetTokenBalanceReturn {
 }
 const useGetTokenBalance = (vaultAddress: string): GetTokenBalanceReturn => {
   const [vaultAddressIsInvalid, setVaultAddressIsInvalid] = useState(false);
+  const { address } = useAccount();
 
   useEffect(() => {
     if (vaultAddress) {
       setVaultAddressIsInvalid(!isAddress(vaultAddress));
     }
   }, [vaultAddress]);
-  const { address } = useAccount();
   const { vaults } = useStore();
   const tokens = vaults[vaultAddress as keyof typeof vaults]?.tokens;
   const tokensArr = Object.values(Object.values(tokens ?? {}));

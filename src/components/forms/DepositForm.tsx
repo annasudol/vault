@@ -5,7 +5,6 @@ import type { Address } from 'viem';
 
 import { ErrorInfo } from '@/components/Error';
 import { TokenInput } from '@/components/inputs/TokenTinput';
-import { ValultLayout } from '@/components/layout/ValultLayout';
 import { INPUT_VALUE_PRECISION } from '@/constants/contract';
 import { useGetTokenBalance } from '@/hooks/useGetTokenBalance';
 import { useTokenRatio } from '@/hooks/useTokenRatio';
@@ -17,12 +16,10 @@ import { Loading } from '../Loading';
 import { MyAlert } from '../MyAlert';
 
 const DepositForm = () => {
-  // const { tokenBalance, setDepositValue, changeStep } = useStore();
   const params = useParams<{ address: string }>();
   const vaultAddress = params?.address;
   const { balance, vaultAddressIsInvalid, tokensCallStatus } =
     useGetTokenBalance(vaultAddress as string);
-  // const saveTokenBalance = useStore((state) => state.saveTokenBalance);
 
   const { vaults } = useStore();
   const tokens = vaults[vaultAddress as keyof typeof vaults]?.tokens;
@@ -116,31 +113,31 @@ const DepositForm = () => {
 
   if (vaultAddressIsInvalid) {
     return (
-      <ValultLayout>
+      <div>
         <ErrorInfo
           message="Error"
           desription="The vault contract address is invalid"
         />
-      </ValultLayout>
+      </div>
     );
   }
   if (tokensCallStatus.isLoading) {
     return (
-      <ValultLayout>
+      <div>
         <Loading title="Reading tokens data" />
-      </ValultLayout>
+      </div>
     );
   }
 
-  if (tokensCallStatus.isError) {
+  if (tokensCallStatus.isError && address) {
     return (
-      <ValultLayout>
+      <div>
         <MyAlert message="Error while reading tokens balance" color="danger" />
-      </ValultLayout>
+      </div>
     );
   }
 
-  if (vaults && tokens && balance && tokenDeposit) {
+  if (vaults && tokens) {
     return (
       <Form
         className="mx-auto mb-11 min-h-96 w-full p-4"
@@ -148,14 +145,16 @@ const DepositForm = () => {
         onSubmit={onSubmit}
       >
         {Object.entries(tokens).map(([token]) => {
-          const tokenBalance = balance[token]?.balanceInt;
-          const maxValue = tokenDeposit[token]?.maxDepositValue;
-          const value = tokenDeposit[token]?.depositValue || '0';
+          const tokenBalance = balance ? balance[token]?.balanceInt : '0';
+          const maxValue = tokenDeposit
+            ? tokenDeposit[token]?.maxDepositValue
+            : 0;
+          const value = tokenDeposit ? tokenDeposit[token]?.depositValue : '0';
           return (
             <TokenInput
               key={token}
               name={token}
-              value={value}
+              value={value || '0'}
               setValue={(val: string) =>
                 handleUpdateTokenDepositValue(token, val as string)
               }
@@ -184,7 +183,7 @@ const DepositForm = () => {
             ;
           </div>
         )} */}
-        <SubmitButton isDisabled={balanceIsNotSufficient}>
+        <SubmitButton disabled={balanceIsNotSufficient}>
           {balanceIsNotSufficient ? 'Balance is not suficient' : 'Submit'}
         </SubmitButton>
       </Form>
