@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 
 import Steps from '@/components/Steps';
 import { VaultContext } from '@/providers/VaultProvider';
@@ -10,7 +10,6 @@ import { LiquidityForm } from './LiquidityForm';
 
 const StepForm = () => {
   const { step } = useContext(VaultContext) ?? {};
-
   const getCurrentStepNumber = (currentStep?: StepType) => {
     switch (currentStep) {
       case StepType.Deposit:
@@ -23,11 +22,11 @@ const StepForm = () => {
         return 1;
     }
   };
-
+  const ref = useRef<HTMLButtonElement | null>(null);
   return (
     <div className="flex flex-col items-center justify-center">
       <Steps
-        ref={step}
+        ref={ref || undefined}
         currentStep={getCurrentStepNumber(step)}
         steps={[
           {

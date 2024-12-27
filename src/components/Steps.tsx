@@ -4,7 +4,7 @@ import { cn } from '@nextui-org/react';
 import { useControlledState } from '@react-stately/utils';
 import { color, domAnimation, LazyMotion, m } from 'framer-motion';
 import type { ComponentProps } from 'react';
-import React from 'react';
+import React, { useRef } from 'react';
 
 import type { StepType } from '@/types';
 
@@ -89,6 +89,7 @@ const Steps = React.forwardRef<HTMLButtonElement, StepsProps>(
 
       return colorsVars;
     }, [color, className]);
+    const ref = useRef<HTMLDivElement | null>(null);
 
     return (
       <div
@@ -114,6 +115,7 @@ const Steps = React.forwardRef<HTMLButtonElement, StepsProps>(
                 className="relative flex w-full items-center pr-12"
               >
                 <div
+                  ref={ref}
                   key={stepIdx}
                   aria-current={status === 'active' ? 'step' : undefined}
                   className={cn(
