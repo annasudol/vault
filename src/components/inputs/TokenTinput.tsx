@@ -29,25 +29,24 @@ const TokenInput: React.FC<CustomInputProps> = ({
   const [errorMessages, setErrorMessages] = React.useState<string>();
   const [inputValidate, setInputValidate] = React.useState<boolean>(false);
 
-  // useEffect(() => {
-  //   let erorMessage;
-  //   console.log(value, 'val');
-  //   if (inputValidate) {
-  //     if (Number(value) > max) {
-  //       erorMessage = 'Value cannot be higher than max value';
-  //     }
-  //     if (Number(value) <= 0) {
-  //       erorMessage = 'Value must be greater than 0';
-  //     }
-  //     const validValueRegex = /^0$|^[1-9]\d*(\.\d+)?$|^0\.\d+$/;
-  //     if (!validValueRegex.test(value)) {
-  //       erorMessage = 'Value must be avalid number';
-  //     }
-  //     setError(erorMessage !== undefined);
+  useEffect(() => {
+    let erorMessage;
+    if (inputValidate) {
+      if (Number(value) > max) {
+        erorMessage = 'Value cannot be higher than max value';
+      }
+      if (Number(value) <= 0) {
+        erorMessage = 'Value must be greater than 0';
+      }
+      const validValueRegex = /^0$|^[1-9]\d*(\.\d+)?$|^0\.\d+$/;
+      if (!validValueRegex.test(value)) {
+        erorMessage = 'Value must be avalid number';
+      }
+      setError(erorMessage !== undefined);
 
-  //     setErrorMessages(erorMessage);
-  //   }
-  // }, [value, max, inputValidate]);
+      setErrorMessages(erorMessage);
+    }
+  }, [value, max, inputValidate]);
 
   const handleChange = (val: string) => {
     // only allow numbers and one decimal point

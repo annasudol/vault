@@ -58,8 +58,7 @@ export interface TokenInfo {
 
 export interface VaultData {
   contractName: string;
-  tokens: TokensCollection<TokenInfo>;
-  totalUnderlying: [bigint, bigint];
+  ratio: number;
 }
 
 export interface VaultCollection<T> {
@@ -78,7 +77,7 @@ export interface TokenValue {
 export interface DepositTokens extends TokensCollection<TokenValue> {}
 
 export interface TokenDeposit {
-  depositValue: string;
+  depositValue?: string;
   maxDepositValue?: number;
 }
 

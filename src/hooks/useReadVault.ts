@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { Address } from 'viem';
-import { erc20Abi } from 'viem';
+import { erc20Abi, isAddress } from 'viem';
 import { useReadContract } from 'wagmi';
 
 import { helperABI } from '@/abi/helperABI';
@@ -8,6 +8,7 @@ import { vaultABI } from '@/abi/valutABI';
 import { CONTRACT_ADDRESS } from '@/constants/contract';
 import type {
   CallContractStatus,
+  TokenInfo,
   TokensCollection,
   TokenSymbol,
   VaultData,
@@ -15,19 +16,25 @@ import type {
 
 interface ReadVaultDataReturn {
   vaultAddressIsInvalid: boolean;
-  vault?: VaultData;
-  vaultSatus: CallContractStatus;
-  tokensCallStatus: TokensCollection<CallContractStatus>;
+  vaultData?: VaultData;
+  vaultStatus: CallContractStatus;
+  tokens: TokensCollection<TokenInfo>;
+  tokensStatus: CallContractStatus;
 }
 
 export function useReadVaultData(vaultAddress: string): ReadVaultDataReturn {
-  const [vaultAddressIsInvalid, setVaultAddressIsInvalid] = useState(false);
+  const [vaultAddressIsInvalid, setVaultAddressIsInvalid] =
+    useState<boolean>(false);
+  const setAddressIsInvalid = useCallback(() => {
+    if (vaultAddress) {
+      setVaultAddressIsInvalid(!isAddress(vaultAddress));
+    }
+  }, [vaultAddress]);
 
-  // useEffect(() => {
-  //   if (vaultAddress) {
-  //     setVaultAddressIsInvalid(!isAddress(vaultAddress));
-  //   }
-  // }, [vaultAddress, isAddress]);
+  useEffect(() => {
+    setAddressIsInvalid();
+  }, [setAddressIsInvalid]);
+
   const vaultContract = {
     abi: vaultABI,
     address: vaultAddress as Address,
@@ -136,20 +143,22 @@ export function useReadVaultData(vaultAddress: string): ReadVaultDataReturn {
       },
     };
   }
-  let vault: VaultData | undefined;
+  let vaultData: VaultData | undefined;
 
   if (totalUnderlying && contractName) {
-    vault = {
+    const ratioBN = totalUnderlying[1] / totalUnderlying[0];
+    const ratio = Number(ratioBN);
+    vaultData = {
       contractName,
-      tokens,
-      totalUnderlying: totalUnderlying as [bigint, bigint],
+      ratio,
     };
   }
 
   return {
     vaultAddressIsInvalid,
-    vault,
-    vaultSatus: {
+    vaultData,
+    tokens,
+    vaultStatus: {
       isError:
         readNameError ||
         readToken0AddressError ||
@@ -161,15 +170,17 @@ export function useReadVaultData(vaultAddress: string): ReadVaultDataReturn {
         readToken1AddressLoading ||
         readTotalUnderlyingLoading,
     },
-    tokensCallStatus: {
-      [token0Symbol as TokenSymbol]: {
-        isError: readToken0SymbolError || readToken0DecimalsError,
-        isLoading: readtoken0SymbolLoading || readtoken0DecimalsLoading,
-      },
-      [token1Symbol as TokenSymbol]: {
-        isError: readToken1SymbolError || readToken1DecimalsError,
-        isLoading: readToken1SymbolLoading || readToken1DecimalsLoading,
-      },
+    tokensStatus: {
+      isError:
+        readToken0SymbolError ||
+        readToken0DecimalsError ||
+        readToken1SymbolError ||
+        readToken1DecimalsError,
+      isLoading:
+        readtoken0SymbolLoading ||
+        readtoken0DecimalsLoading ||
+        readToken1SymbolLoading ||
+        readToken1DecimalsLoading,
     },
   };
 }

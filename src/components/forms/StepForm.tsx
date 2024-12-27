@@ -1,11 +1,10 @@
 import React from 'react';
 
-import { Allowance } from '@/components/forms/Allowance';
-import { DepositForm } from '@/components/forms/DepositForm';
-import { LiquidityForm } from '@/components/forms/LiquidityForm';
 import Steps from '@/components/Steps';
 import { useStore } from '@/store/store';
 import { StepType } from '@/types';
+
+import { DepositForm } from './DepositForm';
 
 const StepForm = () => {
   const { step } = useStore();
@@ -26,6 +25,7 @@ const StepForm = () => {
   return (
     <div className="flex flex-col items-center justify-center">
       <Steps
+        ref={step}
         currentStep={getCurrentStepNumber(step)}
         steps={[
           {
@@ -43,8 +43,8 @@ const StepForm = () => {
         ]}
       />
       {step === StepType.Deposit && <DepositForm />}
-      {step === StepType.Allowance && <Allowance />}
-      {step === StepType.Liquidity && <LiquidityForm />}
+      {/* {step === StepType.Allowance && <Allowance />} */}
+      {/* {step === StepType.Liquidity && <LiquidityForm />} */}
     </div>
   );
 };

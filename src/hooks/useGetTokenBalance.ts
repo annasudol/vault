@@ -1,34 +1,25 @@
-import { useEffect, useState } from 'react';
 import type { Address } from 'viem';
-import { erc20Abi, isAddress } from 'viem';
+import { erc20Abi } from 'viem';
 import { useAccount, useReadContract } from 'wagmi';
 
 import { formatBigInt } from '@/lib/formatBigInt';
-import { useStore } from '@/store/store';
 import type {
   CallContractStatus,
   TokenBalance,
+  TokenInfo,
   TokensCollection,
   TokenSymbol,
 } from '@/types';
 
 interface GetTokenBalanceReturn {
-  vaultAddressIsInvalid: boolean;
   balance?: TokensCollection<TokenBalance>;
-  tokensCallStatus: CallContractStatus;
+  balanceCallStatus: CallContractStatus;
 }
-const useGetTokenBalance = (vaultAddress: string): GetTokenBalanceReturn => {
-  const [vaultAddressIsInvalid, setVaultAddressIsInvalid] = useState(false);
-  const { address } = useAccount();
-
-  useEffect(() => {
-    if (vaultAddress) {
-      setVaultAddressIsInvalid(!isAddress(vaultAddress));
-    }
-  }, [vaultAddress]);
-  const { vaults } = useStore();
-  const tokens = vaults[vaultAddress as keyof typeof vaults]?.tokens;
+const useGetTokenBalance = (
+  tokens: TokensCollection<TokenInfo>,
+): GetTokenBalanceReturn => {
   const tokensArr = Object.values(Object.values(tokens ?? {}));
+  const { address } = useAccount();
 
   const token0 = tokensArr[0];
   const token1 = tokensArr[1];
@@ -70,9 +61,8 @@ const useGetTokenBalance = (vaultAddress: string): GetTokenBalanceReturn => {
       },
     };
     return {
-      vaultAddressIsInvalid,
       balance,
-      tokensCallStatus: {
+      balanceCallStatus: {
         isError: readbalanceToken0Error || readbalanceToken1Error,
         isLoading: readbalanceToken0Loading || readbalanceToken1Loading,
       },
@@ -80,8 +70,7 @@ const useGetTokenBalance = (vaultAddress: string): GetTokenBalanceReturn => {
   }
 
   return {
-    vaultAddressIsInvalid,
-    tokensCallStatus: {
+    balanceCallStatus: {
       isError: readbalanceToken0Error || readbalanceToken1Error,
       isLoading: readbalanceToken0Loading || readbalanceToken1Loading,
     },
