@@ -30,7 +30,7 @@ const Allowance = () => {
             <AllowanceForm
               key={token}
               vault={vaultData}
-              depositValue={depositValue?.int}
+              depositValue={depositValue}
               token={tokens[token] as TokenInfo}
               updateAllowance={(value: boolean) =>
                 setAllowanceNeedsIncrease({

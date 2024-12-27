@@ -10,11 +10,11 @@ import {
 } from 'wagmi';
 
 import { CONTRACT_ADDRESS } from '@/constants/contract';
-import { formatBigInt, parseToBigInt } from '@/lib/formatBigInt';
+import { formatBigInt } from '@/lib/formatBigInt';
 import type { Address, CallContractStatus, TokenInfo, TxHash } from '@/types';
 
 interface AddAllowance {
-  amount: string;
+  amount: bigint;
 }
 interface IncreaseAllowance {
   token?: TokenInfo;
@@ -75,10 +75,7 @@ const useIncreaseAllowance = ({
         address: token?.address as Address,
         abi: erc20Abi,
         functionName: 'approve',
-        args: [
-          CONTRACT_ADDRESS.ROUTER,
-          parseToBigInt(amount || '0', token?.decimals as number),
-        ],
+        args: [CONTRACT_ADDRESS.ROUTER, amount],
       });
     },
     argsError: !address || !token,

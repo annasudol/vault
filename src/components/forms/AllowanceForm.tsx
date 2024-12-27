@@ -5,12 +5,12 @@ import { SubmitButton } from '@/components/button/SubmitButton';
 import { MyAlert } from '@/components/MyAlert';
 import { TxLink } from '@/components/TxLink';
 import { useIncreaseAllowance } from '@/hooks/useIncreaseAllowance';
-import type { TokenInfo, VaultData } from '@/types';
+import type { DepositValue, TokenInfo, VaultData } from '@/types';
 
 interface AllowanceProps {
   vault: VaultData;
   token: TokenInfo;
-  depositValue?: string;
+  depositValue?: DepositValue;
   updateAllowance: (value: boolean) => void;
 }
 
@@ -35,7 +35,7 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
     useState<boolean>();
 
   useEffect(() => {
-    const status = Number(allowance) < Number(depositValue);
+    const status = Number(allowance) < Number(depositValue?.int);
     setAllowanceNeedsIncrease(status);
     updateAllowance(status);
   }, [allowance, vault]);
@@ -67,15 +67,13 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
     <div className="my-4">
       <h3 className="text-lg font-medium">{token.symbol}</h3>
       <p>Allowance: {statusRead.isLoading ? '...loading' : allowance}</p>
-      <p>Deposit Value: {depositValue}</p>
+      <p>Deposit Value: {depositValue?.int}</p>
       {allowanceNeedsIncrease && (
         <SubmitButton
           type="button"
           onPress={() =>
-            depositValue &&
-            handleIncreaseAllowance({
-              amount: depositValue,
-            })
+            depositValue?.bigInt &&
+            handleIncreaseAllowance({ amount: depositValue.bigInt })
           }
           isLoading={statusWrite.isLoading}
           disabled={!depositValue}
