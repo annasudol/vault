@@ -1,9 +1,9 @@
-import type { Address } from 'viem';
 import { erc20Abi } from 'viem';
 import { useAccount, useReadContract } from 'wagmi';
 
 import { formatBigInt } from '@/lib/formatBigInt';
 import type {
+  Address,
   CallContractStatus,
   TokenBalance,
   TokenInfo,
@@ -29,7 +29,7 @@ const useGetTokenBalance = (
     isError: readbalanceToken0Error,
   } = useReadContract({
     abi: erc20Abi,
-    address: token0?.address,
+    address: token0?.address as unknown as Address,
     functionName: 'balanceOf',
     args: [address as Address],
   });
@@ -40,7 +40,7 @@ const useGetTokenBalance = (
     isError: readbalanceToken1Error,
   } = useReadContract({
     abi: erc20Abi,
-    address: token1?.address as Address,
+    address: token1?.address as unknown as Address,
     functionName: 'balanceOf',
     args: [address as Address],
   });

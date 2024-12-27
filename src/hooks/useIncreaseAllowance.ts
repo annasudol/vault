@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import type { Address } from 'viem';
 import { erc20Abi } from 'viem';
 import {
   useAccount,
@@ -12,7 +11,7 @@ import {
 
 import { CONTRACT_ADDRESS } from '@/constants/contract';
 import { formatBigInt, parseToBigInt } from '@/lib/formatBigInt';
-import type { CallContractStatus, TokenInfo, TxHash } from '@/types';
+import type { Address, CallContractStatus, TokenInfo, TxHash } from '@/types';
 
 interface AddAllowance {
   amount: string;
