@@ -39,21 +39,21 @@ const LiquidityForm = () => {
     }
   }, [statusWrite, tx, displayedToasts]);
 
+  if (statusRead.isError) {
+    return <MyAlert color="danger" message="Error while reading mint values" />;
+  }
   return (
     <div className="flex flex-col">
       <h1>Liquidity Form</h1>
-      {!statusRead.isSuccess ? (
-        <MyButton onPress={handleAddLiquidity} isLoading={statusRead.isLoading}>
-          Submit
-        </MyButton>
-      ) : (
+      {tx ? (
         <MyAlert
           color="success"
           message="Liquidity has been added successfully"
         />
-      )}
-      {statusRead.isError && (
-        <MyAlert color="danger" message="Error while reading mint values" />
+      ) : (
+        <MyButton onPress={handleAddLiquidity} isLoading={statusRead.isLoading}>
+          Submit
+        </MyButton>
       )}
     </div>
   );

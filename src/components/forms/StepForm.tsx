@@ -6,6 +6,7 @@ import { StepType } from '@/types';
 
 import { Allowance } from './Allowance';
 import { DepositForm } from './DepositForm';
+import { LiquidityForm } from './LiquidityForm';
 
 const StepForm = () => {
   const { step } = useContext(VaultContext) ?? {};
@@ -45,7 +46,7 @@ const StepForm = () => {
       />
       {step === StepType.Deposit && <DepositForm />}
       {step === StepType.Allowance && <Allowance />}
-      {/* {step === StepType.Liquidity && <LiquidityForm />} */}
+      {step === StepType.Liquidity && <LiquidityForm />}
     </div>
   );
 };

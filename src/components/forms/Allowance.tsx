@@ -13,6 +13,12 @@ const Allowance = () => {
   const [allowanceNeedsIncrease, setAllowanceNeedsIncrease] =
     useState<TokensCollection<boolean | null>>();
 
+  const handleChangeStep = () => {
+    if (setStep) {
+      setStep(StepType.Liquidity);
+    }
+  };
+
   return (
     <div>
       <h2 className="my-8 text-xl">Allowance</h2>
@@ -38,10 +44,7 @@ const Allowance = () => {
 
       {allowanceNeedsIncrease &&
         Object.values(allowanceNeedsIncrease).every((v) => v === false) && (
-          <MyButton
-            onPress={() => (setStep ? StepType.Liquidity : null)}
-            icon={ButtonIcon.ArrowRight}
-          >
+          <MyButton onPress={handleChangeStep} icon={ButtonIcon.ArrowRight}>
             Proceed to Liquidity
           </MyButton>
         )}
