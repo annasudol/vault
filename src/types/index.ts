@@ -40,12 +40,12 @@ export interface TokensCollection<T> {
   [key: string]: T;
 }
 
-export interface TokenValue {
+export interface DepositValue {
   int?: string;
   bigInt?: bigint;
 }
 
-export interface DepositTokens extends TokensCollection<TokenValue> {}
+export interface DepositTokens extends TokensCollection<DepositValue> {}
 
 export interface TokenDeposit {
   deposit?: string;
