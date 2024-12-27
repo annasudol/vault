@@ -96,14 +96,14 @@ const DepositForm = () => {
           [token0]: {
             int: formData.get(token0) as string,
             bigInt: parseToBigInt(
-              formData.get(token0) as string,
+              (formData.get(token0) as string) || '0',
               Object.values(tokens)[0]?.decimals || 18,
             ),
           },
           [token1]: {
             int: formData.get(token1) as string,
             bigInt: parseToBigInt(
-              formData.get(token1) as string,
+              (formData.get(token1) as string) || '0',
               Object.values(tokens)[1]?.decimals || 18,
             ),
           },

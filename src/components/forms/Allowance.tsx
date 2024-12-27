@@ -1,11 +1,14 @@
 import React, { useContext, useState } from 'react';
+import { useAccount } from 'wagmi';
 
 import { AllowanceForm } from '@/components/forms/AllowanceForm';
-import { ButtonIcon, MyButton } from '@/components/MyButton';
 import { VaultContext } from '@/providers/VaultProvider';
 import { StepType, type TokenInfo, type TokensCollection } from '@/types';
 
+import { SubmitButton } from '../button/SubmitButton';
+
 const Allowance = () => {
+  const { address } = useAccount();
   const { tokens, vaultData, setStep, deposit } =
     useContext(VaultContext) ?? {};
 
@@ -24,6 +27,7 @@ const Allowance = () => {
       {vaultData &&
         deposit &&
         tokens &&
+        address &&
         Object.entries(deposit).map(([token, depositValue]) => {
           return (
             <AllowanceForm
@@ -43,9 +47,9 @@ const Allowance = () => {
 
       {allowanceNeedsIncrease &&
         Object.values(allowanceNeedsIncrease).every((v) => v === false) && (
-          <MyButton onPress={handleChangeStep} icon={ButtonIcon.ArrowRight}>
+          <SubmitButton onPress={handleChangeStep}>
             Proceed to Liquidity
-          </MyButton>
+          </SubmitButton>
         )}
     </div>
   );

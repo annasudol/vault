@@ -112,7 +112,7 @@ const Steps = React.forwardRef<HTMLButtonElement, StepsProps>(
             return (
               <li
                 key={stepIdx}
-                className="relative flex w-full items-center pr-12"
+                className="relative flex w-full items-center pr-1 sm:pr-6 lg:pr-8"
               >
                 <div
                   ref={ref}
@@ -173,13 +173,16 @@ const Steps = React.forwardRef<HTMLButtonElement, StepsProps>(
                         },
                       )}
                     >
-                      <span className="whitespace-nowrap"> {step.title}</span>
+                      <span className="whitespace-nowrap text-xs sm:mx-1 sm:text-sm">
+                        {' '}
+                        {step.title}
+                      </span>
                     </div>
                   </div>
                   {stepIdx < steps.length - 1 && !hideProgressBars && (
                     <div
                       aria-hidden="true"
-                      className="pointer-events-none absolute right-0 w-10 flex-none items-center"
+                      className="pointer-events-none absolute right-0 w-0 flex-none items-center sm:w-6 lg:w-8"
                       style={{
                         // @ts-ignore
                         '--idx': stepIdx,
