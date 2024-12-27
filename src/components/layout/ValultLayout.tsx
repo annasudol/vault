@@ -37,7 +37,7 @@ export function ValultLayout(props: PropsWithChildren) {
       {vaultData && tokens && (
         <VaultHeader title={vaultData?.contractName} tokens={tokens} />
       )}
-      <main className="min-h-[80vh] bg-slate-100">
+      <main className="min-h-[90vh] bg-slate-100">
         <div className="mx-auto mb-12 max-w-screen-lg px-4">
           {vaultStatus?.isLoading && <Loading title="Reading Vault contract" />}
           {tokensStatus?.isLoading && (
