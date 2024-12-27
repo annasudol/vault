@@ -75,7 +75,7 @@ const useGetTokenBalance = (vaultAddress: string): GetTokenBalanceReturn => {
       tokensCallStatus: {
         isError: readbalanceToken0Error || readbalanceToken1Error,
         isLoading: readbalanceToken0Loading || readbalanceToken1Loading,
-      }
+      },
     };
   }
 
@@ -84,8 +84,8 @@ const useGetTokenBalance = (vaultAddress: string): GetTokenBalanceReturn => {
     tokensCallStatus: {
       isError: readbalanceToken0Error || readbalanceToken1Error,
       isLoading: readbalanceToken0Loading || readbalanceToken1Loading,
-    }
-  }
+    },
+  };
 };
 
 export { useGetTokenBalance };

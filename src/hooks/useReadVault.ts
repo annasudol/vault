@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { Address } from 'viem';
-import { erc20Abi, isAddress } from 'viem';
+import { erc20Abi } from 'viem';
 import { useReadContract } from 'wagmi';
 
 import { helperABI } from '@/abi/helperABI';
@@ -23,11 +23,11 @@ interface ReadVaultDataReturn {
 export function useReadVaultData(vaultAddress: string): ReadVaultDataReturn {
   const [vaultAddressIsInvalid, setVaultAddressIsInvalid] = useState(false);
 
-  useEffect(() => {
-    if (vaultAddress) {
-      setVaultAddressIsInvalid(!isAddress(vaultAddress));
-    }
-  }, [vaultAddress]);
+  // useEffect(() => {
+  //   if (vaultAddress) {
+  //     setVaultAddressIsInvalid(!isAddress(vaultAddress));
+  //   }
+  // }, [vaultAddress, isAddress]);
   const vaultContract = {
     abi: vaultABI,
     address: vaultAddress as Address,

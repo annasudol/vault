@@ -2,20 +2,19 @@ import type { Address } from 'viem';
 import { create } from 'zustand';
 
 import type {
-  AsyncResponse,
   DepositTokens,
   TokenBalance,
   TokensCollection,
   VaultCollection,
   VaultData,
 } from '@/types';
-import { ResponseStatus, StepType } from '@/types';
+import { StepType } from '@/types';
 
 interface Store {
   vaults: VaultCollection<VaultData>;
   saveVaultData: (vaultAddress: Address, vault: VaultData) => void;
   tokenBalance: VaultCollection<TokensCollection<TokenBalance>>;
-  
+
   saveTokenBalance: (
     vaultAddress: Address,
     balance: TokensCollection<TokenBalance>,
@@ -44,7 +43,7 @@ export const useStore = create<Store>((set) => ({
     set((state) => ({
       tokenBalance: {
         ...state.tokenBalance,
-        [vaultAddress]: balance, 
+        [vaultAddress]: balance,
       },
     }));
   },

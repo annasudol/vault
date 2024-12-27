@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 import type { Address } from 'viem';
