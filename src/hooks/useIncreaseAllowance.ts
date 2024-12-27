@@ -77,7 +77,7 @@ const useIncreaseAllowance = ({
         functionName: 'approve',
         args: [
           CONTRACT_ADDRESS.ROUTER,
-          parseToBigInt(amount, token?.decimals as number),
+          parseToBigInt(amount || '0', token?.decimals as number),
         ],
       });
     },

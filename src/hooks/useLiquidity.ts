@@ -64,12 +64,12 @@ const useLiquidity = ({
 
   const amountShares = minAmounts && Array.isArray(minAmounts) && minAmounts[2];
   const amount0Min = parseToBigInt(
-    (Number(depositT0?.int) * 0.95).toString(),
+    (Number(depositT0?.int || 0) * 0.95).toString(),
     decimalsT0 as number,
   );
 
   const amount1Min = parseToBigInt(
-    (Number(depositT1?.int) * 0.95).toString(),
+    (Number(depositT1?.int || 0) * 0.95).toString(),
     decimalsT1 as number,
   );
 
