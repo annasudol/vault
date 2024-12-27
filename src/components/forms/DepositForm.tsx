@@ -14,7 +14,6 @@ import { StepType, TokenSymbol } from '@/types';
 
 import { SubmitButton } from '../button/SubmitButton';
 import { TokenInput } from '../inputs/TokenTinput';
-import { Loading } from '../Loading';
 import { MyAlert } from '../MyAlert';
 
 const DepositForm = () => {
@@ -162,17 +161,12 @@ const DepositForm = () => {
           color="danger"
         />
       )}
-      {balanceCallStatus.isError && (
+      {balanceCallStatus.isError && !balanceIsNotSufficient && (
         <div className="flex h-40 items-center justify-center">
           <MyAlert
             message="Error while reading tokens balance"
             color="danger"
           />
-        </div>
-      )}
-      {balanceCallStatus.isLoading && (
-        <div className="flex h-40 items-center justify-center">
-          <Loading title="Reading tokens data" />
         </div>
       )}
       <SubmitButton isDisabled={balanceIsNotSufficient} type="submit">
