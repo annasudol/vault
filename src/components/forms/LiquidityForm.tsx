@@ -3,11 +3,10 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import type { Address } from 'viem';
 
+import { SubmitButton } from '@/components/button/SubmitButton';
+import { MyAlert } from '@/components/MyAlert';
+import { TxLink } from '@/components/TxLink';
 import { useLiquidity } from '@/hooks/useLiquidity';
-
-import { SubmitButton } from '../button/SubmitButton';
-import { MyAlert } from '../MyAlert';
-import { TxLink } from '../TxLink';
 
 const LiquidityForm = () => {
   const params = useParams<{ address: string }>();

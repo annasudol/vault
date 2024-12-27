@@ -7,10 +7,9 @@ import {
 } from '@nextui-org/react';
 import { useRouter } from 'next/router';
 
+import { ButtonIcon, MyButton } from '@/components/MyButton';
 import { TokenIcon } from '@/components/TokenIcon';
 import type { StaticData } from '@/types';
-
-import { ButtonIcon, MyButton } from './MyButton';
 
 function TokenCard({ vaultAddress, tokens, chain, stats }: StaticData) {
   const router = useRouter();

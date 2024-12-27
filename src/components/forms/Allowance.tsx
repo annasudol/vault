@@ -1,10 +1,9 @@
 import React, { useContext, useState } from 'react';
 
+import { AllowanceForm } from '@/components/forms/AllowanceForm';
+import { ButtonIcon, MyButton } from '@/components/MyButton';
 import { VaultContext } from '@/providers/VaultProvider';
 import { StepType, type TokenInfo, type TokensCollection } from '@/types';
-
-import { ButtonIcon, MyButton } from '../MyButton';
-import { AllowanceForm } from './AllowanceForm';
 
 const Allowance = () => {
   const { tokens, vaultData, setStep, deposit } =

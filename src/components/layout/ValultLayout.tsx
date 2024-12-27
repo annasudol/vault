@@ -2,14 +2,13 @@ import { NextSeo } from 'next-seo';
 import type { PropsWithChildren } from 'react';
 import React, { useContext } from 'react';
 
+import { ErrorInfo } from '@/components/Error';
 import { Footer } from '@/components/Footer';
+import { VaultHeader } from '@/components/header/VaultHeader';
+import { Loading } from '@/components/Loading';
 import { MainNavbar } from '@/components/MainNavbar';
 import { AppConfig } from '@/config/AppConfig';
 import { VaultContext } from '@/providers/VaultProvider';
-
-import { ErrorInfo } from '../Error';
-import { VaultHeader } from '../header/VaultHeader';
-import { Loading } from '../Loading';
 
 export function ValultLayout(props: PropsWithChildren) {
   const {
@@ -23,7 +22,7 @@ export function ValultLayout(props: PropsWithChildren) {
   return (
     <div className="flex min-h-screen flex-col">
       <NextSeo
-        title={`${AppConfig.site_name} | Vaults`}
+        title={`${AppConfig.site_name} | ${vaultData?.contractName ? vaultData?.contractName : 'Vault'}`}
         description={AppConfig.description}
         canonical={AppConfig.url}
       />

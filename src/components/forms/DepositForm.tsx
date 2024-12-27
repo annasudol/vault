@@ -31,11 +31,9 @@ const DepositForm = () => {
 
   useEffect(() => {
     if (balance) {
-      if (
-        Object.values(balance).some((token) => Number(token.balanceInt) <= 0)
-      ) {
-        setBalanceIsNotSufficient(true);
-      }
+      setBalanceIsNotSufficient(
+        Object.values(balance).some((token) => token.balanceInt === '0'),
+      );
     }
   }, [balance]);
 

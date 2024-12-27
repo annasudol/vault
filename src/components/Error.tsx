@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 
-import { ButtonIcon, MyButton } from './MyButton';
+import { ButtonIcon, MyButton } from '@/components/MyButton';
 
 type ErrorProps = {
   message: string;

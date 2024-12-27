@@ -1,12 +1,11 @@
 import React, { useContext, useRef } from 'react';
 
+import { Allowance } from '@/components/forms/Allowance';
+import { DepositForm } from '@/components/forms/DepositForm';
+import { LiquidityForm } from '@/components/forms/LiquidityForm';
 import Steps from '@/components/Steps';
 import { VaultContext } from '@/providers/VaultProvider';
 import { StepType } from '@/types';
-
-import { Allowance } from './Allowance';
-import { DepositForm } from './DepositForm';
-import { LiquidityForm } from './LiquidityForm';
 
 const StepForm = () => {
   const { step } = useContext(VaultContext) ?? {};
