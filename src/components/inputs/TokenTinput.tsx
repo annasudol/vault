@@ -61,7 +61,7 @@ const TokenInput: React.FC<CustomInputProps> = ({
     <div className="relative my-6 w-full">
       {balance && (
         <span className="absolute right-1 text-xs text-gray-500">
-          Balance: {balance} {name}
+          Balance: {Number(balance).toFixed(2)} {name}
         </span>
       )}
       <Input
@@ -78,7 +78,7 @@ const TokenInput: React.FC<CustomInputProps> = ({
         type="text"
       />
       <span className="text-right text-xs text-gray-500">
-        max: {max} {name}
+        max: {max.toFixed(2)} {name}
       </span>
       <Button
         size="sm"

@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import Steps from '@/components/Steps';
-import { useStore } from '@/store/store';
+import { VaultContext } from '@/providers/VaultProvider';
 import { StepType } from '@/types';
 
+import { Allowance } from './Allowance';
 import { DepositForm } from './DepositForm';
 
 const StepForm = () => {
-  const { step } = useStore();
+  const { step } = useContext(VaultContext) ?? {};
 
-  const getCurrentStepNumber = (currentStep: StepType) => {
+  const getCurrentStepNumber = (currentStep?: StepType) => {
     switch (currentStep) {
       case StepType.Deposit:
         return 1;
@@ -43,7 +44,7 @@ const StepForm = () => {
         ]}
       />
       {step === StepType.Deposit && <DepositForm />}
-      {/* {step === StepType.Allowance && <Allowance />} */}
+      {step === StepType.Allowance && <Allowance />}
       {/* {step === StepType.Liquidity && <LiquidityForm />} */}
     </div>
   );

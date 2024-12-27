@@ -5,11 +5,11 @@ import { SubmitButton } from '@/components/button/SubmitButton';
 import { MyAlert } from '@/components/MyAlert';
 import { TxLink } from '@/components/TxLink';
 import { useIncreaseAllowance } from '@/hooks/useIncreaseAllowance';
-import type { TokenSymbol, VaultData } from '@/types';
+import type { TokenInfo, VaultData } from '@/types';
 
 interface AllowanceProps {
   vault: VaultData;
-  token: TokenSymbol;
+  token: TokenInfo;
   depositValue?: string;
   updateAllowance: (value: boolean) => void;
 }
@@ -28,7 +28,7 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
     statusWrite,
     argsError,
   } = useIncreaseAllowance({
-    token: vault.tokens[token],
+    token,
   });
 
   const [allowanceNeedsIncrease, setAllowanceNeedsIncrease] =
@@ -44,11 +44,11 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
     new Set(),
   );
   useEffect(() => {
-    const toastIdError = `${token}-error`;
-    const toastIdSuccess = `${token}-success`;
+    const toastIdError = `${token.symbol}-error`;
+    const toastIdSuccess = `${token.symbol}-success`;
 
     if (statusWrite.isError && !displayedToasts.has(toastIdError)) {
-      toast.error(`Error while increasing ${token} allowance`);
+      toast.error(`Error while increasing ${token.symbol} allowance`);
       setDisplayedToasts((prev) => new Set(prev).add(toastIdError));
     }
 
@@ -65,7 +65,7 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
 
   return (
     <div className="my-4">
-      <h3 className="text-lg font-medium">{token}</h3>
+      <h3 className="text-lg font-medium">{token.symbol}</h3>
       <p>Allowance: {statusRead.isLoading ? '...loading' : allowance}</p>
       <p>Deposit Value: {depositValue}</p>
       {allowanceNeedsIncrease && (
@@ -79,25 +79,25 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
           isLoading={statusWrite.isLoading}
           disabled={!depositValue}
         >
-          Set {token} Allowance
+          Set {token.symbol} Allowance
         </SubmitButton>
       )}
       {allowanceNeedsIncrease === false && (
         <MyAlert
           color="success"
-          message={`Allowance for ${token} is already set`}
+          message={`Allowance for ${token.symbol} is already set`}
         />
       )}
       {argsError ? (
         <MyAlert
           color="danger"
-          message={`Wallet is not connected  or token is not recognized to get ${token} allowance`}
+          message={`Wallet is not connected  or token is not recognized to get ${token.symbol} allowance`}
         />
       ) : (
         statusRead.isError && (
           <MyAlert
             color="danger"
-            message={`Error while reading ${token} allowance`}
+            message={`Error while reading ${token.symbol} allowance`}
           />
         )
       )}

@@ -1,56 +1,45 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
-import { useStore } from '@/store/store';
-import type { TokensCollection } from '@/types';
-import { StepType, TokenSymbol } from '@/types';
+import { VaultContext } from '@/providers/VaultProvider';
+import { StepType, type TokenInfo, type TokensCollection } from '@/types';
 
 import { ButtonIcon, MyButton } from '../MyButton';
 import { AllowanceForm } from './AllowanceForm';
 
 const Allowance = () => {
-  const { vault, depositValue, changeStep } = useStore();
+  const { tokens, vaultData, setStep, deposit } =
+    useContext(VaultContext) ?? {};
 
-  const [allowanceNeedsIncrease, setAllowanceNeedsIncrease] = useState<
-    TokensCollection<boolean | null>
-  >({
-    WETH: null,
-    rETH: null,
-  });
+  const [allowanceNeedsIncrease, setAllowanceNeedsIncrease] =
+    useState<TokensCollection<boolean | null>>();
 
   return (
     <div>
       <h2 className="my-8 text-xl">Allowance</h2>
-      {'data' in vault && (
-        <>
-          <AllowanceForm
-            vault={vault?.data}
-            depositValue={depositValue?.WETH?.int}
-            token={TokenSymbol.WETH}
-            updateAllowance={(value: boolean) =>
-              setAllowanceNeedsIncrease({
-                ...allowanceNeedsIncrease,
-                [TokenSymbol.WETH]: value,
-              })
-            }
-          />
+      {vaultData &&
+        deposit &&
+        tokens &&
+        Object.entries(deposit).map(([token, depositValue]) => {
+          return (
+            <AllowanceForm
+              key={token}
+              vault={vaultData}
+              depositValue={depositValue?.int}
+              token={tokens[token] as TokenInfo}
+              updateAllowance={(value: boolean) =>
+                setAllowanceNeedsIncrease({
+                  ...allowanceNeedsIncrease,
+                  [token]: value,
+                })
+              }
+            />
+          );
+        })}
 
-          <AllowanceForm
-            vault={vault.data}
-            depositValue={depositValue?.rETH?.int}
-            token={TokenSymbol.rETH}
-            updateAllowance={(value: boolean) =>
-              setAllowanceNeedsIncrease({
-                ...allowanceNeedsIncrease,
-                [TokenSymbol.rETH]: value,
-              })
-            }
-          />
-        </>
-      )}
-      {allowanceNeedsIncrease.WETH === false &&
-        allowanceNeedsIncrease.rETH === false && (
+      {allowanceNeedsIncrease &&
+        Object.values(allowanceNeedsIncrease).every((v) => v === false) && (
           <MyButton
-            onPress={() => changeStep(StepType.Liquidity)}
+            onPress={() => (setStep ? StepType.Liquidity : null)}
             icon={ButtonIcon.ArrowRight}
           >
             Proceed to Liquidity

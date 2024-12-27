@@ -29,7 +29,7 @@ const useGetTokenBalance = (
     isError: readbalanceToken0Error,
   } = useReadContract({
     abi: erc20Abi,
-    address: token0?.address as Address,
+    address: token0?.address,
     functionName: 'balanceOf',
     args: [address as Address],
   });
@@ -45,11 +45,11 @@ const useGetTokenBalance = (
     args: [address as Address],
   });
 
-  if (balanceToken1 || balanceToken1) {
+  if (balanceToken1 !== undefined && balanceToken0 !== undefined) {
     const balance: TokensCollection<TokenBalance> = {
       [token0?.symbol as TokenSymbol]: {
         balanceInt: Number(
-          formatBigInt(balanceToken0 as bigint, token0?.decimals as number),
+          formatBigInt(balanceToken0, token0?.decimals as number),
         ).toString(),
         balanceBigInt: balanceToken0,
       },

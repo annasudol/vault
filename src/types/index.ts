@@ -77,8 +77,11 @@ export interface TokenValue {
 export interface DepositTokens extends TokensCollection<TokenValue> {}
 
 export interface TokenDeposit {
-  depositValue?: string;
-  maxDepositValue?: number;
+  deposit?: string;
+}
+
+export interface TokenMaxDeposit {
+  maxDeposit?: string;
 }
 
 export type TokenAllowanceResponse = AsyncResponse<string>;
