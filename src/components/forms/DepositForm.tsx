@@ -21,12 +21,14 @@ const DepositForm = () => {
   const { address } = useAccount();
   const { tokens, vaultData, setStep, setDeposit } =
     useContext(VaultContext) ?? {};
+
   const [isError, setIsError] = useState(false);
   const { balance, balanceCallStatus } = useGetTokenBalance(
     tokens as TokensCollection<TokenInfo>,
   );
   const [tokenDeposit, setTokenDeposit] =
     useState<TokensCollection<TokenDeposit>>();
+
   const [balanceIsNotSufficient, setBalanceIsNotSufficient] = useState(false);
 
   useEffect(() => {

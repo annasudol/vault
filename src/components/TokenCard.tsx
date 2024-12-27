@@ -14,7 +14,7 @@ import type { StaticData } from '@/types';
 function TokenCard({ vaultAddress, tokens, chain, stats }: StaticData) {
   const router = useRouter();
   return (
-    <Card className="max-w-[400px]">
+    <Card className=" w-full max-w-xs">
       <CardHeader className="flex gap-2">
         <TokenIcon token={tokens[0]} />
         <TokenIcon token={tokens[1]} className="relative -left-5" />
