@@ -3,6 +3,7 @@ import { cn, Image } from '@nextui-org/react';
 import { ChainName, TokenSymbol } from '@/types';
 
 const tokenIcons: Record<TokenSymbol | ChainName, string> = {
+  [TokenSymbol.USDC]: '/assets/USDC.svg',
   [TokenSymbol.WETH]: '/assets/ETH.png',
   [TokenSymbol.rETH]: '/assets/rETH.svg',
   [TokenSymbol.wstETH]: '/assets/wstETH.png',

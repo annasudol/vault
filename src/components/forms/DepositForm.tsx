@@ -128,6 +128,7 @@ const DepositForm = () => {
       validationBehavior="native"
       onSubmit={onSubmit}
     >
+      {vaultData?.ratio}
       {Object.entries(tokens || {}).map(([token], index) => {
         const tokenBalnceArr = balance && Object.values(balance);
         const tokenRatio = vaultData?.ratio;
@@ -172,7 +173,7 @@ const DepositForm = () => {
         </div>
       )}
       <SubmitButton isDisabled={balanceIsNotSufficient} type="submit">
-        {balanceIsNotSufficient ? 'Balance is not suficient' : 'Submit'}
+        {balanceIsNotSufficient ? 'Insufficient balance' : 'Submit'}
       </SubmitButton>
     </Form>
   );
