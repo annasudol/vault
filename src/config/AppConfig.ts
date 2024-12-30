@@ -1,10 +1,10 @@
 export const AppConfig = {
-  site_name: 'Arrakis',
+  site_name: 'Vaults',
   title: 'Market making infrastructure',
   description:
-    'Arrakis is a market making infrastructure & strategies to create deep liquidity for crypto assets',
+    'Market making infrastructure & strategies to create deep liquidity for crypto assets',
   locale: 'en',
-  url: 'https://app.arrakis.fi/',
+  url: 'https://vaults-18br.vercel.app/',
   author: 'Anna Sudol',
   author_git: 'https://github.com/annasudol',
 };

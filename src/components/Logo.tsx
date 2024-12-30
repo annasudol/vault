@@ -27,7 +27,7 @@ const Logo = ({ size }: LogoProps) => {
 
   return (
     <svg
-      aria-label="Arrakis logo"
+      aria-label="vault logo"
       width={width}
       height={height}
       viewBox="0 0 200 50"
@@ -50,7 +50,7 @@ const Logo = ({ size }: LogoProps) => {
         fill="url(#gradient)"
         fontWeight="bold"
       >
-        ARRAKIS
+        VAULT
       </text>
     </svg>
   );

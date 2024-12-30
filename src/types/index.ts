@@ -13,12 +13,6 @@ export interface StaticData {
   vaultAddress: string;
   chain: ChainName;
   tokens: TokenSymbol[];
-  stats: {
-    [key: string]: {
-      title: string;
-      desc?: string;
-    };
-  };
 }
 
 export interface TokenBalance {

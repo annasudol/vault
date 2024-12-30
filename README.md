@@ -1,6 +1,6 @@
 
 # Vault dapp
-Dapp that allows users to deposit funds into an Arrakis vault
+Dapp that allows users to deposit funds into an vault
 
 ## How to run
 
