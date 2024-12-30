@@ -128,7 +128,6 @@ const DepositForm = () => {
       validationBehavior="native"
       onSubmit={onSubmit}
     >
-      {vaultData?.ratio}
       {Object.entries(tokens || {}).map(([token], index) => {
         const tokenBalnceArr = balance && Object.values(balance);
         const tokenRatio = vaultData?.ratio;
