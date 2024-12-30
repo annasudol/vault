@@ -19,7 +19,9 @@ export function MainLayout(props: PropsWithChildren) {
         <MainNavbar />
         <MainHeader />
         <main className="bg-slate-200">
-          <div className="mx-auto max-w-2xl grow">{props.children}</div>
+          <div className="mx-auto min-h-[55vh] max-w-2xl grow">
+            {props.children}
+          </div>
         </main>
         <Footer />
       </div>

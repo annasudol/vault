@@ -44,3 +44,12 @@ NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
    }
    ```
 
+
+## The app was build using Arbitrum Smart Contract Addresses:
+-  helper: 0x89E4bE1F999E3a58D16096FBe405Fc2a1d7F07D6 
+-  router: 0x6aC8Bab8B775a03b8B72B2940251432442f61B94
+-  resolver: 0x535c5fdf31477f799366df6e4899a12a801cc7b8
+
+Arbitrum vault: 
+0x4ca9fb1f302b6bd8421bad9debd22198eb6ab723, 
+0xf06fda2664d1f88d19919e37034b92bf26896c61
