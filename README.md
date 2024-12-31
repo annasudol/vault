@@ -20,7 +20,7 @@ NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
 
 ### Deposit Token
 1. User connects wallet
-2. Select vault '0xf06fda2664d1f88d19919e37034b92bf26896c61' or '0x4ca9fb1f302b6bd8421bad9debd22198eb6ab723' and enters deposit amount in a calucated ratio
+2. Select vault and enters deposit amount in a calucated ratio
 
 ### Token Approval Process
 1. Checks existing allowance against vault contract
