@@ -10,8 +10,9 @@ import type {
   TokenDeposit,
   TokenInfo,
   TokensCollection,
+  TokenSymbol,
 } from '@/types';
-import { StepType, TokenSymbol } from '@/types';
+import { StepType } from '@/types';
 
 import { SubmitButton } from '../button/SubmitButton';
 import { TokenInput } from '../inputs/TokenTinput';
@@ -150,7 +151,7 @@ const DepositForm = () => {
             balance={tokenBalance}
             max={maxValue || 0}
             label={`${token} Amount`}
-            displaySlider={token === TokenSymbol.rETH}
+            displaySlider={index === 1}
             setError={setIsError}
             isError={isError}
           />

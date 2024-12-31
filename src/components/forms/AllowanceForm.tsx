@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -35,6 +36,9 @@ const AllowanceForm: React.FC<AllowanceProps> = ({
     useState<boolean>();
 
   useEffect(() => {
+    if (!depositValue) {
+      redirect(`/`);
+    }
     const status = Number(allowance) < Number(depositValue?.int);
     setAllowanceNeedsIncrease(status);
     updateAllowance(status);
