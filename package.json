@@ -1,5 +1,5 @@
 {
-  "name": "arrakis-fe-task",
+  "name": "vault",
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
